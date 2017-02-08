@@ -1,0 +1,127 @@
+Date,Quadrat,Species,% Cover,"% Bare Ground
+(Bee's eye view)","Species in Strip, 
+<<<<<<< HEAD
+Not in Quadrats",Outside Species
+5/12/2016,1,Dandelion ,3,25,,Common blue violet
+5/12/2016,2,No blooms,,25,,Common lilac
+5/12/2016,3,No blooms,,15,,Wild mustard
+5/12/2016,4,Dandelion ,3,40,,
+5/12/2016,5,No blooms,,50,,
+5/12/2016,6,Dandelion ,1,35,,
+5/12/2016,7,Dandelion ,5,40,,
+5/12/2016,8,No blooms,,35,,
+5/12/2016,9,Dandelion ,1,15,,
+5/12/2016,10,Dandelion ,1,50,,
+5/22/2016,1,Dandelion ,5,5,,Common blue violet
+5/22/2016,2,Dandelion ,3,3,,Common lilac
+5/22/2016,3,Dandelion ,3,0,,
+5/22/2016,4,Dandelion ,3,0,,
+5/22/2016,5,Dandelion ,2,3,,
+5/22/2016,6,Golden alexander ,5,5,,
+5/22/2016,7,Dandelion ,3,0,,
+5/22/2016,8,No blooms,,5,,
+5/22/2016,9,Dandelion ,3,0,,
+5/22/2016,10,No blooms,,0,,
+6/17/2016,1,No blooms,,0,Daisy fleabane,Red clover
+6/17/2016,2,No blooms,,0,Common daisy,White clover
+6/17/2016,3,Dandelion,5,0,Shepherd's purse,Yellow sweet clover
+6/17/2016,4,Dandelion,3,0,Carolina horsenettle,
+6/17/2016,5,No blooms,,0,Wild parsnip,
+6/17/2016,6,Hoary vervain,6,0,Golden alexander,
+6/17/2016,7,No blooms,,0,,
+6/17/2016,8,Black-eyed Susan,8,0,,
+6/17/2016,8,Hoary vervain,6,0,,
+6/17/2016,8,Dandelion,3,0,,
+6/17/2016,9,No blooms,,0,,
+6/17/2016,10,Hoary vervain,,0,,
+7/25/2016,1,Canada thistle,10,0,White sweet clover,
+7/25/2016,2,Purple prairie clover,3,0,Queen Anne's lace,
+7/25/2016,3,No blooms,,0,Common daisy,
+7/25/2016,4,No blooms,,0,Bee balm,
+7/25/2016,5,Hoary vervain,3,0,Germander,
+7/25/2016,6,Hoary vervain,10,0,Daisy fleabane,
+7/25/2016,7,Velvet leaf,10,35,Red clover,
+7/25/2016,7,Gray-headed coneflower,3,35,,
+7/25/2016,8,No blooms,,0,,
+7/25/2016,9,Black-eyed Susan,6,0,,
+7/25/2016,10,Hoary vervain,5,0,,
+7/25/2016,10,Velvet leaf,3,0,,
+8/17/2016,1,Gray-headed coneflower,10,3,Velvet leaf,Red clover
+8/17/2016,1,Black-eyed Susan,3,3,Common daisy,Common mullein
+8/17/2016,2,Stiff goldenrod,3,5,Queen Anne's lace,White clover
+8/17/2016,3,Dandelion,10,0,Showy tick trefoil,Mouse ears
+8/17/2016,3,Hoary vervain,5,0,Bee balm,Field bindweed
+8/17/2016,4,Stiff goldenrod,25,15,Prairie fleabane,
+8/17/2016,4,Canada goldenrod,15,15,Prickly lettuce,
+8/17/2016,4,Rattlesnake master,3,15,,
+8/17/2016,4,Oxeye sunflower,3,15,,
+8/17/2016,5,Hoary vervain,3,0,,
+8/17/2016,6,Stiff goldenrod,10,15,,
+8/17/2016,7,No blooms,,0,,
+8/17/2016,8,Black-eyed Susan,5,0,,
+8/17/2016,9,Stiff goldenrod,3,0,,
+8/17/2016,10,Hoary vervain,3,0,,
+8/17/2016,10,Dandelion,3,0,,
+=======
+Not in Quadrats",Outside Species
+5/12/2016,1,Dandelion ,3,25,,Common blue violet
+5/12/2016,2,No blooms,,25,,Common lilac
+5/12/2016,3,No blooms,,15,,Wild mustard
+5/12/2016,4,Dandelion ,3,40,,
+5/12/2016,5,No blooms,,50,,
+5/12/2016,6,Dandelion ,1,35,,
+5/12/2016,7,Dandelion ,5,40,,
+5/12/2016,8,No blooms,,35,,
+5/12/2016,9,Dandelion ,1,15,,
+5/12/2016,10,Dandelion ,1,50,,
+5/22/2016,1,Dandelion ,5,5,,Common blue violet
+5/22/2016,2,Dandelion ,3,3,,Common lilac
+5/22/2016,3,Dandelion ,3,0,,
+5/22/2016,4,Dandelion ,3,0,,
+5/22/2016,5,Dandelion ,2,3,,
+5/22/2016,6,Golden alexander ,5,5,,
+5/22/2016,7,Dandelion ,3,0,,
+5/22/2016,8,No blooms,,5,,
+5/22/2016,9,Dandelion ,3,0,,
+5/22/2016,10,No blooms,,0,,
+6/17/2016,1,No blooms,,0,Daisy fleabane,Red clover
+6/17/2016,2,No blooms,,0,Common daisy,White clover
+6/17/2016,3,Dandelion,5,0,Shepherd's purse,Yellow sweet clover
+6/17/2016,4,Dandelion,3,0,Carolina horsenettle,
+6/17/2016,5,No blooms,,0,Wild parsnip,
+6/17/2016,6,Hoary vervain,6,0,Golden alexander,
+6/17/2016,7,No blooms,,0,,
+6/17/2016,8,Black-eyed Susan,8,0,,
+6/17/2016,8,Hoary vervain,6,0,,
+6/17/2016,8,Dandelion,3,0,,
+6/17/2016,9,No blooms,,0,,
+6/17/2016,10,Hoary vervain,,0,,
+7/25/2016,1,Canada thistle,10,0,White sweet clover,
+7/25/2016,2,Purple prairie clover,3,0,Queen Anne's lace,
+7/25/2016,3,No blooms,,0,Common daisy,
+7/25/2016,4,No blooms,,0,Bee balm,
+7/25/2016,5,Hoary vervain,3,0,Germander,
+7/25/2016,6,Hoary vervain,10,0,Daisy fleabane,
+7/25/2016,7,Velvet leaf,10,35,Red clover,
+7/25/2016,7,Gray-headed coneflower,3,35,,
+7/25/2016,8,No blooms,,0,,
+7/25/2016,9,Black-eyed Susan,6,0,,
+7/25/2016,10,Hoary vervain,5,0,,
+7/25/2016,10,Velvet leaf,3,0,,
+8/17/2016,1,Gray-headed coneflower,10,3,Velvet leaf,Red clover
+8/17/2016,1,Black-eyed Susan,3,3,Common daisy,Common mullein
+8/17/2016,2,Stiff goldenrod,3,5,Queen Anne's lace,White clover
+8/17/2016,3,Dandelion,10,0,Showy tick trefoil,Mouse ears
+8/17/2016,3,Hoary vervain,5,0,Bee balm,Field bindweed
+8/17/2016,4,Stiff goldenrod,25,15,Prairie fleabane,
+8/17/2016,4,Canada goldenrod,15,15,Prickly lettuce,
+8/17/2016,4,Rattlesnake master,3,15,,
+8/17/2016,4,Oxeye sunflower,3,15,,
+8/17/2016,5,Hoary vervain,3,0,,
+8/17/2016,6,Stiff goldenrod,10,15,,
+8/17/2016,7,No blooms,,0,,
+8/17/2016,8,Black-eyed Susan,5,0,,
+8/17/2016,9,Stiff goldenrod,3,0,,
+8/17/2016,10,Hoary vervain,3,0,,
+8/17/2016,10,Dandelion,3,0,,
+>>>>>>> cf53935e3439b19479429c529a3d9cc1edbe6a5c

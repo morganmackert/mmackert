@@ -1,0 +1,151 @@
+Date,Quadrat,Species,% Cover,"% Bare Ground
+(Bee's eye view)","Species in Strip, 
+<<<<<<< HEAD
+Not in Quadrats",Outside Species
+5/4/2016,1,No blooms,,0,Field pennycress,Dandelion
+5/4/2016,2,No blooms,,5,,Wild mustard
+5/4/2016,3,No blooms,,5,,Shepherd's purse
+5/4/2016,4,No blooms,,1,,
+5/4/2016,5,No blooms,,0,,
+5/4/2016,6,No blooms,,0,,
+5/4/2016,7,No blooms,,0,,
+5/4/2016,8,No blooms,,5,,
+5/4/2016,9,No blooms,,15,,
+5/4/2016,10,No blooms,,0,,
+5/19/2016,1,No blooms,,1,Field pennycress,Dandelion
+5/19/2016,2,No blooms,,0,,Wild mustard
+5/19/2016,3,No blooms,,25,,Creeping charlie
+5/19/2016,4,No blooms,,15,,Shepherd's purse
+5/19/2016,5,No blooms,,0,,Red clover
+5/19/2016,6,No blooms,,0,,Japanese honeysuckle
+5/19/2016,7,No blooms,,0,,
+5/19/2016,8,No blooms,,0,,
+5/19/2016,9,No blooms,,1,,
+5/19/2016,10,No blooms,,0,,
+6/16/2016,1,White clover,3,3,Red clover,Canada thistle
+6/16/2016,1,Black-eyed Susan,5,3,Yellow sweet clover,Alfalfa
+6/16/2016,2,White clover,1,0,Daisy fleabane,Shepherd's purse
+6/16/2016,3,Black-eyed Susan,3,30,American black elderberry,
+6/16/2016,4,No blooms,,5,Field bindweed,
+6/16/2016,5,White clover,7,10,,
+6/16/2016,6,No blooms,,0,,
+6/16/2016,7,No blooms,,0,,
+6/16/2016,8,Pale purple coneflower,5,0,,
+6/16/2016,8,Common milkweed,3,0,,
+6/16/2016,9,Black-eyed Susan,3,0,,
+6/16/2016,10,Black-eyed Susan,5,0,,
+7/21/2016,1,Queen Anne's lace,15,3,American black elderberry,Flower of an hour
+7/21/2016,2,Black-eyed Susan,20,5,White sweet clover,Pennsylvania smartweed
+7/21/2016,2,Field bindweed,5,5,Red clover,Dandelion
+7/21/2016,3,Field bindweed,3,30,White clover,Alfalfa
+7/21/2016,4,Field bindweed,10,0,Daisy fleabane,Ground cherry
+7/21/2016,5,White sweet clover,5,0,Yellow sweet clover,Common daylily
+7/21/2016,5,Field bindweed,5,0,,Birdsfoot trefoil
+7/21/2016,6,Whorled milkweed,3,0,,
+7/21/2016,6,Queen Anne's lace,3,0,,
+7/21/2016,6,Gray-headed coneflower,5,0,,
+7/21/2016,6,Field bindweed,5,0,,
+7/21/2016,7,Black-eyed Susan,6,3,,
+7/21/2016,7,Field bindweed,5,3,,
+7/21/2016,8,Field bindweed,3,0,,
+7/21/2016,8,Black-eyed Susan,3,0,,
+7/21/2016,9,Gray-headed coneflower,20,5,,
+7/21/2016,9,Queen Anne's lace,5,5,,
+7/21/2016,9,Field bindweed,3,5,,
+7/21/2016,10,Queen Anne's lace,15,10,,
+7/21/2016,10,Black-eyed Susan,10,10,,
+8/16/2016,1,Queen Anne's lace,10,0,Canada goldenrod,Birdsfoot trefoil
+8/16/2016,2,Queen Anne's lace,10,10,Velvet leaf,Daisy fleabane
+8/16/2016,2,Field bindweed,5,10,Prickly lettuce,
+8/16/2016,2,White clover,3,10,,
+8/16/2016,3,Field bindweed,5,0,,
+8/16/2016,4,Field bindweed,5,0,,
+8/16/2016,4,White clover,5,0,,
+8/16/2016,5,Queen Anne's lace,3,0,,
+8/16/2016,5,Gray-headed coneflower,10,0,,
+8/16/2016,6,White clover,10,30,,
+8/16/2016,6,Field bindweed,10,30,,
+8/16/2016,6,Queen Anne's lace,15,30,,
+8/16/2016,7,Field bindweed,15,0,,
+8/16/2016,7,Gray-headed coneflower,3,0,,
+8/16/2016,8,Gray-headed coneflower,35,0,,
+8/16/2016,9,Gray-headed coneflower,3,0,,
+8/16/2016,9,Field bindweed,3,0,,
+8/16/2016,10,Queen Anne's lace,10,0,,
+8/16/2016,10,Partridge pea,3,0,,
+8/16/2016,10,Red clover,20,0,,
+=======
+Not in Quadrats",Outside Species
+5/4/2016,1,No blooms,,0,Field pennycress,Dandelion
+5/4/2016,2,No blooms,,5,,Wild mustard
+5/4/2016,3,No blooms,,5,,Shepherd's purse
+5/4/2016,4,No blooms,,1,,
+5/4/2016,5,No blooms,,0,,
+5/4/2016,6,No blooms,,0,,
+5/4/2016,7,No blooms,,0,,
+5/4/2016,8,No blooms,,5,,
+5/4/2016,9,No blooms,,15,,
+5/4/2016,10,No blooms,,0,,
+5/19/2016,1,No blooms,,1,Field pennycress,Dandelion
+5/19/2016,2,No blooms,,0,,Wild mustard
+5/19/2016,3,No blooms,,25,,Creeping charlie
+5/19/2016,4,No blooms,,15,,Shepherd's purse
+5/19/2016,5,No blooms,,0,,Red clover
+5/19/2016,6,No blooms,,0,,Japanese honeysuckle
+5/19/2016,7,No blooms,,0,,
+5/19/2016,8,No blooms,,0,,
+5/19/2016,9,No blooms,,1,,
+5/19/2016,10,No blooms,,0,,
+6/16/2016,1,White clover,3,3,Red clover,Canada thistle
+6/16/2016,1,Black-eyed Susan,5,3,Yellow sweet clover,Alfalfa
+6/16/2016,2,White clover,1,0,Daisy fleabane,Shepherd's purse
+6/16/2016,3,Black-eyed Susan,3,30,American black elderberry,
+6/16/2016,4,No blooms,,5,Field bindweed,
+6/16/2016,5,White clover,7,10,,
+6/16/2016,6,No blooms,,0,,
+6/16/2016,7,No blooms,,0,,
+6/16/2016,8,Pale purple coneflower,5,0,,
+6/16/2016,8,Common milkweed,3,0,,
+6/16/2016,9,Black-eyed Susan,3,0,,
+6/16/2016,10,Black-eyed Susan,5,0,,
+7/21/2016,1,Queen Anne's lace,15,3,American black elderberry,Flower of an hour
+7/21/2016,2,Black-eyed Susan,20,5,White sweet clover,Pennsylvania smartweed
+7/21/2016,2,Field bindweed,5,5,Red clover,Dandelion
+7/21/2016,3,Field bindweed,3,30,White clover,Alfalfa
+7/21/2016,4,Field bindweed,10,0,Daisy fleabane,Ground cherry
+7/21/2016,5,White sweet clover,5,0,Yellow sweet clover,Common daylily
+7/21/2016,5,Field bindweed,5,0,,Birdsfoot trefoil
+7/21/2016,6,Whorled milkweed,3,0,,
+7/21/2016,6,Queen Anne's lace,3,0,,
+7/21/2016,6,Gray-headed coneflower,5,0,,
+7/21/2016,6,Field bindweed,5,0,,
+7/21/2016,7,Black-eyed Susan,6,3,,
+7/21/2016,7,Field bindweed,5,3,,
+7/21/2016,8,Field bindweed,3,0,,
+7/21/2016,8,Black-eyed Susan,3,0,,
+7/21/2016,9,Gray-headed coneflower,20,5,,
+7/21/2016,9,Queen Anne's lace,5,5,,
+7/21/2016,9,Field bindweed,3,5,,
+7/21/2016,10,Queen Anne's lace,15,10,,
+7/21/2016,10,Black-eyed Susan,10,10,,
+8/16/2016,1,Queen Anne's lace,10,0,Canada goldenrod,Birdsfoot trefoil
+8/16/2016,2,Queen Anne's lace,10,10,Velvet leaf,Daisy fleabane
+8/16/2016,2,Field bindweed,5,10,Prickly lettuce,
+8/16/2016,2,White clover,3,10,,
+8/16/2016,3,Field bindweed,5,0,,
+8/16/2016,4,Field bindweed,5,0,,
+8/16/2016,4,White clover,5,0,,
+8/16/2016,5,Queen Anne's lace,3,0,,
+8/16/2016,5,Gray-headed coneflower,10,0,,
+8/16/2016,6,White clover,10,30,,
+8/16/2016,6,Field bindweed,10,30,,
+8/16/2016,6,Queen Anne's lace,15,30,,
+8/16/2016,7,Field bindweed,15,0,,
+8/16/2016,7,Gray-headed coneflower,3,0,,
+8/16/2016,8,Gray-headed coneflower,35,0,,
+8/16/2016,9,Gray-headed coneflower,3,0,,
+8/16/2016,9,Field bindweed,3,0,,
+8/16/2016,10,Queen Anne's lace,10,0,,
+8/16/2016,10,Partridge pea,3,0,,
+8/16/2016,10,Red clover,20,0,,
+>>>>>>> cf53935e3439b19479429c529a3d9cc1edbe6a5c
