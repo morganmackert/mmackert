@@ -34,8 +34,11 @@ ggplot(beefamilies, aes(x = Family)) +
 #OMG SO COOL
 ggplot(beefamilies, aes(x = Family, fill = Site)) + 
   geom_bar(color = "black") +
-  ggtitle("Bee Families by Site") +
+  ggtitle("Abundance of Bee Families by Site") +
   theme_bw() +
   theme(legend.key.size = unit(1, "cm")) +
   theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
+  theme(axis.title = element_text(size = 16, face = "bold")) +
+  theme(axis.text.x = element_text(size = 14, angle = 45, hjust = 1)) +
+  theme(axis.text.y = element_text(size = 12, margin = margin(0, 0, 0, 10))) +
   labs(y = "Count")
