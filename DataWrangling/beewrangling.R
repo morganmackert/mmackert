@@ -34,8 +34,12 @@ View(simplebees)
 #Not worrying about trap effects just yet, so combine by date and site.
 #HOW?
 
+test <- bees %>% group_by(Site, Date) %>% summarise(total.bees = sum(Bees)) 
 
+library(ggplot2)
 
+ggplot(test, aes(x = Date, y = total.bees)) +
+  geom_line(aes(color = Site))
 
 
 
