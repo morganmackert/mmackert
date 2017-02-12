@@ -42,3 +42,14 @@ ggplot(beefamilies, aes(x = Family, fill = Site)) +
   theme(axis.text.x = element_text(size = 14, angle = 45, hjust = 1)) +
   theme(axis.text.y = element_text(size = 12, margin = margin(0, 0, 0, 10))) +
   labs(y = "Count")
+
+#########################################################################################
+#Total bees by site and by date
+ggplot(summarybees, aes(x = Date, y = total.bees)) +
+  geom_line(aes(color = Site)) +
+  ggtitle("Bee Abundance by Date and Site") +
+  theme_bw() +
+  labs(y = "Count")
+
+#Blooming forb richness by date
+

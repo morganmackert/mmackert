@@ -13,6 +13,7 @@ View(bees)
 
 #Load libraries
 library(lubridate)
+library(dplyr)
 
 #Fix dates in "bees"
 bees$Date <- mdy(bees$Date)
@@ -32,16 +33,10 @@ View(simplebees)
 #Looks good
 
 #Not worrying about trap effects just yet, so combine by date and site.
-#HOW?
+groupedbees <- bees %>% group_by(Site, Date)
 
-test <- bees %>% group_by(Site, Date) %>% summarise(total.bees = sum(Bees)) 
-
-library(ggplot2)
-
-ggplot(test, aes(x = Date, y = total.bees)) +
-  geom_line(aes(color = Site))
-
-
+#Summarize and view grouped bee data frame
+summarybees <- groupedbees %>% summarise(total.bees = sum(Bees))
 
 
 
