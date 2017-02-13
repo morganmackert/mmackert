@@ -44,12 +44,38 @@ ggplot(beefamilies, aes(x = Family, fill = Site)) +
   labs(y = "Count")
 
 #########################################################################################
-#Total bees by site and by date
-ggplot(summarybees, aes(x = Date, y = total.bees)) +
+#Total bees by date (point)
+beesbysite <- ggplot(simplebees, aes(x = Date, y = TotalBees)) + 
+  geom_point(shape = 19, size = 2) + 
+  geom_smooth(method = lm) +
+  ggtitle("Bee Abundance by Date") +
+  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
+  theme_bw() +
+  labs(x = "Date", y = "Number of Individuals")
+beesbysite
+
+#Total plants by date (point)
+plantsbysite <- ggplot(simpleplants, aes(x = Date, y = TotalPlants)) +
+  geom_point(shape = 19, size = 2) +
+  geom_smooth(method = lm)+
+  ggtitle("Blooming Forb Richness by Date") +
+  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
+  theme_bw() +
+  labs(x = "Date", y = "Number of Species")
+plantsbysite
+
+#Total bees by site (line) and by date
+beesbysitedate <- ggplot(summarybees, aes(x = Date, y = total.bees)) +
   geom_line(aes(color = Site)) +
   ggtitle("Bee Abundance by Date and Site") +
   theme_bw() +
   labs(y = "Count")
+beesbysitedate
 
-#Blooming forb richness by date
-
+#Blooming forb richness by site (line) and by date
+plantsbysitedate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
+  geom_line(aes(color = Site)) +
+  ggtitle("Blooming Forb Richness by Site and Date") +
+  theme_bw() +
+  labs(y = "Number of Species")
+plantsbysitedate
