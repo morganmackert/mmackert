@@ -43,6 +43,7 @@ plantcoverage_averaged <- plants %>%
 plantcoverage_data <- full_join(merged_bees, plantcoverage_averaged, by = c("Date", "Site"))
 
 #Fix dates with lubridate
+##### KATHERINE: Do you think I should use Julian Date instead? How would I do this?
 mdy(plantcoverage_data$Date)
 
 #Drop 8/5/2016 observation from Cretsinger 
@@ -74,9 +75,18 @@ plantcoverage_data$Sampling_Period[plantcoverage_data$Sampling_Period == 5] <- "
 #------------------------------------------------
 #               Figure Scripts
 #------------------------------------------------
-#Plot of total bees versus average plant coverage
+#Plot of total bees versus average plant coverage by site
 ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Site)) +
   geom_point()
+
+#Plot of total bees versus average plant coverage by sampling period
+ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = (Sampling_Period))) +
+  geom_point(shape = 19, size = 3) +
+  ggtitle("Bee Abundance vs. Flowering Plant Average Coverage") +
+  labs(x = "Flowering Plant Average Coverage", y = "Bee Abundance") +
+  theme(legend.title = element_text(color = "black", size = 12, face = NULL)) + 
+  scale_color_discrete(name = "Sample Period", breaks = c("Early May", "Late May", "June", "July", "August")) +
+  theme_bw()
 
 #Plot of total bees versus average plant coverage faceted by site
 ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Site)) +
@@ -100,12 +110,13 @@ ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Sit
 #                    Models
 #------------------------------------------------
 # Poisson mixed model with sampling day and average plant coverage as predictors
-fit <- glmer(Total_Bees ~ Average_Coverage + Sampling_Day + Average_Coverage * Sampling_Day + 
-               (1|Site),
+##### KATHERINE: Not working??? Failure to converge? Help.
+model <- glmer(Total_Bees ~ Average_Coverage + Sampling_Day + Average_Coverage * Sampling_Day + (1|Site),
              data = plantcoverage_data, family = poisson(link = "log"))
 
+summary(model)
 
-
+anova(model)
 
 
 

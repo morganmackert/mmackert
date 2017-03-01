@@ -95,8 +95,7 @@ ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)
 ## ===================================================================================
 
 # Poisson mixed model with sampling day and bare ground as predictors
-fit <- glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + 
-               (1|Site),
+fit <- glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + (1|Site),
       data = baregound_data, family = poisson(link = "log"))
 
 # Summary of model
