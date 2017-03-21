@@ -91,7 +91,7 @@ ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)
 
 
 ## ===================================================================================
-## Poison Mixed Models
+## Poisson Mixed Models
 ## ===================================================================================
 
 # Poisson mixed model with sampling day and bare ground as predictors
