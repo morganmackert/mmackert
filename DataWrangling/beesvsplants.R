@@ -153,12 +153,13 @@ summary(model)
 anova(model)
 
 
-#------------------------------------------------
+#------------------------------------------------#
 #                   Extras
-#------------------------------------------------
+#------------------------------------------------#
 plantcoverage_data$Sampling_Period <- as.factor(plantcoverage_data$Sampling_Period)
 
 plantcoverage_data$Sampling_Period <- factor(plantcoverage_data$Sampling_Period, levels(plantcoverage_data$Sampling_Period)[c(2,5,4,3,1)])
+
 levels(plantcoverage_data$Sampling_Period)
 
 
