@@ -2,25 +2,17 @@
 ############### BEES BY FAMILY ###############
 ##############################################
 
-#Set working directory; depends on which computer
-#Personal:
-setwd("~/ISU/Project/Data/Bees")
-#Lab:
-setwd("C:/Users/mmackert/Box Sync/Project/Data/Bees")
+#Clear environment
+rm(list=ls())
 
 #Load libraries
 library(ggplot2)
 
 #Read in the data
-beefamilies <- read.csv("2016 Bee IDs.csv")
+beefamilies <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/master/Data/bees/working/2016%20Bee%20IDs.csv")
 
 #Create a table to visualize the data
 table(beefamilies$Family)
-
-#Andrendidae -> Andrenidae
-##### MORGAN: Still leaves the column heading. Figure out how to remove.
-##### MORGAN: Fix the two blanks.
-beefamilies$Family[beefamilies$Family == "Andrendidae"] <- "Andrenidae"
 
 #Determine proportions of each family compared to the total
 proportions <- table(beefamilies$Family)/sum(table(beefamilies$Family))
@@ -28,11 +20,14 @@ proportions <- table(beefamilies$Family)/sum(table(beefamilies$Family))
 #Create bar graph of family count data
 ggplot(beefamilies, aes(x = Family)) + 
   geom_bar() +
+  labs(y = "Count") +
   theme_bw()
 
 #Plot the count data by site using facet wrap
+##### MORGAN: How to angle the labels??
 ggplot(beefamilies, aes(x = Family)) + 
   geom_bar() + 
+  labs(y = "Count") +
   facet_wrap( ~ Site) +
   theme_bw()
 
@@ -48,7 +43,8 @@ ggplot(beefamilies, aes(x = Family, fill = Site)) +
   theme(axis.title = element_text(size = 16, face = "bold")) +
   theme(axis.text.x = element_text(size = 14, angle = 45, hjust = 1)) +
   theme(axis.text.y = element_text(size = 12, margin = margin(0, 0, 0, 10))) +
-  labs(y = "Count")
+  labs(y = "Count") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 #------------------------------------------------#
 #                Extras - Bees
@@ -134,12 +130,14 @@ plantsbysite <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
   labs(x = "Date", y = "Number of Species")
 plantsbysite
 
+#------------------------------------------------#
+#                Extras - Code
+#------------------------------------------------#
 
-
-
-
-
-
+Andrendidae -> Andrenidae
+##### MORGAN: Still leaves the column heading. Figure out how to remove.
+##### MORGAN: Fix the two blanks.
+beefamilies$Family[beefamilies$Family == "Andrendidae"] <- "Andrenidae"
 
 
 

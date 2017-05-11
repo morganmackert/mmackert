@@ -4,6 +4,9 @@
 
 #Research question: How does bare ground presence within contour buffer and filter strips of various vegetation mixes influence bee abundance?
 
+#Clear environment
+rm(list=ls())
+
 # Load libraries
 library(lme4)
 library(ggplot2)
@@ -16,10 +19,13 @@ bees <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/maste
 plants <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/master/Data/plants/raw/2016Total.csv")
 
 
-#------------------------------------------------
+#------------------------------------------------#
 #               Data Manipulation
-#------------------------------------------------
+#------------------------------------------------#
 #Create new datasets that can be joined to have a dataset with variables on number of bees and bare ground coverage
+
+bees2 <- bees %>%
+  filter(bees$Trap != "Total")
 
 #Bees: merge traps into one total number for each site/date
 merged_bees <- bees %>% 
@@ -41,12 +47,14 @@ bareground_averaged <- plants %>%
             Number_Quadrats = length(Percent_Bare_Ground))
 
 #Join merged bees and averaged bare ground together
+##### JOHN: Same full join error.
+##### MORGAN: Find missing Date data point
 bareground_data <- full_join(merged_bees, bareground_averaged, by = c("Date", "Site")) 
 
 #Fix dates with lubridate
 mdy(bareground_data$Date)
 
-# Check to see how many dates per site (we find the Crestsinger has 6)
+#Check to see how many dates per site
 bareground_data %>%
   group_by(Site) %>%
   summarise(count = n())
@@ -81,9 +89,11 @@ bareground_data$Sample_Number <- 1:40
 #                 Figure Scripts
 #------------------------------------------------#
 
-#Plot of total bees versus average plant coverage by site
+#Plot of total bees versus average bare ground coverage by site
 ggplot(bareground_data, aes(x = Average_Bare_Ground, y = Total_Bees, color = Site)) +
-  geom_point() 
+  geom_point() +
+  labs(x = "Average Bare Ground Presence", y = "Bee Abundance") +
+  theme_bw()
 
 #Plot of total bees versus average bare ground faceted by site
 ggplot(bareground_data, aes(x = Average_Bare_Ground, y = Total_Bees, color = Site)) +

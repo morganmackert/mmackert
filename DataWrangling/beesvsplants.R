@@ -4,11 +4,15 @@
 
 #Research question: How does blooming floral abundance (average coverage) within contour buffer and filter strips of various vegetation mixes influence bee abundance?
 
+#Clear environment
+rm(list=ls())
+
 #Load libraries
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(lme4)
+library(phia)
 
 #Load data
 bees <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/master/Data/bees/working/2016Bees.csv")
@@ -78,6 +82,9 @@ plantcoverage_data$Sampling_Period[plantcoverage_data$Sampling_Period == 3] <- "
 plantcoverage_data$Sampling_Period[plantcoverage_data$Sampling_Period == 4] <- "July"
 plantcoverage_data$Sampling_Period[plantcoverage_data$Sampling_Period == 5] <- "August"
 
+plantcoverage_data$Sampling_Period <- factor(plantcoverage_data$Sampling_Period,
+                                             levels = c("Early May", "Late May", "June", "July", "August"))
+
 #------------------------------------------------#
 #               Figure Scripts
 #------------------------------------------------#
@@ -102,6 +109,7 @@ ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = (Sa
   theme(plot.title = element_text(hjust = 0.5))
 
 #Plot of total bees versus average plant coverage faceted by site
+##### Need legend here? Seems redundant.
 ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Site)) +
   geom_point() + 
   facet_wrap( ~ Site) +
@@ -111,6 +119,7 @@ ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Sit
   theme(plot.title = element_text(hjust = 0.5))
   
 #Plot of total bees versus sampling day faceted by site
+##### Rotate x-axis labels
 ggplot(plantcoverage_data, aes(x = Sampling_Period, y = Total_Bees, color = Site)) +
   geom_point() +
   facet_wrap( ~ Site) +
@@ -135,7 +144,6 @@ ggplot(plantcoverage_data, aes(x = Average_Coverage, y = Total_Bees, color = Sit
 #                    Models
 #------------------------------------------------#
 #Poisson mixed model with sampling day and average plant coverage as predictors
-##### JOHN: Not working??? Failure to converge? Help.
 model <- glmer(Total_Bees ~ Average_Coverage + Sampling_Day + Average_Coverage * Sampling_Day + (1|Site),
              data = plantcoverage_data, family = poisson(link = "log"))
 
@@ -147,9 +155,14 @@ model <- glmer(Total_Bees ~ Average_Coverage_Scaled + Sampling_Day + Average_Cov
 fit <- glm(Total_Bees ~ Average_Coverage + Sampling_Day + Average_Coverage * Sampling_Day + Site,
     data = plantcoverage_data, family = poisson(link = "log"))
 
-summary(fit)
-summary(model)
+fit2 <- glm(Total_Bees ~ Sampling_Day + Site+ Site* Sampling_Day,
+           data = plantcoverage_data, family = poisson(link = "log"))
 
+summary(fit)
+summary(fit2)
+summary(model)
+plot(interactionMeans(fit))
+plot(interactionMeans(fit2))
 anova(model)
 
 
