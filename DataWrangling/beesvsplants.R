@@ -19,7 +19,7 @@ bees <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/maste
 plants <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/master/Data/plants/raw/2016Total.csv")
 
 #------------------------------------------------#
-#               Data Manipulation
+#               Data Manipulation                #
 #------------------------------------------------#
 # Create new datasets that can be joined to have a dataset with variables on number of bees and number of blooming forb and weed species
 
