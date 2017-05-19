@@ -2,8 +2,9 @@
 #                    MEAN AND STANDARD DEVIATION                    #
 #####################################################################
 
-#Clear environment
+#Clear environment and set working directory
 rm(list=ls())
+setwd("~/ISU/Project/Previous Data/Data Files")
 
 #Load libraries
 library(plotrix)

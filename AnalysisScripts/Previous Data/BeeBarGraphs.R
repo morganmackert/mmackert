@@ -2,7 +2,8 @@
 #                              BAR GRAPHS                           #
 #####################################################################
 
-#Set working directory
+#Clear environment and set working directory
+rm(list=ls())
 setwd("~/ISU/Project/Previous Data/Data Files")
 
 #Load libraries

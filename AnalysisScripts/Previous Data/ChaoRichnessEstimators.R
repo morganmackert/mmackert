@@ -1,0 +1,159 @@
+#####################################################################
+#                      CHAO RICHNESS ESTIMATORS                     #
+#####################################################################
+
+#Clear environment and set working directory
+rm(list=ls())
+setwd("~/ISU/Project/Previous Data/Data Files")
+
+#Load libraries
+library(fossil)
+
+#-------------------------------------------------------------------#
+#                              Plunkett                             #
+#-------------------------------------------------------------------#
+
+#Read in data
+Plunkett <- read.csv("Plunketts.csv")
+#####Do the numbers following the site names in the column headings correspond to sampling period?
+
+#Remove the first column (Site Code) and change "Plunkett" from data.frame to a matrix
+PlunkettMatrix <- as.matrix(Plunkett[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(PlunkettMatrix, abund = TRUE)
+#####How is it possible to have 16.6 observed species?
+#####Why do I get different results each time I run the function?
+
+#-------------------------------------------------------------------#
+#                              Bowman                               #
+#-------------------------------------------------------------------#
+
+#Read in data
+Bowman <- read.csv("Bowman.csv")
+
+#Remove the first column (Site Code) and change "Bowman" from data.frame to a matrix
+BowmanMatrix <- as.matrix(Bowman[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(BowmanMatrix, abund = TRUE)
+
+#-------------------------------------------------------------------#
+#                           Kaldenberg                              #
+#-------------------------------------------------------------------#
+
+#Read in data
+Kaldenberg <- read.csv("Kaldenberg.csv")
+
+#Remove the first column (Site Code) and change "Bowman" from data.frame to a matrix
+KaldenbergMatrix <- as.matrix(Kaldenberg[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(KaldenbergMatrix, abund = TRUE)
+
+#-------------------------------------------------------------------#
+#                            McClellan                              #
+#-------------------------------------------------------------------#
+
+#Read in data
+McClellan <- read.csv("McClellan.csv")
+
+#Remove the first column (Site Code) and change "McClellan" from data.frame to a matrix
+McClellanMatrix <- as.matrix(McClellan[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(McClellanMatrix)
+
+#-------------------------------------------------------------------#
+#                              Sloan                               #
+#-------------------------------------------------------------------#
+
+#Read in data
+Sloan <- read.csv("Sloan.csv")
+
+#Remove the first column (Site Code) and change "Sloan" from data.frame to a matrix
+SloanMatrix <- as.matrix(Sloan[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(SloanMatrix)
+
+#-------------------------------------------------------------------#
+#                             Sheller                               #
+#-------------------------------------------------------------------#
+
+#Read in data
+Sheller <- read.csv("Sheller.csv")
+
+#Remove the first column (Site Code) and change "Sheller" from data.frame to a matrix
+ShellerMatrix <- as.matrix(Sheller[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(ShellerMatrix)
+
+#-------------------------------------------------------------------#
+#                            Cretsinger                             #
+#-------------------------------------------------------------------#
+
+#Read in data
+Cretsinger <- read.csv("Cretsinger.csv")
+
+#Remove the first column (Site Code) and change "Cretsinger" from data.frame to a matrix
+CretsingerMatrix <- as.matrix(Cretsinger[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(CretsingerMatrix)
+
+#-------------------------------------------------------------------#
+#                        Greving and Peckumn                        #
+#-------------------------------------------------------------------#
+
+#####Don't have this file!
+#Read in data
+GandP <- read.csv("Greving_Peckumn.csv")
+
+#Remove the first column (Site Code) and change "GandP" from data.frame to a matrix
+GandPMatrix <- as.matrix(GandP[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(GandPMatrix)
+
+#-------------------------------------------------------------------#
+#                           Low Diversity                           #
+#-------------------------------------------------------------------#
+
+#Read in data
+Low <- read.csv("LowDiversity.csv")
+#####What do these columns/values mean?
+
+#Remove the first column (Site Code) and change "Low" from data.frame to a matrix
+LowMatrix <- as.matrix(Low[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(LowMatrix)
+
+#-------------------------------------------------------------------#
+#                          Medium Diversity                         #
+#-------------------------------------------------------------------#
+
+#Read in data
+Medium <- read.csv("MediumDiversity.csv")
+
+#Remove the first column (Site Code) and change "Medium" from data.frame to a matrix
+MediumMatrix <- as.matrix(Medium[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(MediumMatrix)
+
+#-------------------------------------------------------------------#
+#                           High Diversity                          #
+#-------------------------------------------------------------------#
+
+#Read in data
+High <- read.csv("HighDiversity.csv")
+#####What do these columns/values mean?
+
+#Remove the first column (Site Code) and change "High" from data.frame to a matrix
+HighMatrix <- as.matrix(High[,-1])
+
+#Use "spp.est" function to estimate species diversity
+spp.est(HighMatrix)
