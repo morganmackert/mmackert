@@ -86,7 +86,7 @@ bareground_data$Sampling_Period[bareground_data$Sampling_Period == 5] <- "August
 bareground_data$Sample_Number <- 1:40
 
 #------------------------------------------------#
-#                 Figure Scripts
+#                 Figure Scripts                 #
 #------------------------------------------------#
 
 #Plot of total bees versus average bare ground coverage by site
