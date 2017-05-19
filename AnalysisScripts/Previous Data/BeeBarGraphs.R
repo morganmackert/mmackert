@@ -526,7 +526,7 @@ rm(list=ls())
 #Read in data
 CPR <- read.csv("Bee_BarGraph_Cleptoparasites_Richness.csv")
 
-#PlantDiversity column in "CPA" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+#PlantDiversity column in "CPR" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
 CPR$PlantDiversity <- factor(CPR$PlantDiversity, c("Low", "Medium", "High"))
 
 #Create values for error bars
@@ -567,3 +567,112 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 #Plot all of Morgan's graphs in one figure
 grid.arrange(PDonSGNR, PDonScGNR, PDonBBR, PDonCNR, ncol = 2)
 #Include PDonCPR upon receiving datafile
+
+#-------------------------------------------------------------------#
+#                     Chao1 Richness by Site                        #
+#-------------------------------------------------------------------#
+
+#Clear environment
+rm(list=ls())
+
+#Read in data
+SiteChao <- read.csv("Bee_BarGraph_Site_Chao.csv")
+
+#####How did you calculate Chao1 richness estimate?
+#####Does this value include both years? What do the graphs look like if years one and two are separated?
+
+#PlantDiversity column in "SiteChao" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+SiteChao$PlantDiversity <- factor(SiteChao$PlantDiversity, c("Low", "Medium", "High"))
+
+#Site column in "SiteChao" dataframe is an incorrect order; reorder as follows.
+SiteChao$Site <- factor(SiteChao$Site,c("Bo","Mc","Sh","El","Ka","Pl","Sl","Cr","NS","Gr/Pe"))
+
+#Create values for error bars
+SiteChaolimits <- aes(ymax = Measure + SE, ymin = Measure - SE)
+
+#Amy's plot: Chao1 Richness by Site
+p<-ggplot(data=SiteChao,aes(x=factor(Site),y=Measure, fill=PlantDiversity))
+p+geom_bar(stat="identity",position=position_dodge(0.9))+
+  labs(x="Site",y="Chao1 Richness Estimate")+
+  geom_errorbar(SiteChaolimits,position=position_dodge(0.9),width=0.25)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+#Morgan's plot: Chao1 Richness by Site
+SiteChaoGraph <- ggplot(data = SiteChao, aes(x = Site, y = Measure, fill = PlantDiversity)) +
+  geom_bar(stat = "identity", position = position_dodge(0.9)) +
+  labs(x = "Site", y = "Chao1 Richness Estimate") +
+  geom_errorbar(SiteChaolimits, position = position_dodge(0.9), width=0.25) +
+  theme_bw() +
+  ggtitle("Chao1 Richness Estimates by Site") +
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+SiteChaoGraph
+
+#Chao1 richness Treatment
+bm <- read.csv("Bee_BarGraph_Treatment_Chao.csv")
+names(bm)
+bm$PlantDiversity <- factor(bm$PlantDiversity, c("Low", "Medium", "High"))
+
+limits<-aes(ymax=Measure+SE, ymin=Measure-SE)
+
+p<-ggplot(data=bm,aes(x=factor(PlantDiversity),y=Measure))
+p+geom_bar(stat="identity",position=position_dodge(0.9))+
+  labs(x="Plant Diversity",y="Chao1 Richness Estimate")+
+  geom_errorbar(limits,position=position_dodge(0.9),width=0.25)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+
+#-------------------------------------------------------------------#
+#                  Chao1 Richness by Treatment                      #
+#-------------------------------------------------------------------#
+
+#Clear environment
+rm(list=ls())
+
+#Read in data
+TreatChao <- read.csv("Bee_BarGraph_Treatment_Chao.csv")
+
+#PlantDiversity column in "TreatChao" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+TreatChao$PlantDiversity <- factor(TreatChao$PlantDiversity, c("Low", "Medium", "High"))
+
+#Create values for error bars
+TreatChaolimits <- aes(ymax = Measure + SE, ymin = Measure - SE)
+
+#Amy's plot: Chao1 Richness by Site
+p<-ggplot(data=TreatChao,aes(x=factor(PlantDiversity),y=Measure))
+p+geom_bar(stat="identity",position=position_dodge(0.9))+
+  labs(x="Plant Diversity",y="Chao1 Richness Estimate")+
+  geom_errorbar(TreatChaolimits,position=position_dodge(0.9),width=0.25)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+#Morgan's plot: Chao1 Richness by Site
+TreatChaoGraph <- ggplot(data = TreatChao, aes(x = PlantDiversity, y = Measure, fill = PlantDiversity)) +
+  geom_bar(stat = "identity", position = position_dodge(0.9)) +
+  labs(x = "Plant Diversity", y = "Chao1 Richness Estimate") +
+  geom_errorbar(TreatChaolimits, position = position_dodge(0.9), width=0.25) +
+  theme_bw() +
+  ggtitle("Chao1 Richness Estimates by Treatment") +
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+TreatChaoGraph
