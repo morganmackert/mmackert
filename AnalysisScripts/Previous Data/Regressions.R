@@ -1,6 +1,6 @@
-####################################################
-#                   REGRESSIONS                    #
-####################################################
+#####################################################################
+#                             REGRESSIONS                           #
+#####################################################################
 
 #Clear environment and set working directory
 rm(list=ls())
@@ -9,9 +9,9 @@ setwd("~/ISU/Project/Previous Data/Data Files")
 #Load libraries
 library(ggplot2)
 
-#--------------------------------------------------#
-#       Percent Bare Ground ~ Bee Abundance        #
-#--------------------------------------------------#
+#-------------------------------------------------------------------#
+#                Percent Bare Ground ~ Bee Abundance                #
+#-------------------------------------------------------------------#
 
 #Read in the data
 et <- read.csv("ETrap_Bees.csv")
@@ -55,9 +55,9 @@ ggplot(et, aes(x = BareGround, y = Ind)) +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 
-#--------------------------------------------------#
-#  Blooming Forb and Weed Species ~ Bee Abundance  #
-#--------------------------------------------------#
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Species ~ Bee Abundance          #
+#-------------------------------------------------------------------#
 
 #Clear environment
 rm(list=ls())
@@ -102,9 +102,9 @@ ggplot(nq, aes(x = Quadrats, y = TotalAbundance)) +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 
-#--------------------------------------------------#
-#   Quadrats and Percent Forest ~ Bee Abundance    #
-#--------------------------------------------------#
+#-------------------------------------------------------------------#
+#             Quadrats and Percent Forest ~ Bee Abundance           #
+#-------------------------------------------------------------------#
 
 #Clear environment
 rm(list=ls())
@@ -148,9 +148,9 @@ PFQonBAplot <- with(bee, {
 #Add in a plane to 3D scatterplot
 PFQonBAplot$plane3d(lm(bee$TotalAbundance ~ bee$Quadrats + bee$PercentForest))
 
-#--------------------------------------------------#
-#     Percent Forest ~ Cavity Nester Abundance     #
-#--------------------------------------------------#
+#-------------------------------------------------------------------#
+#               Percent Forest ~ Cavity Nester Abundance            #
+#-------------------------------------------------------------------#
 
 #Clear environment
 rm(list=ls())
@@ -193,9 +193,9 @@ ggplot(pf, aes(x = PercentForest, y = CavityNesters)) +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 
-#--------------------------------------------------#
-#     Percent Forest ~ Cavity Nester Richness      #
-#--------------------------------------------------#
+#-------------------------------------------------------------------#
+#              Percent Forest ~ Cavity Nester Richness              #
+#-------------------------------------------------------------------#
 
 #Clear environment
 rm(list=ls())
