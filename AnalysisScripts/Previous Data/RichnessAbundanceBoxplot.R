@@ -26,13 +26,16 @@ BA$Period <- factor(BA$Period,c("EarlyMay","LateMay","June","July","August"))
 #the contrast letters go medium, high, low instead of low, medium, high
 #####If the letters are in the wrong order, is there a way to fix it?
 #####How did you determine these letters?
+#####In SAS.
 #####Why do you have to make the second dataframe?
+#####Formatting contrast letters.
 contrast<-c("a","b","a","b","b","a","ab","b","a","ab","b","a","b","b","a")
 contrast.df <- data.frame(contrast=contrast)
 contrast.df$PlantDiversity <- rep(c("LowDiversity", "MediumDiversity", "HighDiversity"), 5)
 contrast.df$Period<-rep(c("EarlyMay","LateMay","June","July","August"), each=3)
 contrast.df$Abundance <- 1
 #####Abundance = 1? Why?
+#####Keeps letters at the bottom.
 
 #Plot Sampling Period vs. Bee Species Richness with Plant Diversity as fill
 ggplot(data = BA, aes(x = Period, y = Abundance, fill = PlantDiversity)) +

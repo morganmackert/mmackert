@@ -16,6 +16,7 @@ library(ggplot2)
 #Read in the data
 et <- read.csv("ETrap_Bees.csv")
 #####How is "BareGround" calculated? Is it the average of all quadrats?
+#####YA
 
 #Year column in "et" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.list <- as.numeric(et$Year)
@@ -38,6 +39,7 @@ model2=lm(et$Ind~0+et$BareGround)
 summary(model2)
 abline(model2, lty="dotted")
 #####Is the second model forcing the intercept through zero? How do you know you need to have this?
+#####Yes, force the intercept through zero. Looks at 0% bare ground and 0 bees.
 
 #Model for bee abundance predicted by bare ground
 BGonBA <- lm(Ind ~ BareGround, data = et)
@@ -65,6 +67,11 @@ rm(list=ls())
 
 #Read in data
 nq <- read.csv("New_Bees_Format.csv")
+#####Floral index in this data set DOES include weed species as well as forbs.
+#####PercentCover in "New_Bees_Format.csv" is the average floral coverage for all 40 quadrats in year 1; all 50 in year 2.
+#####For example: McClellan Year 1 (Site 9) had 0.3% coverage in all ten quadrats during the first sample of the year and nothing beyond that, so the average over all 4 samples is 0.3/4=0.075.
+#####Quadrats in "New_Bees_Format.csv" is the proportion of quadrats over the entire year that contained blooming species.
+#####For example: McClellan Year 1 (Site 9) had 1 quadrat during the entire year with anything blooming, so the proportion would be 1/40=0.025.
 
 #Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.list<-as.numeric(nq$Year)
@@ -93,7 +100,9 @@ coef(BSonBA)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
 #####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
+#####Average coverage!
 #####What is "Frequency of Blooming Species"?
+#####Frequency = Percent Coverage
 ggplot(nq, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 123.5586, slope = 297.5132) +
@@ -244,8 +253,10 @@ ggplot(cn, aes(x = PercentForest, y = CavityNesters)) +
 cor.test(cn$PercentForest, cn$CavityNesters, method = "spearman")
 #####Throws warning: Cannot compute exact p-value with ties
 #####How to interpret these results?
+#####Interpret p-value regardless of warning; 0.1797 >> 0.05.
 
 #####Why do we need to plot the rank?
+#####Plot rank because Elkader pulled data in weird ways.
 plot(rank(cn$PercentForest), rank(cn$CavityNesters),
      xlab="Percent Forested Area in 1km Radius Rank", ylab="Cavity Nesting Specied Richness Rank",
      pch=c(pch.list),col='black')

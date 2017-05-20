@@ -13,8 +13,11 @@ library(grid)
 library(gridExtra)
 
 #####What does "Measure" column mean? Is that the average bee abundance for each category?
+#####"Measure" column is always referring to bees, whether abundance or richness.
 #####How did you calculate each column?
+#####Calculations came from "MeanandSD" code.
 #####What does this look like using plant diversity as a continuous variable rather than a categorical variable?
+#####Nothing.
 
 #-------------------------------------------------------------------#
 #                  Plant Diversity ~ Bee Abundance                  #
@@ -534,7 +537,7 @@ CPR$PlantDiversity <- factor(CPR$PlantDiversity, c("Low", "Medium", "High"))
 PDonCPRlimits <- aes(ymax = Measure + SE, ymin = Measure - SE)
 
 #Amy's plot: Plant Diversity vs. Cleptoparasite Richness
-p5<-ggplot(data=CPA,aes(x=factor(PlantDiversity),y=Measure))+
+p5<-ggplot(data=CPR,aes(x=factor(PlantDiversity),y=Measure))+
   geom_bar(stat="identity",position=position_dodge(0.9))+
   labs(x="Plant Diversity",y="Species Richness")+
   geom_errorbar(PDonCPRlimits,position=position_dodge(0.9),width=0.25)+
@@ -563,11 +566,12 @@ PDonCPR <- ggplot(data = CPR, aes(x = PlantDiversity, y = Measure)) +
 PDonCPR
 
 #Plot all of Amy's graphs in one figure
-grid.arrange(p1, p2, p3, p4, ncol=2)
+grid.arrange(p1, p2, p3, p4, p5, ncol=2)
 
 #Plot all of Morgan's graphs in one figure
-grid.arrange(PDonSGNR, PDonScGNR, PDonBBR, PDonCNR, ncol = 2)
-#Include PDonCPR upon receiving datafile
+grid.arrange(PDonSGNR, PDonScGNR, PDonBBR, PDonCNR, PDonCPR, ncol = 2)
+#####Include PDonCPR upon receiving datafile
+#####Done.
 
 #-------------------------------------------------------------------#
 #                     Chao1 Richness by Site                        #
@@ -578,9 +582,12 @@ rm(list=ls())
 
 #Read in data
 SiteChao <- read.csv("Bee_BarGraph_Site_Chao.csv")
+#####Both years combined for each site.
 
 #####How did you calculate Chao1 richness estimate?
+#####Look in ChaoRichnessEstimators.R file.
 #####Does this value include both years? What do the graphs look like if years one and two are separated?
+#####Yes, includes both years and all samples (Two in May 2015)
 
 #PlantDiversity column in "SiteChao" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
 SiteChao$PlantDiversity <- factor(SiteChao$PlantDiversity, c("Low", "Medium", "High"))

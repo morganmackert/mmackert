@@ -16,6 +16,7 @@ library(fossil)
 #Read in data
 Plunkett <- read.csv("Plunketts.csv")
 #####Do the numbers following the site names in the column headings correspond to sampling period?
+#####Numbers following site names correspond to sampling period for BOTH years.
 
 #Remove the first column (Site Code) and change "Plunkett" from data.frame to a matrix
 PlunkettMatrix <- as.matrix(Plunkett[,-1])
@@ -23,7 +24,9 @@ PlunkettMatrix <- as.matrix(Plunkett[,-1])
 #Use "spp.est" function to estimate species diversity
 spp.est(PlunkettMatrix, abund = TRUE)
 #####How is it possible to have 16.6 observed species?
+#####Because this is the estimate.
 #####Why do I get different results each time I run the function?
+#####Because it's an estimate.
 
 #-------------------------------------------------------------------#
 #                              Bowman                               #
@@ -107,9 +110,9 @@ spp.est(CretsingerMatrix)
 #                        Greving and Peckumn                        #
 #-------------------------------------------------------------------#
 
-#####Don't have this file!
 #Read in data
 GandP <- read.csv("Greving_Peckumn.csv")
+#####Columns labeled as "Greving" but include both sites.
 
 #Remove the first column (Site Code) and change "GandP" from data.frame to a matrix
 GandPMatrix <- as.matrix(GandP[,-1])
@@ -124,6 +127,8 @@ spp.est(GandPMatrix)
 #Read in data
 Low <- read.csv("LowDiversity.csv")
 #####What do these columns/values mean?
+#####Rows are bee species, columns correspond site and sample number.
+#####For example: Bowman7 is June 2015.
 
 #Remove the first column (Site Code) and change "Low" from data.frame to a matrix
 LowMatrix <- as.matrix(Low[,-1])

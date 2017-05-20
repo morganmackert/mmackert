@@ -17,6 +17,7 @@ library(vegan)
 #Read in data
 CPCS <- read.csv("Cleptoparasite_Chi_Square.csv")
 #####What do these columns (HP and HNP) and corresponding values mean?
+#####Host Present and Host Not Present
 
 #Create new vectors
 col1 <- c(1,4,1,5,1,1,1,4,2,2,3,1,1,1,1,1,2,1,1,1,1,1,1)
@@ -33,6 +34,8 @@ chisq.test(CPCS)
 
 GCCS <- read.csv("Guild_Contingency_Table.csv")
 #####What do the numbered rows mean?
+#####Numbers (1-7) are guilds
+#####1: Solitary ground nesters; 2: Social ground nesters, 3: Honeybees, 4: Bumblebees, 5: Cavity nesters, 6: Cleptoparasites, 7: Social parasites
 chisq.test(GCCS)
 #####Throws warning: Chi-squared approximation may be incorrect.
 
@@ -53,6 +56,7 @@ dat <- dat[,-1]
 ISDI <- diversity(dat, index = "invsimpson")
 ISDI
 #####Why do we use the inverse instead of the regular?
+#####Inverse means number of species. Double check this.
 
 #Provides Simpson's Diversity Indices
 SDI <- diversity(dat, index = "simpson")
