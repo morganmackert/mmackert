@@ -12,11 +12,10 @@ library(ggplot2)
 #-------------------------------------------------------------------#
 #                Percent Bare Ground ~ Bee Abundance                #
 #-------------------------------------------------------------------#
-
 #Read in the data
 et <- read.csv("ETrap_Bees.csv")
 #####How is "BareGround" calculated? Is it the average of all quadrats?
-#####YA
+#####Yes
 
 #Year column in "et" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.list <- as.numeric(et$Year)
@@ -61,7 +60,6 @@ ggplot(et, aes(x = BareGround, y = Ind)) +
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Abundance          #
 #-------------------------------------------------------------------#
-
 #Clear environment
 rm(list=ls())
 

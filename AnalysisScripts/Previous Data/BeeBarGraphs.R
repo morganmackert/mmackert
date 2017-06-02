@@ -22,10 +22,6 @@ library(gridExtra)
 #-------------------------------------------------------------------#
 #                  Plant Diversity ~ Bee Abundance                  #
 #-------------------------------------------------------------------#
-
-#Clear environment
-rm(list=ls())
-
 #Read in data
 bm <- read.csv("Bee_BarGraph_Abundance.csv")
 
