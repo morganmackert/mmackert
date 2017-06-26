@@ -20,20 +20,24 @@ ggiNEXT(out, type = 1, facet.var = "site")
 ggiNEXT(out, type = 1, facet.var = "site", grey = TRUE)
 ggiNEXT(out, type = 1, facet.var = "order")
 
-#Trying it out with previous data!
-#Read in the data
-Practice3 <- read_csv("C:/Users/Morgan/Desktop/Practice3.csv")
+#Trying it out with a subset of the previous data!
+#Set working directory and read in the data
+setwd("~/ISU/Project/mmackert/Data")
+PlunkettBowman <- read.csv("bees/working/PlunkettBowman.csv")
 #Data must be as a dataframe
-Practice3 <- as.data.frame(Practice3)
+PlunkettBowman <- as.data.frame(PlunkettBowman)
 #Need to change the rownames to the species rather than numbers
-Practice4 <- Practice3[,-1]
-rownames(Practice4) <- Practice3[,1]
+PlunkettBowman2 <- PlunkettBowman[,-1]
+rownames(PlunkettBowman2) <- PlunkettBowman[,1]
 #Check the dataframe out to make sure all is well
-str(Practice4)
+str(PlunkettBowman2)
 
 #RUN THE TEST
-out4 <- iNEXT(Practice4, q = c(0, 1, 2), datatype = "abundance")
+out4 <- iNEXT(PlunkettBowman2, q = c(0, 1, 2), datatype = "abundance")
 
 #Make pretty graphs
 ggiNEXT(out4, type = 1, facet.var = "site")
 ggiNEXT(out4, type = 1, facet.var = "order")
+
+#Now try it with the whole previous dataset!
+#Read in the data
