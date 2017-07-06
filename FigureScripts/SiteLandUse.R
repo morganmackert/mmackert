@@ -9,8 +9,8 @@ setwd("~/ISU/Project/mmackert/Data")
 #Load libraries
 library(ggplot2)
 library(plotly)
+#library(plyr)
 library(dplyr)
-library(tidyr)
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
@@ -343,42 +343,40 @@ PElandusepie
 FullLandUse <- read.csv("sites/FullLandUse.csv")
 
 #Figure out proportions of each land type per each site
-#Add new columns to FullLandUse dataframe
-FullLandUse$Sum <- NA
-FullLandUse$Proportion <- NA
-
 #Determine sum of land cover for each site 
 SumLandUse <- FullLandUse %>%
   group_by(Site) %>%
   summarise(TotalCoverage = sum(Coverage))
 
-#Insert summed values from SumLandUse into FullLandUse dataframe
-FullLandUse$Sum <- SumLandUse[match(FullLandUse$Site, SumLandUse$Site), 2]
+#Join these two datasets together
+FullLandUseJoined <- full_join(FullLandUse, SumLandUse, by = c("Site")) 
 
 #Determine proportions using new summed values
-FullLandUse$Proportion <- (FullLandUse$Coverage/FullLandUse$Sum)*100
+FullLandUseJoined$Proportion <- (FullLandUseJoined$Coverage/FullLandUseJoined$TotalCoverage)*100
 
 #Define specific colors for each land type
 barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed" = "gray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
 
 #Make graph of Land Coverage (km^2)
-Fulllandusebarcover <- ggplot(FullLandUse, aes(x = Site, y = Coverage, fill = LandType)) +
+Fulllandusebarcover <- ggplot(FullLandUseJoined, aes(x = Site, y = Coverage, fill = LandType)) +
   geom_bar(stat = "identity", color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(y = "Coverage (sq. km)")
+  labs(y = "Coverage (sq. km)") +
+  labs(fill = "Land Type")
 Fulllandusebarcover
 
 #Make graph of Land Coverage (%)
-Fulllandusebarprop <- ggplot(FullLandUse, aes(x = Site, y = Proportion, fill = LandType)) +
+Fulllandusebarprop <- ggplot(FullLandUseJoined, aes(x = Site, y = Proportion, fill = LandType)) +
   geom_bar(stat = "identity", color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(y = "Coverage (%)")
+  labs(y = "Coverage (%)") +
+  labs(fill = "Land Type")
 Fulllandusebarprop
