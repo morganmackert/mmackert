@@ -9,6 +9,8 @@ setwd("~/ISU/Project/mmackert/Data")
 #Load libraries
 library(ggplot2)
 library(plotly)
+library(dplyr)
+library(tidyr)
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
@@ -40,7 +42,7 @@ PLlandusebar
 
 #Create pie chart using Plotly
 #Establish color scheme for pie chart
-colors <- c('white', 'yellow', 'green', 'violet', 'gray', 'saddlebrown', 'olivedrab')
+colors <- c('white', 'yellow', 'darkgreen', 'violet', 'gray', 'saddlebrown', 'olivedrab')
 #Make the graph
 PLlandusepie <- plot_ly(PlunkettLandUse, labels = PlunkettLandUse$LandType, values = PlunkettLandUse$Coverage, type = 'pie',
              textposition = 'outside',
@@ -333,3 +335,50 @@ PElandusepie <- plot_ly(PeckumnLandUse, labels = PeckumnLandUse$LandType, values
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 PElandusepie
+
+#-------------------------------------------------------------------#
+#                        Stacked Bar Graph                          #
+#-------------------------------------------------------------------#
+#Read in data
+FullLandUse <- read.csv("sites/FullLandUse.csv")
+
+#Figure out proportions of each land type per each site
+#Add new columns to FullLandUse dataframe
+FullLandUse$Sum <- NA
+FullLandUse$Proportion <- NA
+
+#Determine sum of land cover for each site 
+SumLandUse <- FullLandUse %>%
+  group_by(Site) %>%
+  summarise(TotalCoverage = sum(Coverage))
+
+#Insert summed values from SumLandUse into FullLandUse dataframe
+FullLandUse$Sum <- SumLandUse[match(FullLandUse$Site, SumLandUse$Site), 2]
+
+#Determine proportions using new summed values
+FullLandUse$Proportion <- (FullLandUse$Coverage/FullLandUse$Sum)*100
+
+#Define specific colors for each land type
+barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed" = "gray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
+
+#Make graph of Land Coverage (km^2)
+Fulllandusebarcover <- ggplot(FullLandUse, aes(x = Site, y = Coverage, fill = LandType)) +
+  geom_bar(stat = "identity", color = "black") +
+  ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
+  theme_bw() +
+  scale_fill_manual(values = barcolors) +
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(y = "Coverage (sq. km)")
+Fulllandusebarcover
+
+#Make graph of Land Coverage (%)
+Fulllandusebarprop <- ggplot(FullLandUse, aes(x = Site, y = Proportion, fill = LandType)) +
+  geom_bar(stat = "identity", color = "black") +
+  ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
+  theme_bw() +
+  scale_fill_manual(values = barcolors) +
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(y = "Coverage (%)")
+Fulllandusebarprop

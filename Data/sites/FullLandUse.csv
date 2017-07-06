@@ -1,0 +1,57 @@
+Site,LandType,Coverage
+Plunkett,Undefined,1.329327
+Plunkett,Corn,14.237224
+Plunkett,Soybeans,4.69227
+Plunkett,Alfalfa,0.272142
+Plunkett,Developed,1.928025
+Plunkett,Deciduous Forest,2.389732
+Plunkett,Grass/Pasture,3.832494
+Bowman,Undefined,1.316326
+Bowman,Corn,9.779479
+Bowman,Soybeans,10.077941
+Bowman,Alfalfa,0.273246
+Bowman,Developed,1.327657
+Bowman,Deciduous Forest,2.528575
+Bowman,Grass/Pasture,2.969855
+Kaldenberg,Undefined,0.43751
+Kaldenberg,Corn,10.776119
+Kaldenberg,Soybeans,10.615634
+Kaldenberg,Alfalfa,0.148108
+Kaldenberg,Developed,1.626896
+Kaldenberg,Deciduous Forest,1.595831
+Kaldenberg,Grass/Pasture,3.072982
+McClellan,Undefined,0.199309
+McClellan,Corn,15.327814
+McClellan,Soybeans,9.400741
+McClellan,Alfalfa,0.200129
+McClellan,Developed,1.23275
+McClellan,Deciduous Forest,0.252336
+McClellan,Grass/Pasture,2.089757
+Sloan,Undefined,0.893368
+Sloan,Corn,13.867756
+Sloan,Soybeans,6.718266
+Sloan,Alfalfa,0.779203
+Sloan,Developed,1.256191
+Sloan,Deciduous Forest,1.050754
+Sloan,Grass/Pasture,3.70754
+Sheller,Undefined,0.369261
+Sheller,Corn,12.165824
+Sheller,Soybeans,12.617201
+Sheller,Alfalfa,0.182037
+Sheller,Developed,1.618443
+Sheller,Deciduous Forest,0.097706
+Sheller,Grass/Pasture,1.222769
+Cretsinger,Undefined,0.500841
+Cretsinger,Corn,12.041417
+Cretsinger,Soybeans,6.075854
+Cretsinger,Alfalfa,0.911216
+Cretsinger,Developed,0.970566
+Cretsinger,Deciduous Forest,0.894396
+Cretsinger,Grass/Pasture,6.878789
+Peckumn,Undefined,3.349677
+Peckumn,Corn,10.259109
+Peckumn,Soybeans,6.178287
+Peckumn,Alfalfa,0.304103
+Peckumn,Developed,1.40095
+Peckumn,Deciduous Forest,3.583871
+Peckumn,Grass/Pasture,3.197082

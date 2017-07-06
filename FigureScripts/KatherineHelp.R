@@ -4,7 +4,7 @@
 
 #Set working directory; depends on which computer
 #Personal:
-setwd("~/ISU/Project/Data/Bees")
+setwd("~/ISU/Project/mmackert/Data")
 #Lab:
 setwd("C:/Users/mmackert/Box Sync/Project/Data/Bees")
 
@@ -12,7 +12,10 @@ setwd("C:/Users/mmackert/Box Sync/Project/Data/Bees")
 library(ggplot2)
 
 #Read in the data
-beefamilies <- read.csv("2016 Bee IDs.csv")
+beefamilies <- read.csv("bees/working/BeeIDs2016.csv")
+
+#Data file is imported with a bunch of empty columns. Cut them off.
+beefamilies <- beefamilies[,-(10:29)]
 
 #Create a table to visualize the data
 table(beefamilies$Family)
