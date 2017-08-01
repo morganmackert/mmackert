@@ -1,5 +1,5 @@
 #####################################################################
-#                             REGRESSIONS                           #
+#                           REGRESSIONS                             #
 #####################################################################
 
 #Clear environment and set working directory
@@ -48,7 +48,7 @@ summary(BGonBA)
 coef(BGonBA)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
-ggplot(et, aes(x = BareGround, y = Ind)) +
+BGonBAplot <- ggplot(et, aes(x = BareGround, y = Ind)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = -0.7025809, slope = 0.3164081) +
   theme_bw() +
@@ -56,6 +56,7 @@ ggplot(et, aes(x = BareGround, y = Ind)) +
   ggtitle("Influence of Bare Ground \non Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
+BGonBAplot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Abundance          #
@@ -101,7 +102,7 @@ coef(BSonBA)
 #####Average coverage!
 #####What is "Frequency of Blooming Species"?
 #####Frequency = Percent Coverage
-ggplot(nq, aes(x = Quadrats, y = TotalAbundance)) +
+BSonBAplot <- ggplot(nq, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 123.5586, slope = 297.5132) +
   theme_bw() +
@@ -109,6 +110,7 @@ ggplot(nq, aes(x = Quadrats, y = TotalAbundance)) +
   ggtitle("Influence of Blooming Forb and Weed Species on Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
+BSonBAplot
 
 #-------------------------------------------------------------------#
 #             Quadrats and Percent Forest ~ Bee Abundance           #
@@ -152,6 +154,7 @@ PFQonBAplot <- with(bee, {
                 ylab = "Percent Forest Coverage",
                 zlab = "Bee Abundance")
 })
+PFQonBAplot
 
 #Add in a plane to 3D scatterplot
 PFQonBAplot$plane3d(lm(bee$TotalAbundance ~ bee$Quadrats + bee$PercentForest))
@@ -192,7 +195,7 @@ summary(PFonCNA)
 coef(PFonCNA)
 
 #Morgan's plot: Percent Forest Coverage vs. Cavity Nesting Bee Abundance plot using ggplot2
-ggplot(pf, aes(x = PercentForest, y = CavityNesters)) +
+PFonCNAplot <- ggplot(pf, aes(x = PercentForest, y = CavityNesters)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 12.8147487, slope = 0.2660526) +
   theme_bw() +
@@ -200,6 +203,7 @@ ggplot(pf, aes(x = PercentForest, y = CavityNesters)) +
   ggtitle("Influence of Forest Coverage on \nCavity Nesting Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
+PFonCNAplot
 
 #-------------------------------------------------------------------#
 #              Percent Forest ~ Cavity Nester Richness              #
@@ -237,7 +241,7 @@ summary(PFonCNR)
 coef(PFonCNR)
 
 #Morgan's plot: Percent Forest Coverage vs. Cavity Nesting Bee Richness
-ggplot(cn, aes(x = PercentForest, y = CavityNesters)) +
+PFonCNRplot <- ggplot(cn, aes(x = PercentForest, y = CavityNesters)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 3.62212627, slope = 0.09367731) +
   theme_bw() +
@@ -245,7 +249,7 @@ ggplot(cn, aes(x = PercentForest, y = CavityNesters)) +
   ggtitle("Influence of Forest Coverage on \nCavity Nesting Bee Richness") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-
+PFonCNRplot
 
 #Scatterplot of Percent Forest Coverage vs. Cavity Nesting Bee Richness
 cor.test(cn$PercentForest, cn$CavityNesters, method = "spearman")

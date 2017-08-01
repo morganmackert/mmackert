@@ -2,17 +2,18 @@
 ################### BEES #####################
 ##############################################
 
-#Set working directory; depends on which computer
+#Clear environment and set working directory
 #Personal:
+rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
-#Lab:
-setwd("C:/Users/mmackert/Box Sync/Project/Data/Bees")
 
 #Load libraries
 library(ggplot2)
 
 #Read in the data
 beefamilies <- read.csv("bees/working/BeeIDs2016.csv")
+simplebees <- read.csv("R Class/bees/working/simplebees.csv")
+simpleplants <- read.csv("R Class/plants/working/simpleplants.csv")
 
 #Data file is imported with a bunch of empty columns. Cut them off.
 beefamilies <- beefamilies[,-(10:29)]
@@ -21,10 +22,12 @@ beefamilies <- beefamilies[,-(10:29)]
 table(beefamilies$Family)
 
 #Andrendidae -> Andrenidae
+#This step not necessary any longer; fixed the typo in the original datasheet
 beefamilies$Family[beefamilies$Family == "Andrendidae"] <- "Andrenidae"
 
 #Determine proportions of each family compared to the total
 proportions <- table(beefamilies$Family)/sum(table(beefamilies$Family))
+proportions
 
 #Create bar graph of family count data
 ggplot(beefamilies, aes(x = Family)) + 
@@ -87,7 +90,7 @@ plantsbysitedate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
 plantsbysitedate
 
 ##############################################
-################## PLANTS ####################
+#                    PLANTS                  #
 ##############################################
 
 #Set working directory; depends on which computer

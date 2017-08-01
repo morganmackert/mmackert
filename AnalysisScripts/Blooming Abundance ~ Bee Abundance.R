@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Abundance          #
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
 #Clear environment and set working directory
@@ -13,6 +13,20 @@ nqAM <- read.csv("Moorhouse Full data set.csv")
 #####For example: McClellan Year 1 (Site 9) had 0.3% coverage in all ten quadrats during the first sample of the year and nothing beyond that, so the average over all 4 samples is 0.3/4=0.075.
 #####Quadrats in "New_Bees_Format.csv" is the proportion of quadrats over the entire year that contained blooming species.
 #####For example: McClellan Year 1 (Site 9) had 1 quadrat during the entire year with anything blooming, so the proportion would be 1/40=0.025.
+
+#Date = Date of sample
+#Site = Site name
+#Sampling = Sample period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016
+#Quadrats = Combined coverage of blooming forb/weed species in ten quadrats
+#SppBloomQ = Number of forb/weed species in bloom within ten quadrats
+#BareGround = Average bare ground coverage in ten quadrats
+#TotalAbundance = Total number of bees collected
+#Total.Genus.Richness = Total number of bee genera collected
+#Total.Species.Richness = Total number of bee species collected
+#Following species names correspond to number of individuals collected of that species
+
+##### REMOVE ONE OF EARLY MAY NEAL SMITH SAMPLES??? #####
 
 #Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.listAM <- as.numeric(nqAM$Year)
@@ -33,29 +47,25 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelAM)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBAAM <- lm(TotalAbundance ~ Quadrats, data = nqAM)
-summary(BSonBAAM)
+BAonBAAM <- lm(TotalAbundance ~ Quadrats, data = nqAM)
+summary(BAonBAAM)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBAAM)
+coef(BAonBAAM)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
-BSonBAAMplot <- ggplot(nqAM, aes(x = Quadrats, y = TotalAbundance)) +
+BAonBAAMplot <- ggplot(nqAM, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 54.003745, slope = 0.221903) +
   theme_bw() +
-  labs(x = "Frequency of Blooming Species", y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BSonBAAMplot
+BAonBAAMplot
 
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Abundance          #
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Year 3                                #
 #-------------------------------------------------------------------#
 #Clear environment and set working directory
@@ -83,29 +93,25 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelMMM)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBAMMM <- lm(TotalAbundance ~ Quadrats, data = nqMMM)
-summary(BSonBAMMM)
+BAonBAMMM <- lm(TotalAbundance ~ Quadrats, data = nqMMM)
+summary(BAonBAMMM)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBAMMM)
+coef(BAonBAMMM)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
-BSonBAMMMplot <- ggplot(nqMMM, aes(x = Quadrats, y = TotalAbundance)) +
+BAonBAMMMplot <- ggplot(nqMMM, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 36.577611, slope = 3.246725) +
   theme_bw() +
-  labs(x = "Frequency of Blooming Species", y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BSonBAMMMplot
+BAonBAMMMplot
 
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Abundance          #
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 #Clear environment
@@ -133,23 +139,19 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBAfull <- lm(TotalAbundance ~ Quadrats, data = nqfull)
-summary(BSonBAfull)
+BAonBAfull <- lm(TotalAbundance ~ Quadrats, data = nqfull)
+summary(BAonBAfull)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBAfull)
+coef(BAonBAfull)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
-BSonBAfullplot <- ggplot(nqfull, aes(x = Quadrats, y = TotalAbundance)) +
+BAonBAfullplot <- ggplot(nqfull, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 45.239054, slope = 1.801929) +
   theme_bw() +
-  labs(x = "Frequency of Blooming Species", y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BSonBAfullplot
+BAonBAfullplot

@@ -1,5 +1,5 @@
 ##############################################
-################## PLANTS ####################
+#                   PLANTS                   #
 ##############################################
 
 #Set working directory; depends on which computer
@@ -36,12 +36,3 @@ plantsbysitedate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
   theme_bw() +
   labs(y = "Number of Species")
 plantsbysitedate
-
-
-
-
-
-
-
-
-
