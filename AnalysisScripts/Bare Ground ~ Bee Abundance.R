@@ -2,10 +2,8 @@
 #                Percent Bare Ground ~ Bee Abundance                #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
-#Clear environment
+#Clear environment and set working directory
 rm(list=ls())
-
-#Set working directory
 setwd("~/ISU/Project/mmackert/Data")
 
 #Read in the data
