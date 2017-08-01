@@ -15,9 +15,11 @@ library(gridExtra)
 #####What does "Measure" column mean? Is that the average bee abundance for each category?
 #####"Measure" column is always referring to bees, whether abundance or richness.
 #####How did you calculate each column?
-#####Calculations came from "MeanandSD" code.
+#####Calculations came from "MeanandSD.R" code.
 #####What does this look like using plant diversity as a continuous variable rather than a categorical variable?
 #####Nothing.
+
+#####MUST CLEAR ENVIRONMENT BETWEEN EACH GRAPH
 
 #-------------------------------------------------------------------#
 #                  Plant Diversity ~ Bee Abundance                  #
@@ -25,7 +27,7 @@ library(gridExtra)
 #Read in data
 bm <- read.csv("Bee_BarGraph_Abundance.csv")
 
-#PlantDiversity column in "bm" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+#Set PlantDiversity column as a factor
 bm$PlantDiversity <- factor(bm$PlantDiversity, c("Low", "Medium", "High"))
 
 #Create values for error bars
@@ -69,7 +71,7 @@ rm(list=ls())
 #Read in data
 br <- read.csv("Bee_BarGraph_Richness.csv")
 
-#PlantDiversity column in "br" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+#Set PlantDiversity column as a factor
 br$PlantDiversity <- factor(br$PlantDiversity, c("Low", "Medium", "High"))
 
 #Create values for error bars
@@ -113,7 +115,7 @@ rm(list=ls())
 #Read in data
 SGNA <- read.csv("Bee_BarGraph_Solitary_Abundance.csv")
 
-#PlantDiversity column in "SGNA" dataframe is brought in as High, Low, Medium; change order to Low, Medium, High.
+#Set PlantDiversity column as a factor
 SGNA$PlantDiversity <- factor(SGNA$PlantDiversity, c("Low", "Medium", "High"))
 
 #Create values for error bars

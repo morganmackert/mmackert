@@ -16,7 +16,7 @@ library(plotrix)
 #####Where did the numbers come from?
 
 #Treatment 1
-#####Mean numbers are abundance of all bees across all low diversity sites for the year.
+#####Numbers are abundance of all bees across all low diversity sites for the year.
 #####121 = Bowman Year 1... 38 = Bowman Year 2...
 mean(c(121,200,160,38,119,192))
 std.error(c(121,200,160,38,119,192))

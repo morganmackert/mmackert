@@ -9,6 +9,12 @@ setwd("~/ISU/Project/Previous Data/Data Files")
 #Load libraries
 library(fossil)
 
+#####Function "spp.est" returns a table: N.obs = Total sample size, S.obs = Number of observed species, Chao1 = Chao Species Estimation, ACE = Abundance-based Coverage Estimator, Jack1 = First Order Jacknife Estimator.
+
+#####What is Chao1??
+#"Chao1 estimates total species richness as SChao = Sobs + (n1^2/(2*n2)), where Sobs is the number of observed species, n1 is the number of singletons (species captured once), and n2 is the number of doubletons (species captured twice). Chao noted that this index is particularly useful for data sets skewed toward the low-abundance classes."
+#(Hughes, Jennifer B. et al. “Counting the Uncountable: Statistical Approaches to  Estimating Microbial Diversity.” Applied and Environmental Microbiology 67.10 (2001): 4399–4406. PMC. Web. 1 Aug. 2017.)
+
 #-------------------------------------------------------------------#
 #                              Plunkett                             #
 #-------------------------------------------------------------------#
@@ -18,7 +24,7 @@ Plunkett <- read.csv("Plunketts.csv")
 #####Do the numbers following the site names in the column headings correspond to sampling period?
 #####Numbers following site names correspond to sampling period for BOTH years.
 
-#Remove the first column (Site Code) and change "Plunkett" from data.frame to a matrix
+#Remove the first column (Site.Code) and change "Plunkett" from data.frame to a matrix
 PlunkettMatrix <- as.matrix(Plunkett[,-1])
 
 #Use "spp.est" function to estimate species diversity
@@ -128,13 +134,14 @@ spp.est(GandPMatrix)
 Low <- read.csv("LowDiversity.csv")
 #####What do these columns/values mean?
 #####Rows are bee species, columns correspond site and sample number.
-#####For example: Bowman7 is June 2015.
+#####For example: Bowman7 is the seventh sample, so June 2015.
 
 #Remove the first column (Site Code) and change "Low" from data.frame to a matrix
 LowMatrix <- as.matrix(Low[,-1])
 
 #Use "spp.est" function to estimate species diversity
 spp.est(LowMatrix)
+#Throws warning stating that the data seems to be presence/absence; we don't need to worry about this because it IS abundance data.
 
 #-------------------------------------------------------------------#
 #                          Medium Diversity                         #
