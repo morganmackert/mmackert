@@ -24,10 +24,12 @@ PLsoils <- soils[49:56, ]
 
 #Create Plunkett ternary diagram 
 PLsoilstern <- ggtern(data = PLsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#FFFF33") +
   ggtitle("Plunkett Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 PLsoilstern
 
 #-------------------------------------------------------------------#
@@ -38,10 +40,12 @@ BOsoils <- soils[33:40, ]
 
 #Create Bowman ternary diagram 
 BOsoilstern <- ggtern(data = BOsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#E41A1C") +
   ggtitle("Bowman Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 BOsoilstern
 
 #-------------------------------------------------------------------#
@@ -52,10 +56,12 @@ KAsoils <- soils[1:8, ]
 
 #Create Kaldenberg ternary diagram 
 KAsoilstern <- ggtern(data = KAsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#4DAF4A") +
   ggtitle("Kaldenberg Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 KAsoilstern
 
 #-------------------------------------------------------------------#
@@ -66,10 +72,12 @@ MCsoils <- soils[17:24, ]
 
 #Create McClellan ternary diagram 
 MCsoilstern <- ggtern(data = MCsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#984EA3") +
   ggtitle("McClellan Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 MCsoilstern
 
 #-------------------------------------------------------------------#
@@ -80,10 +88,12 @@ SLsoils <- soils[57:64, ]
 
 #Create Sloan ternary diagram 
 SLsoilstern <- ggtern(data = SLsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#F781BF") +
   ggtitle("Sloan Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 SLsoilstern
 
 #-------------------------------------------------------------------#
@@ -94,10 +104,12 @@ SHsoils <- soils[41:48, ]
 
 #Create Sheller ternary diagram 
 SHsoilstern <- ggtern(data = SHsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#A65628") +
   ggtitle("Sheller Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 SHsoilstern
 
 #-------------------------------------------------------------------#
@@ -108,10 +120,12 @@ CRsoils <- soils[9:16, ]
 
 #Create Cretsinger ternary diagram 
 CRsoilstern <- ggtern(data = CRsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#377EB8") +
   ggtitle("Cretsinger Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15))
 CRsoilstern
 
 #-------------------------------------------------------------------#
@@ -122,24 +136,33 @@ PEsoils <- soils[25:32, ]
 
 #Create Peckumn ternary diagram 
 PEsoilstern <- ggtern(data = PEsoils, aes(Sand, Silt, Clay)) +
-  geom_point() +
+  geom_point(shape = 21, size = 3, fill = "#FF7F00") +
   ggtitle("Peckumn Soil Composition") +
   theme_bw() +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.position = "none") +
+  theme(text = element_text(size = 15)) +
+  theme_showarrows()
+PEsoilstern
 
 #-------------------------------------------------------------------#
 #                                Full                               #
 #-------------------------------------------------------------------#
-
-#Define specific colors for each site
-#This hasn't worked yet...
-sitecolors <- c("Plunkett" = "red", "Bowman" = "orange", "Kaldenberg" = "yellow", "McClellan" = "green", "Sloan" = "blue", "Sheller" = "white", "Cretsinger" = "violet", "Peckumn" = "black")
+#Set "sitecolors" to be "Set1" from color brewer; makes formatting the legend easier
+sitecolors <- RColorBrewer::brewer.pal(8, "Set1")
 
 #Create full ternary diagram colored by site
 fullsoilstern <- ggtern(data = soils, aes(Sand, Silt, Clay)) +
-  geom_point(aes(fill = Site, color = "sitecolors"), stat = "identity", color = "black") +
+  geom_point(aes(color = Site), size = 3) +
+  geom_point(shape = 21, size = 3, color = "black") +
+  ggtitle("Soil Composition of All Sites") +
   theme_bw() +
-  scale_color_manual(values = sitecolors) +
-  ggtitle("Full Soil Composition") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5))
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.75)) +
+  theme(plot.title = element_text(size = 22, face = "bold", hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21, fill = sitecolors, color = "black"))) +
+  scale_color_manual(values = sitecolors)
 fullsoilstern
