@@ -14,7 +14,6 @@ library(dplyr)
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
 #-------------------------------------------------------------------#
-
 #Read in data
 PlunkettLandUse <- read.csv("sites/PlunkettLandUse.csv")
 
