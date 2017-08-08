@@ -6,7 +6,7 @@
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
 
-#Read in the data
+#Read in data
 etAM <- read.csv("ETrap_Bees.csv")
 #Site = Site name
 #Year = Year of study 

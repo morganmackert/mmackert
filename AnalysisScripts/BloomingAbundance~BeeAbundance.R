@@ -27,6 +27,7 @@ nqAM <- read.csv("Moorhouse Full data set.csv")
 #Following species names correspond to number of individuals collected of that species
 
 ##### REMOVE ONE OF EARLY MAY NEAL SMITH SAMPLES??? #####
+##### Try analyzing both ways
 
 #Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.listAM <- as.numeric(nqAM$Year)
