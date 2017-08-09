@@ -27,6 +27,7 @@ PLsoilstern <- ggtern(data = PLsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#FFFF33") +
   ggtitle("Plunkett Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -43,6 +44,7 @@ BOsoilstern <- ggtern(data = BOsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#E41A1C") +
   ggtitle("Bowman Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -59,6 +61,7 @@ KAsoilstern <- ggtern(data = KAsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#4DAF4A") +
   ggtitle("Kaldenberg Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -75,6 +78,7 @@ MCsoilstern <- ggtern(data = MCsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#984EA3") +
   ggtitle("McClellan Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -91,6 +95,7 @@ SLsoilstern <- ggtern(data = SLsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#F781BF") +
   ggtitle("Sloan Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -107,6 +112,7 @@ SHsoilstern <- ggtern(data = SHsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#A65628") +
   ggtitle("Sheller Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -123,6 +129,7 @@ CRsoilstern <- ggtern(data = CRsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#377EB8") +
   ggtitle("Cretsinger Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15))
@@ -139,6 +146,7 @@ PEsoilstern <- ggtern(data = PEsoils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, fill = "#FF7F00") +
   ggtitle("Peckumn Soil Composition") +
   theme_bw() +
+  theme_showarrows() +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.position = "none") +
   theme(text = element_text(size = 15)) +
@@ -157,10 +165,11 @@ fullsoilstern <- ggtern(data = soils, aes(Sand, Silt, Clay)) +
   geom_point(shape = 21, size = 3, color = "black") +
   ggtitle("Soil Composition of All Sites") +
   theme_bw() +
+  theme_showarrows() +
   theme(legend.title = element_text(size = 16),
         legend.title.align = 0.5,
         legend.text = element_text(size = 12),
-        legend.position = c(0.85, 0.75)) +
+        legend.position = c(0.85, 0.80)) +
   theme(plot.title = element_text(size = 22, face = "bold", hjust = 0.5)) +
   theme(text = element_text(size = 15)) +
   guides(color = guide_legend(override.aes = list(shape = 21, fill = sitecolors, color = "black"))) +
