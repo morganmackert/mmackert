@@ -263,6 +263,7 @@ fullsoilsbar <- ggplot(soilsbarjoined,
                                   hjust = 0.5)) +
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1)) +
+  theme(legend.title.align = 0.5) +
   labs(y = "Composition (%)",
        fill = "Soil Type")
 fullsoilsbar

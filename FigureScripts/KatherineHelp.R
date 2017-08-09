@@ -3,7 +3,6 @@
 ##############################################
 
 #Clear environment and set working directory
-#Personal:
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
 
@@ -41,40 +40,60 @@ ggplot(beefamilies, aes(x = Family)) +
 #Create bar graph of family count data with bars broken up by site
 #This one is the best
 #OMG SO COOL
-ggplot(beefamilies, aes(x = Family, fill = Site)) + 
+beefamilyhist <- ggplot(data = beefamilies,
+       aes(x = Family, fill = Site)) + 
   geom_bar(color = "black") +
   ggtitle("Abundance of Bee Families by Site") +
   theme_bw() +
   theme(legend.key.size = unit(1, "cm")) +
-  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
-  theme(axis.title = element_text(size = 16, face = "bold")) +
-  theme(axis.text.x = element_text(size = 14, angle = 45, hjust = 1)) +
-  theme(axis.text.y = element_text(size = 12, margin = margin(0, 0, 0, 10))) +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.title = element_text(size = 16,
+                                  face = "bold")) +
+  theme(axis.text.x = element_text(size = 14,
+                                   angle = 45,
+                                   hjust = 1)) +
+  theme(axis.text.y = element_text(size = 12,
+                                   margin = margin(0, 0, 0, 10))) +
+  theme(legend.title.align = 0.5) +
   labs(y = "Count")
-
+beefamilyhist
+  
 #########################################################################################
 #Total bees by date (point)
-beesbysite <- ggplot(simplebees, aes(x = Date, y = TotalBees)) + 
-  geom_point(shape = 19, size = 2) + 
+beesbysite <- ggplot(simplebees,
+                     aes(x = Date, y = TotalBees)) + 
+  geom_point(shape = 19,
+             size = 2) + 
   geom_smooth(method = lm) +
   ggtitle("Bee Abundance by Date") +
-  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  margin = margin(10, 0, 10, 0))) +
   theme_bw() +
-  labs(x = "Date", y = "Number of Individuals")
+  labs(x = "Date",
+       y = "Number of Individuals")
 beesbysite
 
 #Total plants by date (point)
-plantsbysite <- ggplot(simpleplants, aes(x = Date, y = TotalPlants)) +
-  geom_point(shape = 19, size = 2) +
+plantsbysite <- ggplot(simpleplants,
+                       aes(x = Date, y = TotalPlants)) +
+  geom_point(shape = 19,
+             size = 2) +
   geom_smooth(method = lm)+
   ggtitle("Blooming Forb Richness by Date") +
-  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  margin = margin(10, 0, 10, 0))) +
   theme_bw() +
-  labs(x = "Date", y = "Number of Species")
+  labs(x = "Date",
+       y = "Number of Species")
 plantsbysite
 
 #Total bees by site (line) and by date
-beesbysitedate <- ggplot(summarybees, aes(x = Date, y = total.bees)) +
+beesbysitedate <- ggplot(summarybees,
+                         aes(x = Date, y = total.bees)) +
   geom_line(aes(color = Site)) +
   ggtitle("Bee Abundance by Date and Site") +
   theme_bw() +
@@ -82,7 +101,8 @@ beesbysitedate <- ggplot(summarybees, aes(x = Date, y = total.bees)) +
 beesbysitedate
 
 #Blooming forb richness by site (line) and by date
-plantsbysitedate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
+plantsbysitedate <- ggplot(plants,
+                           aes(x = Date, y = TotalPlants)) +
   geom_line(aes(color = Site)) +
   ggtitle("Blooming Forb Richness by Site and Date") +
   theme_bw() +
@@ -111,20 +131,25 @@ plants <- read.csv("simpleplants.csv")
 plants$Date <- mdy(plants$Date)
 
 #Plot total number of blooming forb species as points organized by date
-plantsbydate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
-  geom_point(shape = 19, size = 2) +
+plantsbydate <- ggplot(plants,
+                       aes(x = Date, y = TotalPlants)) +
+  geom_point(shape = 19,
+             size = 2) +
   geom_smooth(method = lm)+
   ggtitle("Blooming Forb Richness by Date") +
   theme_bw() +
-  theme(plot.title = element_text(size = 20, face = "bold", margin = margin(10, 0, 10, 0))) +
-  labs(x = "Date", y = "Number of Species")
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  margin = margin(10, 0, 10, 0))) +
+  labs(x = "Date",
+       y = "Number of Species")
 plantsbydate
 
 #Plot total number of blooming forb species as lines (sites) organized by date
-plantsbysitedate <- ggplot(plants, aes(x = Date, y = TotalPlants)) +
+plantsbysitedate <- ggplot(plants,
+                           aes(x = Date, y = TotalPlants)) +
   geom_line(aes(color = Site)) +
   ggtitle("Blooming Forb Richness by Site and Date") +
   theme_bw() +
   labs(y = "Number of Species")
 plantsbysitedate
-
