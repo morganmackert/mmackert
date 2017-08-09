@@ -8,6 +8,9 @@
 #Visualize soil composition via ternary graphs (a la Cane 1991) of each site and all of the sites together
 #Compare soil composition to bee abundance and bee richness; significant differences?
 
+
+##### FIGURE OUT HOW TO INCLUDE DEPTH AS SHAPE IN TERNARY GRAPHS #####
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
