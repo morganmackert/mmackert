@@ -356,25 +356,37 @@ FullLandUseJoined$Proportion <- (FullLandUseJoined$Coverage/FullLandUseJoined$To
 barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed" = "gray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
 
 #Make graph of Land Coverage (km^2)
-Fulllandusebarcover <- ggplot(FullLandUseJoined, aes(x = Site, y = Coverage, fill = LandType)) +
-  geom_bar(stat = "identity", color = "black") +
+Fulllandusebarcover <- ggplot(FullLandUseJoined,
+                              aes(x = Site, y = Coverage, fill = LandType)) +
+  geom_bar(stat = "identity",
+           color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(y = "Coverage (sq. km)") +
-  labs(fill = "Land Type")
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1)) +
+  theme(legend.title.align = 0.5) +
+  labs(y = "Coverage (sq. km)",
+       fill = "Land Type")
 Fulllandusebarcover
 
 #Make graph of Land Coverage (%)
-Fulllandusebarprop <- ggplot(FullLandUseJoined, aes(x = Site, y = Proportion, fill = LandType)) +
-  geom_bar(stat = "identity", color = "black") +
+Fulllandusebarprop <- ggplot(FullLandUseJoined,
+                             aes(x = Site, y = Proportion, fill = LandType)) +
+  geom_bar(stat = "identity",
+           color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(y = "Coverage (%)") +
-  labs(fill = "Land Type")
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1)) +
+  theme(legend.title.align = 0.5) +
+  labs(y = "Coverage (%)",
+       fill = "Land Type")
 Fulllandusebarprop
