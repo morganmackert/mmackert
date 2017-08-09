@@ -2,6 +2,13 @@
 #                Percent Bare Ground ~ Bee Abundance                #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
+
+#Research Question: How does the presence/absence of bare ground within the strips influence bee abundance?
+
+#Objectives:
+#Create model(s) to explore relationship between bare ground abundance and bee abundance
+#Use created model(s) to visualize the relationship graphically
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")

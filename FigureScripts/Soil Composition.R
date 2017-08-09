@@ -2,6 +2,12 @@
 #                         SOIL COMPOSITION                          #
 #####################################################################
 
+#Research Question:  Does soil composition influence bee abundance/richness within the nesting plots?
+
+#Objectives:  
+#Visualize soil composition via ternary graphs (a la Cane 1991) of each site and all of the sites together
+#Compare soil composition to bee abundance and bee richness; significant differences?
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
@@ -15,6 +21,12 @@ soils <- read.csv("soil/Reduced Analysis Results.csv")
 
 #Rename columns in "Reduced Analysis Results"
 colnames(soils) <- c("Sample ID", "Site", "Beginning Depth", "Ending Depth", "Sand", "Silt", "Clay", "Texture")
+#Sample ID = the identification number and letter combination given to each sample before analysis
+#Site = Site name
+#Beginning Depth = the shallowest depth of each sample
+#Ending Depth = the deepest depth of each sample
+#Sand/Silt/Clay = Percentage of each soil type in the sample
+#Texture = soil classification for each sample
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #

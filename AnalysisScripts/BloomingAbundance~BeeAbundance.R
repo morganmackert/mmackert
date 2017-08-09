@@ -2,6 +2,13 @@
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
+
+#Research Question: How does blooming forb/weed abundance influence bee abundance?
+
+#Objectives:
+#Create model(s) to explore relationship between blooming forb/weed abundance and bee abundance
+#Use created model(s) to visualize the relationship graphically
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")

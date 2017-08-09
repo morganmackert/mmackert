@@ -2,6 +2,13 @@
 #           Blooming Forb and Weed Species ~ Bee Abundance          #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
+
+#Research Question: How does the number of blooming forb/weed species within the strip influence bee abundance?
+
+#Objectives:
+#Create model(s) to explore relationship between blooming forb/weed species richness and bee abundance
+#Use created model(s) to visualize the relationship graphically
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
