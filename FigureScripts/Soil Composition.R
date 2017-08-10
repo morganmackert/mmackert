@@ -23,7 +23,7 @@ library(ggtern)
 soils <- read.csv("soil/Reduced Analysis Results.csv")
 
 #Rename columns in "Reduced Analysis Results"
-colnames(soils) <- c("Sample ID", "Site", "Beginning Depth", "Ending Depth", "Sand", "Silt", "Clay", "Texture")
+colnames(soils) <- c("Sample ID", "Site", "Depth", "Sand", "Silt", "Clay", "Texture")
 #Sample ID = the identification number and letter combination given to each sample before analysis
 #Site = Site name
 #Beginning Depth = the shallowest depth of each sample
@@ -214,11 +214,11 @@ sitecolors <- RColorBrewer::brewer.pal(8, "Set1")
 
 #Create full ternary diagram colored by site
 fullsoilstern <- ggtern(data = soils,
-                        aes(Sand, Silt, Clay)) +
+                        aes(x = Sand, y = Silt, z = Clay)) +
   geom_point(aes(color = Site),
-                 size = 3) +
+                 size = 4) +
   geom_point(shape = 21,
-             size = 3,
+             size = 4,
              color = "black") +
   ggtitle("Soil Composition within Nesting Plots \nof All Sites") +
   theme_bw() +

@@ -1,65 +1,65 @@
-Sample ID,Site,B Depth,E Depth,% Sand,% Silt,% Clay,Texture
-KA1-1,Kaldenberg,0,6,17,53,30,Silty Clay Loam
-KA1-2,Kaldenberg,6,12,15,55,30,Silty Clay Loam
-KA1-3,Kaldenberg,12,24,17,57,26,Silt Loam
-KA1-4,Kaldenberg,24,36,19,57,24,Silt Loam
-KA2-1,Kaldenberg,0,6,24,54,22,Silt Loam
-KA2-2,Kaldenberg,6,12,23,53,24,Silt Loam
-KA2-3,Kaldenberg,12,24,20,58,22,Silt Loam
-KA2-4,Kaldenberg,24,36,21,57,22,Silt Loam
-CR1-1,Cretsinger,0,6,38,34,28,Clay Loam
-CR1-2,Cretsinger,6,12,43,29,28,Clay Loam
-CR1-3,Cretsinger,12,24,41,25,34,Clay Loam
-CR1-4,Cretsinger,24,36,45,21,34,Sandy Clay Loam
-CR2-1,Cretsinger,0,6,17,55,28,Silty Clay Loam
-CR2-2,Cretsinger,6,12,27,47,26,Loam
-CR2-3,Cretsinger,12,24,25,49,26,Loam
-CR2-4,Cretsinger,24,36,27,47,26,Loam
-MC1-1,McClellan,0,6,26,48,26,Loam
-MC1-2,McClellan,6,12,16,52,32,Silty Clay Loam
-MC1-3,McClellan,12,24,19,51,30,Silty Clay Loam
-MC1-4,McClellan,24,36,21,51,28,Clay Loam
-MC2-1,McClellan,0,6,19,53,28,Silty Clay Loam
-MC2-2,McClellan,6,12,16,52,32,Silty Clay Loam
-MC2-3,McClellan,12,24,17,55,28,Silty Clay Loam
-MC2-4,McClellan,24,36,14,59,27,Silt Loam
-PE1-1,Peckumn,0,6,34,43,23,Loam
-PE1-2,Peckumn,6,12,52,29,19,Loam
-PE1-3,Peckumn,12,24,52,29,19,Loam
-PE1-4,Peckumn,24,36,53,26,21,Sandy Clay Loam
-PE2-1,Peckumn,0,6,55,26,19,Sandy Loam
-PE2-2,Peckumn,6,12,59,28,13,Sandy Loam
-PE2-3,Peckumn,12,24,53,30,17,Sandy Loam
-PE2-4,Peckumn,24,36,53,32,15,Sandy Loam
-BO1-1,Bowman,0,6,56,30,14,Sandy Loam
-BO1-2,Bowman,6,12,58,26,16,Sandy Loam
-BO1-3,Bowman,12,24,48,30,22,Loam
-BO1-4,Bowman,24,36,58,28,14,Sandy Loam
-BO2-1,Bowman,0,6,56,24,20,Sandy Loam
-BO2-2,Bowman,6,12,54,24,22,Sandy Clay Loam
-BO2-3,Bowman,12,24,52,24,24,Sandy Clay Loam
-BO2-4,Bowman,24,36,57,25,18,Sandy Loam
-SH1-1,Sheller,0,6,37,41,22,Loam
-SH1-2,Sheller,6,12,23,53,24,Silt Loam
-SH1-3,Sheller,12,24,25,45,30,Clay Loam
-SH1-4,Sheller,24,36,23,47,30,Clay Loam
-SH2-1,Sheller,0,6,21,53,26,Silt Loam
-SH2-2,Sheller,6,12,27,49,24,Loam
-SH2-3,Sheller,12,24,29,45,26,Loam
-SH2-4,Sheller,24,36,23,45,32,Clay Loam
-PL1-1,Plunkett,0,6,67,19,14,Sandy Loam
-PL1-2,Plunkett,6,12,69,15,16,Sandy Loam
-PL1-3,Plunkett,12,24,63,19,18,Sandy Loam
-PL1-4,Plunkett,24,36,59,21,20,Sandy Clay Loam
-PL2-1,Plunkett,0,6,65,23,12,Sandy Loam
-PL2-2,Plunkett,6,12,64,20,16,Sandy Loam
-PL2-3,Plunkett,12,24,56,26,18,Sandy Loam
-PL2-4,Plunkett,24,36,59,25,16,Sandy Loam
-SL1-1,Sloan,0,6,78,14,8,Loamy Sand
-SL1-2,Sloan,6,12,75,15,10,Sandy Loam
-SL1-3,Sloan,12,24,72,18,10,Sandy Loam
-SL1-4,Sloan,24,36,73,15,12,Sandy Loam
-SL2-1,Sloan,0,6,63,23,14,Sandy Loam
-SL2-2,Sloan,6,12,59,25,16,Sandy Loam
-SL2-3,Sloan,12,24,57,25,18,Sandy Loam
-SL2-4,Sloan,24,36,61,17,22,Sandy Clay Loam
+Sample ID,Site,Depth,% Sand,% Silt,% Clay,Texture
+KA1-1,Kaldenberg,0 - 6,17,53,30,Silty Clay Loam
+KA1-2,Kaldenberg,6 - 12,15,55,30,Silty Clay Loam
+KA1-3,Kaldenberg,12 - 24,17,57,26,Silt Loam
+KA1-4,Kaldenberg,24 - 36,19,57,24,Silt Loam
+KA2-1,Kaldenberg,0 - 6,24,54,22,Silt Loam
+KA2-2,Kaldenberg,6 - 12,23,53,24,Silt Loam
+KA2-3,Kaldenberg,12 - 24,20,58,22,Silt Loam
+KA2-4,Kaldenberg,24 - 36,21,57,22,Silt Loam
+CR1-1,Cretsinger,0 - 6,38,34,28,Clay Loam
+CR1-2,Cretsinger,6 - 12,43,29,28,Clay Loam
+CR1-3,Cretsinger,12 - 24,41,25,34,Clay Loam
+CR1-4,Cretsinger,24 - 36,45,21,34,Sandy Clay Loam
+CR2-1,Cretsinger,0 - 6,17,55,28,Silty Clay Loam
+CR2-2,Cretsinger,6 - 12,27,47,26,Loam
+CR2-3,Cretsinger,12 - 24,25,49,26,Loam
+CR2-4,Cretsinger,24 - 36,27,47,26,Loam
+MC1-1,McClellan,0 - 6,26,48,26,Loam
+MC1-2,McClellan,6 - 12,16,52,32,Silty Clay Loam
+MC1-3,McClellan,12 - 24,19,51,30,Silty Clay Loam
+MC1-4,McClellan,24 - 36,21,51,28,Clay Loam
+MC2-1,McClellan,0 - 6,19,53,28,Silty Clay Loam
+MC2-2,McClellan,6 - 12,16,52,32,Silty Clay Loam
+MC2-3,McClellan,12 - 24,17,55,28,Silty Clay Loam
+MC2-4,McClellan,24 - 36,14,59,27,Silt Loam
+PE1-1,Peckumn,0 - 6,34,43,23,Loam
+PE1-2,Peckumn,6 - 12,52,29,19,Loam
+PE1-3,Peckumn,12 - 24,52,29,19,Loam
+PE1-4,Peckumn,24 - 36,53,26,21,Sandy Clay Loam
+PE2-1,Peckumn,0 - 6,55,26,19,Sandy Loam
+PE2-2,Peckumn,6 - 12,59,28,13,Sandy Loam
+PE2-3,Peckumn,12 - 24,53,30,17,Sandy Loam
+PE2-4,Peckumn,24 - 36,53,32,15,Sandy Loam
+BO1-1,Bowman,0 - 6,56,30,14,Sandy Loam
+BO1-2,Bowman,6 - 12,58,26,16,Sandy Loam
+BO1-3,Bowman,12 - 24,48,30,22,Loam
+BO1-4,Bowman,24 - 36,58,28,14,Sandy Loam
+BO2-1,Bowman,0 - 6,56,24,20,Sandy Loam
+BO2-2,Bowman,6 - 12,54,24,22,Sandy Clay Loam
+BO2-3,Bowman,12 - 24,52,24,24,Sandy Clay Loam
+BO2-4,Bowman,24 - 36,57,25,18,Sandy Loam
+SH1-1,Sheller,0 - 6,37,41,22,Loam
+SH1-2,Sheller,6 - 12,23,53,24,Silt Loam
+SH1-3,Sheller,12 - 24,25,45,30,Clay Loam
+SH1-4,Sheller,24 - 36,23,47,30,Clay Loam
+SH2-1,Sheller,0 - 6,21,53,26,Silt Loam
+SH2-2,Sheller,6 - 12,27,49,24,Loam
+SH2-3,Sheller,12 - 24,29,45,26,Loam
+SH2-4,Sheller,24 - 36,23,45,32,Clay Loam
+PL1-1,Plunkett,0 - 6,67,19,14,Sandy Loam
+PL1-2,Plunkett,6 - 12,69,15,16,Sandy Loam
+PL1-3,Plunkett,12 - 24,63,19,18,Sandy Loam
+PL1-4,Plunkett,24 - 36,59,21,20,Sandy Clay Loam
+PL2-1,Plunkett,0 - 6,65,23,12,Sandy Loam
+PL2-2,Plunkett,6 - 12,64,20,16,Sandy Loam
+PL2-3,Plunkett,12 - 24,56,26,18,Sandy Loam
+PL2-4,Plunkett,24 - 36,59,25,16,Sandy Loam
+SL1-1,Sloan,0 - 6,78,14,8,Loamy Sand
+SL1-2,Sloan,6 - 12,75,15,10,Sandy Loam
+SL1-3,Sloan,12 - 24,72,18,10,Sandy Loam
+SL1-4,Sloan,24 - 36,73,15,12,Sandy Loam
+SL2-1,Sloan,0 - 6,63,23,14,Sandy Loam
+SL2-2,Sloan,6 - 12,59,25,16,Sandy Loam
+SL2-3,Sloan,12 - 24,57,25,18,Sandy Loam
+SL2-4,Sloan,24 - 36,61,17,22,Sandy Clay Loam
