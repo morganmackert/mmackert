@@ -13,6 +13,9 @@
 rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
 
+#Load libraries
+library(ggplot2)
+
 #Read in data
 nqAM <- read.csv("Moorhouse Full data set.csv")
 #####Floral index in this data set DOES include weed species as well as forbs.
@@ -20,6 +23,10 @@ nqAM <- read.csv("Moorhouse Full data set.csv")
 #####For example: McClellan Year 1 (Site 9) had 0.3% coverage in all ten quadrats during the first sample of the year and nothing beyond that, so the average over all 4 samples is 0.3/4=0.075.
 #####Quadrats in "New_Bees_Format.csv" is the proportion of quadrats over the entire year that contained blooming species.
 #####For example: McClellan Year 1 (Site 9) had 1 quadrat during the entire year with anything blooming, so the proportion would be 1/40=0.025.
+#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
+#####Average coverage!
+#####What is "Frequency of Blooming Species"?
+#####Frequency = Percent Coverage
 
 #Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.listAM <- as.numeric(nqAM$Year)
@@ -47,10 +54,6 @@ summary(BSonBAAM)
 coef(BSonBAAM)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
 BSonBAAMplot <- ggplot(nqAM, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 54.003745, slope = 0.221903) +
@@ -97,10 +100,6 @@ summary(BSonBAMMM)
 coef(BSonBAMMM)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
 BSonBAMMMplot <- ggplot(nqMMM, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 36.577611, slope = 3.246725) +
@@ -147,10 +146,6 @@ summary(BSonBAfull)
 coef(BSonBAfull)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-#####What does "Quadrats" column depict exactly? Total coverage? Average coverage?
-#####Average coverage!
-#####What is "Frequency of Blooming Species"?
-#####Frequency = Percent Coverage
 BSonBAfullplot <- ggplot(nqfull, aes(x = Quadrats, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 45.239054, slope = 1.801929) +

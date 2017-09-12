@@ -40,29 +40,29 @@ bareground_averaged <- plants %>%
             Number_Quadrats = length(Percent_BareGround))
 
 # Join the two datasets together
-baregound_data <- full_join(bees_summarised, bareground_averaged, by = c("Date", "Site")) 
+bareground_data <- full_join(bees_summarised, bareground_averaged, by = c("Date", "Site")) 
 
 # Use lubridate to allow R to recognize the dates
-mdy(baregound_data$Date)
+mdy(bareground_data$Date)
 
 # Check to see how many dates per site (we find the Crestsinger has 6)
-baregound_data %>%
+bareground_data %>%
   group_by(Site) %>%
   summarise(count = n())
 
 # Dropped 8/5/2016 observation from Cretsinger (need to change to 7/27/2016)
-baregound_data <- baregound_data %>%
+bareground_data <- bareground_data %>%
   mutate(Site = as.factor(Site)) %>%
   filter(Date != "8/5/2016") %>%
   arrange(Site, Date)
 
 # Create a new variable for the sampling day
-baregound_data <- baregound_data %>% 
+bareground_data <- bareground_data %>% 
   group_by(Site) %>%
   mutate(Sampling_Day = as.factor(dense_rank(Date)))
 
 # Create an ID variable for site by sampling day
-baregound_data$Sample <- 1:40
+bareground_data$Sample <- 1:40
 
 
 ## ===================================================================================
@@ -70,22 +70,22 @@ baregound_data$Sample <- 1:40
 ## ===================================================================================
 
 # Plot of total bees versus average bare ground
-ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
+ggplot(bareground_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
   geom_point() 
 
 # Plot of total bees versus average bare ground faceted by site
-ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
+ggplot(bareground_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
   geom_point() + 
   facet_wrap( ~ Site)
 
 # Plot of total bees versus sampling day faceted by site
-ggplot(baregound_data, aes(x = as.numeric(Sampling_Day), y = Total_Bees, color = Site)) + 
+ggplot(bareground_data, aes(x = as.numeric(Sampling_Day), y = Total_Bees, color = Site)) + 
   geom_line() +
   geom_point() +
   facet_wrap( ~ Site)
 
 # Plot of total bees versus average bare ground faceted by sampling day and colored by site
-ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
+ggplot(bareground_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)) +
   geom_point( ) +
   facet_wrap( ~ Sampling_Day)
 
@@ -96,7 +96,7 @@ ggplot(baregound_data, aes(x = Average_BareGround, y = Total_Bees, color = Site)
 
 # Poisson mixed model with sampling day and bare ground as predictors
 fit <- glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + (1|Site),
-      data = baregound_data, family = poisson(link = "log"))
+      data = bareground_data, family = poisson(link = "log"))
 
 # Summary of model
 summary(fit)
@@ -130,12 +130,12 @@ sum(p^2)/df.residual(fit)
 # Attempt to fit a quasi-Poisson model
 q.fit <- glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + 
                  (1|Site),
-               data = baregound_data, family = quasipoisson(link = "log"))
+               data = bareground_data, family = quasipoisson(link = "log"))
 
 # Model with random effect for site and every sample
 r.fit <- glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + 
                  (1|Site) + (1|Sample),
-               data = baregound_data, family = poisson(link = "log"))
+               data = bareground_data, family = poisson(link = "log"))
 
 # Summary of model
 summary(r.fit)
