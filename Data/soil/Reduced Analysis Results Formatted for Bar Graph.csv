@@ -1,193 +1,193 @@
-Sample ID,Site,Soil Type,Percentage,Depth
-KA1-1,Kaldenberg,Sand,17,0 - 15
-KA1-1,Kaldenberg,Silt,53,0 - 15
-KA1-1,Kaldenberg,Clay,30,0 - 15
-KA1-2,Kaldenberg,Sand,15,15 - 30
-KA1-2,Kaldenberg,Silt,55,15 - 30
-KA1-2,Kaldenberg,Clay,30,15 - 30
-KA1-3,Kaldenberg,Sand,17,30 - 60
-KA1-3,Kaldenberg,Silt,57,30 - 60
-KA1-3,Kaldenberg,Clay,26,30 - 60
-KA1-4,Kaldenberg,Sand,19,60 - 90
-KA1-4,Kaldenberg,Silt,57,60 - 90
-KA1-4,Kaldenberg,Clay,24,60 - 90
-KA2-1,Kaldenberg,Sand,24,0 - 15
-KA2-1,Kaldenberg,Silt,54,0 - 15
-KA2-1,Kaldenberg,Clay,22,0 - 15
-KA2-2,Kaldenberg,Sand,23,15 - 30
-KA2-2,Kaldenberg,Silt,53,15 - 30
-KA2-2,Kaldenberg,Clay,24,15 - 30
-KA2-3,Kaldenberg,Sand,20,30 - 60
-KA2-3,Kaldenberg,Silt,58,30 - 60
-KA2-3,Kaldenberg,Clay,22,30 - 60
-KA2-4,Kaldenberg,Sand,21,60 - 90
-KA2-4,Kaldenberg,Silt,57,60 - 90
-KA2-4,Kaldenberg,Clay,22,60 - 90
-CR1-1,Cretsinger,Sand,38,0 - 15
-CR1-1,Cretsinger,Silt,34,0 - 15
-CR1-1,Cretsinger,Clay,28,0 - 15
-CR1-2,Cretsinger,Sand,43,15 - 30
-CR1-2,Cretsinger,Silt,29,15 - 30
-CR1-2,Cretsinger,Clay,28,15 - 30
-CR1-3,Cretsinger,Sand,41,30 - 60
-CR1-3,Cretsinger,Silt,25,30 - 60
-CR1-3,Cretsinger,Clay,34,30 - 60
-CR1-4,Cretsinger,Sand,45,60 - 90
-CR1-4,Cretsinger,Silt,21,60 - 90
-CR1-4,Cretsinger,Clay,34,60 - 90
-CR2-1,Cretsinger,Sand,17,0 - 15
-CR2-1,Cretsinger,Silt,55,0 - 15
-CR2-1,Cretsinger,Clay,28,0 - 15
-CR2-2,Cretsinger,Sand,27,15 - 30
-CR2-2,Cretsinger,Silt,47,15 - 30
-CR2-2,Cretsinger,Clay,26,15 - 30
-CR2-3,Cretsinger,Sand,25,30 - 60
-CR2-3,Cretsinger,Silt,49,30 - 60
-CR2-3,Cretsinger,Clay,26,30 - 60
-CR2-4,Cretsinger,Sand,27,60 - 90
-CR2-4,Cretsinger,Silt,47,60 - 90
-CR2-4,Cretsinger,Clay,26,60 - 90
-MC1-1,McClellan,Sand,26,0 - 15
-MC1-1,McClellan,Silt,48,0 - 15
-MC1-1,McClellan,Clay,26,0 - 15
-MC1-2,McClellan,Sand,16,15 - 30
-MC1-2,McClellan,Silt,52,15 - 30
-MC1-2,McClellan,Clay,32,15 - 30
-MC1-3,McClellan,Sand,19,30 - 60
-MC1-3,McClellan,Silt,51,30 - 60
-MC1-3,McClellan,Clay,30,30 - 60
-MC1-4,McClellan,Sand,21,60 - 90
-MC1-4,McClellan,Silt,51,60 - 90
-MC1-4,McClellan,Clay,28,60 - 90
-MC2-1,McClellan,Sand,19,0 - 15
-MC2-1,McClellan,Silt,53,0 - 15
-MC2-1,McClellan,Clay,28,0 - 15
-MC2-2,McClellan,Sand,16,15 - 30
-MC2-2,McClellan,Silt,52,15 - 30
-MC2-2,McClellan,Clay,32,15 - 30
-MC2-3,McClellan,Sand,17,30 - 60
-MC2-3,McClellan,Silt,55,30 - 60
-MC2-3,McClellan,Clay,28,30 - 60
-MC2-4,McClellan,Sand,14,60 - 90
-MC2-4,McClellan,Silt,59,60 - 90
-MC2-4,McClellan,Clay,27,60 - 90
-PE1-1,Peckumn,Sand,34,0 - 15
-PE1-1,Peckumn,Silt,43,0 - 15
-PE1-1,Peckumn,Clay,23,0 - 15
-PE1-2,Peckumn,Sand,52,15 - 30
-PE1-2,Peckumn,Silt,29,15 - 30
-PE1-2,Peckumn,Clay,19,15 - 30
-PE1-3,Peckumn,Sand,52,30 - 60
-PE1-3,Peckumn,Silt,29,30 - 60
-PE1-3,Peckumn,Clay,19,30 - 60
-PE1-4,Peckumn,Sand,53,60 - 90
-PE1-4,Peckumn,Silt,26,60 - 90
-PE1-4,Peckumn,Clay,21,60 - 90
-PE2-1,Peckumn,Sand,55,0 - 15
-PE2-1,Peckumn,Silt,26,0 - 15
-PE2-1,Peckumn,Clay,19,0 - 15
-PE2-2,Peckumn,Sand,59,15 - 30
-PE2-2,Peckumn,Silt,28,15 - 30
-PE2-2,Peckumn,Clay,13,15 - 30
-PE2-3,Peckumn,Sand,53,30 - 60
-PE2-3,Peckumn,Silt,30,30 - 60
-PE2-3,Peckumn,Clay,17,30 - 60
-PE2-4,Peckumn,Sand,53,60 - 90
-PE2-4,Peckumn,Silt,32,60 - 90
-PE2-4,Peckumn,Clay,15,60 - 90
-BO1-1,Bowman,Sand,56,0 - 15
-BO1-1,Bowman,Silt,30,0 - 15
-BO1-1,Bowman,Clay,14,0 - 15
-BO1-2,Bowman,Sand,58,15 - 30
-BO1-2,Bowman,Silt,26,15 - 30
-BO1-2,Bowman,Clay,16,15 - 30
-BO1-3,Bowman,Sand,48,30 - 60
-BO1-3,Bowman,Silt,30,30 - 60
-BO1-3,Bowman,Clay,22,30 - 60
-BO1-4,Bowman,Sand,58,60 - 90
-BO1-4,Bowman,Silt,28,60 - 90
-BO1-4,Bowman,Clay,14,60 - 90
-BO2-1,Bowman,Sand,56,0 - 15
-BO2-1,Bowman,Silt,24,0 - 15
-BO2-1,Bowman,Clay,20,0 - 15
-BO2-2,Bowman,Sand,54,15 - 30
-BO2-2,Bowman,Silt,24,15 - 30
-BO2-2,Bowman,Clay,22,15 - 30
-BO2-3,Bowman,Sand,52,30 - 60
-BO2-3,Bowman,Silt,24,30 - 60
-BO2-3,Bowman,Clay,24,30 - 60
-BO2-4,Bowman,Sand,57,60 - 90
-BO2-4,Bowman,Silt,25,60 - 90
-BO2-4,Bowman,Clay,18,60 - 90
-SH1-1,Sheller,Sand,37,0 - 15
-SH1-1,Sheller,Silt,41,0 - 15
-SH1-1,Sheller,Clay,22,0 - 15
-SH1-2,Sheller,Sand,23,15 - 30
-SH1-2,Sheller,Silt,53,15 - 30
-SH1-2,Sheller,Clay,24,15 - 30
-SH1-3,Sheller,Sand,25,30 - 60
-SH1-3,Sheller,Silt,45,30 - 60
-SH1-3,Sheller,Clay,30,30 - 60
-SH1-4,Sheller,Sand,23,60 - 90
-SH1-4,Sheller,Silt,47,60 - 90
-SH1-4,Sheller,Clay,30,60 - 90
-SH2-1,Sheller,Sand,21,0 - 15
-SH2-1,Sheller,Silt,53,0 - 15
-SH2-1,Sheller,Clay,26,0 - 15
-SH2-2,Sheller,Sand,27,15 - 30
-SH2-2,Sheller,Silt,49,15 - 30
-SH2-2,Sheller,Clay,24,15 - 30
-SH2-3,Sheller,Sand,29,30 - 60
-SH2-3,Sheller,Silt,45,30 - 60
-SH2-3,Sheller,Clay,26,30 - 60
-SH2-4,Sheller,Sand,23,60 - 90
-SH2-4,Sheller,Silt,45,60 - 90
-SH2-4,Sheller,Clay,32,60 - 90
-PL1-1,Plunkett,Sand,67,0 - 15
-PL1-1,Plunkett,Silt,19,0 - 15
-PL1-1,Plunkett,Clay,14,0 - 15
-PL1-2,Plunkett,Sand,69,15 - 30
-PL1-2,Plunkett,Silt,15,15 - 30
-PL1-2,Plunkett,Clay,16,15 - 30
-PL1-3,Plunkett,Sand,63,30 - 60
-PL1-3,Plunkett,Silt,19,30 - 60
-PL1-3,Plunkett,Clay,18,30 - 60
-PL1-4,Plunkett,Sand,59,60 - 90
-PL1-4,Plunkett,Silt,21,60 - 90
-PL1-4,Plunkett,Clay,20,60 - 90
-PL2-1,Plunkett,Sand,65,0 - 15
-PL2-1,Plunkett,Silt,23,0 - 15
-PL2-1,Plunkett,Clay,12,0 - 15
-PL2-2,Plunkett,Sand,64,15 - 30
-PL2-2,Plunkett,Silt,20,15 - 30
-PL2-2,Plunkett,Clay,16,15 - 30
-PL2-3,Plunkett,Sand,56,30 - 60
-PL2-3,Plunkett,Silt,26,30 - 60
-PL2-3,Plunkett,Clay,18,30 - 60
-PL2-4,Plunkett,Sand,59,60 - 90
-PL2-4,Plunkett,Silt,25,60 - 90
-PL2-4,Plunkett,Clay,16,60 - 90
-SL1-1,Sloan,Sand,78,0 - 15
-SL1-1,Sloan,Silt,14,0 - 15
-SL1-1,Sloan,Clay,8,0 - 15
-SL1-2,Sloan,Sand,75,15 - 30
-SL1-2,Sloan,Silt,15,15 - 30
-SL1-2,Sloan,Clay,10,15 - 30
-SL1-3,Sloan,Sand,72,30 - 60
-SL1-3,Sloan,Silt,18,30 - 60
-SL1-3,Sloan,Clay,10,30 - 60
-SL1-4,Sloan,Sand,73,60 - 90
-SL1-4,Sloan,Silt,15,60 - 90
-SL1-4,Sloan,Clay,12,60 - 90
-SL2-1,Sloan,Sand,63,0 - 15
-SL2-1,Sloan,Silt,23,0 - 15
-SL2-1,Sloan,Clay,14,0 - 15
-SL2-2,Sloan,Sand,59,15 - 30
-SL2-2,Sloan,Silt,25,15 - 30
-SL2-2,Sloan,Clay,16,15 - 30
-SL2-3,Sloan,Sand,57,30 - 60
-SL2-3,Sloan,Silt,25,30 - 60
-SL2-3,Sloan,Clay,18,30 - 60
-SL2-4,Sloan,Sand,61,60 - 90
-SL2-4,Sloan,Silt,17,60 - 90
-SL2-4,Sloan,Clay,22,60 - 90
+Sample ID,Site,Soil Type,Percentage
+KA1-1,Kaldenberg,Sand,17
+KA1-1,Kaldenberg,Silt,53
+KA1-1,Kaldenberg,Clay,30
+KA1-2,Kaldenberg,Sand,15
+KA1-2,Kaldenberg,Silt,55
+KA1-2,Kaldenberg,Clay,30
+KA1-3,Kaldenberg,Sand,17
+KA1-3,Kaldenberg,Silt,57
+KA1-3,Kaldenberg,Clay,26
+KA1-4,Kaldenberg,Sand,19
+KA1-4,Kaldenberg,Silt,57
+KA1-4,Kaldenberg,Clay,24
+KA2-1,Kaldenberg,Sand,24
+KA2-1,Kaldenberg,Silt,54
+KA2-1,Kaldenberg,Clay,22
+KA2-2,Kaldenberg,Sand,23
+KA2-2,Kaldenberg,Silt,53
+KA2-2,Kaldenberg,Clay,24
+KA2-3,Kaldenberg,Sand,20
+KA2-3,Kaldenberg,Silt,58
+KA2-3,Kaldenberg,Clay,22
+KA2-4,Kaldenberg,Sand,21
+KA2-4,Kaldenberg,Silt,57
+KA2-4,Kaldenberg,Clay,22
+CR1-1,Cretsinger,Sand,38
+CR1-1,Cretsinger,Silt,34
+CR1-1,Cretsinger,Clay,28
+CR1-2,Cretsinger,Sand,43
+CR1-2,Cretsinger,Silt,29
+CR1-2,Cretsinger,Clay,28
+CR1-3,Cretsinger,Sand,41
+CR1-3,Cretsinger,Silt,25
+CR1-3,Cretsinger,Clay,34
+CR1-4,Cretsinger,Sand,45
+CR1-4,Cretsinger,Silt,21
+CR1-4,Cretsinger,Clay,34
+CR2-1,Cretsinger,Sand,17
+CR2-1,Cretsinger,Silt,55
+CR2-1,Cretsinger,Clay,28
+CR2-2,Cretsinger,Sand,27
+CR2-2,Cretsinger,Silt,47
+CR2-2,Cretsinger,Clay,26
+CR2-3,Cretsinger,Sand,25
+CR2-3,Cretsinger,Silt,49
+CR2-3,Cretsinger,Clay,26
+CR2-4,Cretsinger,Sand,27
+CR2-4,Cretsinger,Silt,47
+CR2-4,Cretsinger,Clay,26
+MC1-1,McClellan,Sand,26
+MC1-1,McClellan,Silt,48
+MC1-1,McClellan,Clay,26
+MC1-2,McClellan,Sand,16
+MC1-2,McClellan,Silt,52
+MC1-2,McClellan,Clay,32
+MC1-3,McClellan,Sand,19
+MC1-3,McClellan,Silt,51
+MC1-3,McClellan,Clay,30
+MC1-4,McClellan,Sand,21
+MC1-4,McClellan,Silt,51
+MC1-4,McClellan,Clay,28
+MC2-1,McClellan,Sand,19
+MC2-1,McClellan,Silt,53
+MC2-1,McClellan,Clay,28
+MC2-2,McClellan,Sand,16
+MC2-2,McClellan,Silt,52
+MC2-2,McClellan,Clay,32
+MC2-3,McClellan,Sand,17
+MC2-3,McClellan,Silt,55
+MC2-3,McClellan,Clay,28
+MC2-4,McClellan,Sand,14
+MC2-4,McClellan,Silt,59
+MC2-4,McClellan,Clay,27
+PE1-1,Peckumn,Sand,34
+PE1-1,Peckumn,Silt,43
+PE1-1,Peckumn,Clay,23
+PE1-2,Peckumn,Sand,52
+PE1-2,Peckumn,Silt,29
+PE1-2,Peckumn,Clay,19
+PE1-3,Peckumn,Sand,52
+PE1-3,Peckumn,Silt,29
+PE1-3,Peckumn,Clay,19
+PE1-4,Peckumn,Sand,53
+PE1-4,Peckumn,Silt,26
+PE1-4,Peckumn,Clay,21
+PE2-1,Peckumn,Sand,55
+PE2-1,Peckumn,Silt,26
+PE2-1,Peckumn,Clay,19
+PE2-2,Peckumn,Sand,59
+PE2-2,Peckumn,Silt,28
+PE2-2,Peckumn,Clay,13
+PE2-3,Peckumn,Sand,53
+PE2-3,Peckumn,Silt,30
+PE2-3,Peckumn,Clay,17
+PE2-4,Peckumn,Sand,53
+PE2-4,Peckumn,Silt,32
+PE2-4,Peckumn,Clay,15
+BO1-1,Bowman,Sand,56
+BO1-1,Bowman,Silt,30
+BO1-1,Bowman,Clay,14
+BO1-2,Bowman,Sand,58
+BO1-2,Bowman,Silt,26
+BO1-2,Bowman,Clay,16
+BO1-3,Bowman,Sand,48
+BO1-3,Bowman,Silt,30
+BO1-3,Bowman,Clay,22
+BO1-4,Bowman,Sand,58
+BO1-4,Bowman,Silt,28
+BO1-4,Bowman,Clay,14
+BO2-1,Bowman,Sand,56
+BO2-1,Bowman,Silt,24
+BO2-1,Bowman,Clay,20
+BO2-2,Bowman,Sand,54
+BO2-2,Bowman,Silt,24
+BO2-2,Bowman,Clay,22
+BO2-3,Bowman,Sand,52
+BO2-3,Bowman,Silt,24
+BO2-3,Bowman,Clay,24
+BO2-4,Bowman,Sand,57
+BO2-4,Bowman,Silt,25
+BO2-4,Bowman,Clay,18
+SH1-1,Sheller,Sand,37
+SH1-1,Sheller,Silt,41
+SH1-1,Sheller,Clay,22
+SH1-2,Sheller,Sand,23
+SH1-2,Sheller,Silt,53
+SH1-2,Sheller,Clay,24
+SH1-3,Sheller,Sand,25
+SH1-3,Sheller,Silt,45
+SH1-3,Sheller,Clay,30
+SH1-4,Sheller,Sand,23
+SH1-4,Sheller,Silt,47
+SH1-4,Sheller,Clay,30
+SH2-1,Sheller,Sand,21
+SH2-1,Sheller,Silt,53
+SH2-1,Sheller,Clay,26
+SH2-2,Sheller,Sand,27
+SH2-2,Sheller,Silt,49
+SH2-2,Sheller,Clay,24
+SH2-3,Sheller,Sand,29
+SH2-3,Sheller,Silt,45
+SH2-3,Sheller,Clay,26
+SH2-4,Sheller,Sand,23
+SH2-4,Sheller,Silt,45
+SH2-4,Sheller,Clay,32
+PL1-1,Plunkett,Sand,67
+PL1-1,Plunkett,Silt,19
+PL1-1,Plunkett,Clay,14
+PL1-2,Plunkett,Sand,69
+PL1-2,Plunkett,Silt,15
+PL1-2,Plunkett,Clay,16
+PL1-3,Plunkett,Sand,63
+PL1-3,Plunkett,Silt,19
+PL1-3,Plunkett,Clay,18
+PL1-4,Plunkett,Sand,59
+PL1-4,Plunkett,Silt,21
+PL1-4,Plunkett,Clay,20
+PL2-1,Plunkett,Sand,65
+PL2-1,Plunkett,Silt,23
+PL2-1,Plunkett,Clay,12
+PL2-2,Plunkett,Sand,64
+PL2-2,Plunkett,Silt,20
+PL2-2,Plunkett,Clay,16
+PL2-3,Plunkett,Sand,56
+PL2-3,Plunkett,Silt,26
+PL2-3,Plunkett,Clay,18
+PL2-4,Plunkett,Sand,59
+PL2-4,Plunkett,Silt,25
+PL2-4,Plunkett,Clay,16
+SL1-1,Sloan,Sand,78
+SL1-1,Sloan,Silt,14
+SL1-1,Sloan,Clay,8
+SL1-2,Sloan,Sand,75
+SL1-2,Sloan,Silt,15
+SL1-2,Sloan,Clay,10
+SL1-3,Sloan,Sand,72
+SL1-3,Sloan,Silt,18
+SL1-3,Sloan,Clay,10
+SL1-4,Sloan,Sand,73
+SL1-4,Sloan,Silt,15
+SL1-4,Sloan,Clay,12
+SL2-1,Sloan,Sand,63
+SL2-1,Sloan,Silt,23
+SL2-1,Sloan,Clay,14
+SL2-2,Sloan,Sand,59
+SL2-2,Sloan,Silt,25
+SL2-2,Sloan,Clay,16
+SL2-3,Sloan,Sand,57
+SL2-3,Sloan,Silt,25
+SL2-3,Sloan,Clay,18
+SL2-4,Sloan,Sand,61
+SL2-4,Sloan,Silt,17
+SL2-4,Sloan,Clay,22

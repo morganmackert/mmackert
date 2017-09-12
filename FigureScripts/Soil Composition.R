@@ -18,6 +18,7 @@ setwd("~/ISU/Project/mmackert/Data")
 #Load libraries
 library(ggplot2)
 library(ggtern)
+library(dplyr)
 
 #Read in data
 soils <- read.csv("soil/Reduced Analysis Results.csv")
