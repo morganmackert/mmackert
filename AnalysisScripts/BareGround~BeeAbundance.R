@@ -114,13 +114,13 @@ BGonBAMMMplot
 
 #-------------------------------------------------------------------#
 #                Percent Bare Ground ~ Bee Abundance                #
-#                             Years 1-3                             #
+#                             Years 3-4                             #
 #-------------------------------------------------------------------#
 #Clear environment
 rm(list=ls())
 
 #Read in the data
-etfull <- read.csv("ETrapBeesCombined.csv")
+etfull <- read.csv("ETrapBees34.csv")
 #Site = Site name
 #Year = Year of study 
 #BareGround = Average percentage of bare ground within ten 1 square meter quadrats, then averaged across each sample period
@@ -170,10 +170,13 @@ coef(BGonBAfull)
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonBAfullplot <- ggplot(etfull, aes(x = BareGround, y = Ind)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 0.6387116, slope = 0.2785092) +
+  geom_abline(intercept = 2.18171594, slope = 0.06844818) +
+  scale_color_hue(labels = c("2016", "2017")) +
+  scale_shape_manual(labels = c("2016", "2017"), values = c(16, 17)) +
   theme_bw() +
   labs(x = "Percent Bare Ground", y = "Bee Abundance") +
   ggtitle("Influence of Bare Ground \non Bee Abundance") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
 BGonBAfullplot

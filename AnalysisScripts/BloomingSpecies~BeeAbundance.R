@@ -146,7 +146,7 @@ summary(BSonBAfull)
 coef(BSonBAfull)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BSonBAfullplot <- ggplot(nqfull, aes(x = Quadrats, y = TotalAbundance)) +
+BSonBAfullplot <- ggplot(nqfull, aes(x = SppBloomQ, y = TotalAbundance)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 45.239054, slope = 1.801929) +
   theme_bw() +
