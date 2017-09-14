@@ -262,11 +262,11 @@ BSonBS1234plot <- ggplot(years1234, aes(x = SppBloomQ, y = TotalSpeciesRichness)
   geom_abline(intercept = 18.841286, slope = 1.366183) +
   #annotate("text", x = 4, y = 41, label = "R^2 = 0.8286") +
   #annotate("text", x = 5, y = 45, label = "y = 1.48x + 16.49") +
-  scale_color_manual(labels = c("2014", "2015", "2016", "2017"), values = c("#009E73", "#0072B2", "#000000", "#D55E00")) +
-  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"), values = c(15,16, 17, 18)) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"), values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"), values = c(15, 16, 17, 18)) +
   theme_bw() +
   labs(x = "Number of Plant Species in Bloom", y = "Number of Bee Species") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
+  ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align  = 0.5)

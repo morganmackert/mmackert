@@ -180,3 +180,72 @@ BGonBAfullplot <- ggplot(etfull, aes(x = BareGround, y = Ind)) +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5)
 BGonBAfullplot
+
+#-------------------------------------------------------------------#
+#                Percent Bare Ground ~ Bee Abundance                #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
+#Clear environment
+rm(list=ls())
+
+#Read in the data
+et1234 <- read.csv("ETrapBees1234.csv")
+#Site = Site name
+#Year = Year of study 
+#BareGround = Average percentage of bare ground within ten 1 square meter quadrats, then averaged across each sample period
+#Ind = Total number of bees collected from emergence traps for that year
+
+#Year column in "et1234" dataframe is brought in as an integer. Change to numeric for Amy's plot.
+pch.listfull <- as.numeric(et1234$Year)
+pch.listfull
+
+#Year column in "et1234" dataframe is brought in as an integer. Change to factor for Morgan's plot.
+et1234$Year <- as.factor(et1234$Year)
+
+#Amy's plot: Percent Bare Ground vs. Bee Abundance
+plot(et1234$BareGround, et1234$Ind,
+     xlab = "Percent Bare Ground", ylab = "Bee Abundance",
+     pch = c(pch.list), col = 'black')
+model=lm(et$Ind~et$BareGround)
+model
+summary(model)
+abline(model)
+legend("topleft",bty="n",
+       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
+model2=lm(et$Ind~0+et$BareGround)
+summary(model2)
+abline(model2, lty="dotted")
+
+plot(et1234$BareGround, et1234$Ind,
+     xlab = "Percent Bare Ground", ylab = "Bee Abundance",
+     pch = c(pch.list2), col = 'black')
+model=lm(et1234$Ind~et1234$BareGround)
+model
+summary(model)
+abline(model)
+legend("topleft",bty="n",
+       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
+model2=lm(et1234$Ind~0+et1234$BareGround)
+summary(model2)
+abline(model2, lty="dotted")
+
+#Model for bee abundance predicted by bare ground
+BGonBA1234 <- lm(Ind ~ BareGround, data = et1234)
+summary(BGonBA1234)
+
+#Find intercept and slope to plot best fit line on graph
+coef(BGonBA1234)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonBA1234plot <- ggplot(et1234, aes(x = BareGround, y = Ind)) +
+  geom_point(aes(shape = Year, color = Year), size = 3) +
+  geom_abline(intercept = 0.4831679, slope = 0.2596825) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"), values = c("darkorchid1", "darkgreen", "black", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"), values = c(15, 16, 17, 18)) +
+  theme_bw() +
+  labs(x = "Percent Bare Ground", y = "Bee Abundance") +
+  ggtitle("Influence of Bare Ground \non Bee Abundance") +
+  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
+BGonBA1234plot
