@@ -44,6 +44,8 @@ coef(BSonRB12model)
 BSonRB12plot <- ggplot(BSonRB12, aes(x = SppBloomQ, y = Total.Rare.Species.Richness)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 7.3157307, slope = 0.9672395) +
+  scale_color_manual(labels = c("2014", "2015"), values = c("darkorchid1", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015"), values = c(15, 16)) +
   theme_bw() +
   labs(x = "Number of Blooming Species", y = "Number of Rare Bee Species") +
   ggtitle("Influence of Blooming Forb and Weed \nSpecies on Rare Bee Species Richness") +
@@ -76,6 +78,8 @@ coef(BSonRB34model)
 BSonRB34plot <- ggplot(BSonRB34, aes(x = X..Blooming.species.in.quadrats, y = Total.Rare.Species.Richness)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 2.2036751, slope = 0.7091508) +
+  scale_color_manual(labels = c("2016", "2017"), values = c("#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2016", "2017"), values = c(17, 18)) +
   theme_bw() +
   labs(x = "Number of Blooming Species", y = "Number of Rare Bee Species") +
   ggtitle("Influence of Blooming Forb and Weed \nSpecies on Rare Bee Species Richness") +
@@ -96,7 +100,7 @@ BSonRB1234 <- read.csv("Data/Combined full data set.csv")
 #Change "year" to a factor
 BSonRB1234$Year <- as.factor(BSonRB1234$Year)
 
-#Model for bee species richness predicted by number of blooming species
+#Model for influence of number of blooming species on number of rare bee species present (rare meaning 0<x<10)
 BSonRB1234model <- lm(Total.Rare.Species.Richness ~ X..Blooming.species.in.quadrats, data = BSonRB1234)
 summary(BSonRB1234model)
 

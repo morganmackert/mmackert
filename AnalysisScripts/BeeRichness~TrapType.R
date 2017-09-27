@@ -38,7 +38,7 @@ BSbyTT1234plot
 
 #Test for significance between groups
 #Run an ANOVA to test for significance of bee species richness based on trap type
-BSbyTT1234ANOVA <- aov(Species.Richness ~ Trap + Site, data = BSTT1234)
+BSbyTT1234ANOVA <- aov(Species.Richness ~ Trap, data = BSTT1234)
 summary(BSbyTT1234ANOVA)
 
 #Based on the outcome of the ANOVA (p < 0.001), we know that there are significant differences between the number of bee species collected by each trap type.
