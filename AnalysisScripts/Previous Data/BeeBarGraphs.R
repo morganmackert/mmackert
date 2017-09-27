@@ -4,7 +4,7 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/Previous Data/Data Files")
+setwd("~/ISU/Project/Previous Data/R Data Files")
 
 #Load libraries
 library(ggplot2)
