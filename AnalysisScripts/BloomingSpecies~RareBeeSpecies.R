@@ -3,10 +3,10 @@
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
 
-#Research Question: How does the number of blooming forb/weed species within the strip influence bee species richness?
+#Research Question: How does the number of blooming forb/weed species within the strip influence rare bee species richness?
 
 #Objectives:
-#Create model(s) to explore relationship between blooming forb/weed species richness and bee species richness
+#Create model(s) to explore relationship between blooming forb/weed species richness and rare bee species richness
 #Use created model(s) to visualize the relationship graphically
 
 #Clear environment and set working directory
