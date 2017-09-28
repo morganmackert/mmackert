@@ -121,7 +121,6 @@ BSonBSMMMplot <- ggplot(nqMMM, aes(x = SppBloomQ, y = Total.Species.Richness)) +
   theme(legend.text = element_text(size = 10))
 BSonBSMMMplot
 
-##### COMING SOON #####
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-3                             #
@@ -130,7 +129,10 @@ BSonBSMMMplot
 rm(list=ls())
 
 #Read in data
-years123 <- read.csv("mmackert/Data/Combined Full data set.csv")
+years123 <- read.csv("Data/years123.csv")
+
+#Remove empty rows
+years123 <- years123[-(132:171),]
 
 #Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
 pch.listfull <- as.numeric(years123$Year)
@@ -151,22 +153,24 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelfull)$adj.r.squared,digits=4)))
 
 #Model for bee species richness predicted by number of blooming species
-BSonBSfull <- lm(Total.Species.Richness ~ SppBloomQ, data = years123)
-summary(BSonBSfull)
+BSonBS123 <- lm(Total.Species.Richness ~ X..Blooming.species.in.quadrats, data = years123)
+summary(BSonBS123)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBSfull)
+coef(BSonBS123)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBSfullplot <- ggplot(years123, aes(x = SppBloomQ, y = Total.Species.Richness)) +
+BSonBS123plot <- ggplot(years123, aes(x = X..Blooming.species.in.quadrats, y = Total.Species.Richness)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = -0.8941012, slope = 4.8657711) +
+  geom_abline(intercept = 8.1520007, slope = 0.9632926) +
+  scale_color_manual(labels = c("2014", "2015", "2016"), values = c("darkorchid1", "darkgreen", "#000000")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016"), values = c(15, 16, 17)) +
   theme_bw() +
   labs(x = "Number of Blooming Species", y = "Number of Bee Species") +
   ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BSonBSfullplot
+BSonBS123plot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Species            #
