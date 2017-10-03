@@ -160,15 +160,24 @@ summary(BSonBS123)
 coef(BSonBS123)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS123plot <- ggplot(years123, aes(x = X..Blooming.species.in.quadrats, y = Total.Species.Richness)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 8.1520007, slope = 0.9632926) +
-  scale_color_manual(labels = c("2014", "2015", "2016"), values = c("darkorchid1", "darkgreen", "#000000")) +
-  scale_shape_manual(labels = c("2014", "2015", "2016"), values = c(15, 16, 17)) +
+BSonBS123plot <- ggplot(years123, aes(x = X..Blooming.species.in.quadrats,
+                                      y = Total.Species.Richness)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_abline(intercept = 8.1520007,
+              slope = 0.9632926) +
+  scale_color_manual(labels = c("2014", "2015", "2016"),
+                     values = c("darkorchid1", "darkgreen", "#000000")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016"),
+                     values = c(15, 16, 17)) +
   theme_bw() +
-  labs(x = "Number of Blooming Species", y = "Number of Bee Species") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  labs(x = "Number of Plant Species in Bloom",
+       y = "Number of Bee Species") +
+  ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 BSonBS123plot
 

@@ -111,7 +111,7 @@ summary(BSonRB123model)
 coef(BSonRB123model)
 
 #Plot: Number of blooming forb/weed species vs. rare bee species richness
-BSonBS123plot <- ggplot(BSonRB123, aes(x = X..Blooming.species.in.quadrats, y = Total.Rare.Species.Richness)) +
+BSonRBS123plot <- ggplot(BSonRB123, aes(x = X..Blooming.species.in.quadrats, y = Total.Rare.Species.Richness)) +
   geom_point(aes(shape = Year, color = Year), size = 3) +
   geom_abline(intercept = 7.1758069, slope = 0.8152224) +
   scale_color_manual(labels = c("2014", "2015", "2016"), values = c("darkorchid1", "darkgreen", "#000000")) +
@@ -122,41 +122,25 @@ BSonBS123plot <- ggplot(BSonRB123, aes(x = X..Blooming.species.in.quadrats, y = 
   theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align  = 0.5)
-BSonBS123plot
+BSonRBS123plot
 
 #Plot as bar graph by sample period: Number of blooming forb/weed species vs. rare bee species richness
-BSonBS123barplot <- ggplot(BSonRB123,
-                           aes(x = Sampling.Period,
-                               y = Total.Rare.Species.Richness,
+#Load in other data set
+RBSbySP123 <- read.csv("Data/Bees/Rare Bees by Sample Period.csv")
+BSonRBS123barplot <- ggplot(RBSbySP123,
+                           aes(x = Sample.Period,
+                               y = Number.Rare.Bee.Species,
                                fill = Site)) +
   geom_bar(stat = "identity",
-           #position = "dodge",
            color = "black") +
-  scale_fill_manual(values = c("darkorchid1", "darkgreen", "#000000", "blue", "red", "pink", "orange", "white", "purple", "cyan", "magenta")) +
+  scale_fill_brewer(palette = "Set3") +
   theme_bw() +
-  labs(x = "Number of Plant Species in Bloom",
+  labs(x = "Sample Period",
        y = "Number of Rare Bee Species") +
-  ggtitle("Influence of the Number of Blooming Plant \nSpecies on Rare Bee Species Richness") +
+  ggtitle("The Number of Rare Bee Species Collected \nDuring Each Sample Period from 2014 to 2016") +
   theme(plot.title = element_text(size = 15, 
                                   face = "bold",
                                   hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align  = 0.5)
-BSonBS123barplot
-
-Fulllandusebarcover <- ggplot(FullLandUseJoined,
-                              aes(x = Site, y = Coverage, fill = LandType)) +
-  geom_bar(stat = "identity",
-           color = "black") +
-  ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
-  theme_bw() +
-  scale_fill_manual(values = barcolors) +
-  theme(plot.title = element_text(size = 15,
-                                  face = "bold",
-                                  hjust = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1)) +
-  theme(legend.title.align = 0.5) +
-  labs(y = "Coverage (sq. km)",
-       fill = "Land Type")
-Fulllandusebarcover
+BSonRBS123barplot
