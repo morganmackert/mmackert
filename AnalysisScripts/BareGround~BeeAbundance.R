@@ -11,95 +11,117 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/mmackert/Data")
+setwd("~/ISU/Project/Data")
+
+#Load libraries
+library(ggplot2)
+library(dplyr)
+library(lme4)
 
 #Read in data
-etAM <- read.csv("ETrap_Bees.csv")
-#Site = Site name
-#Year = Year of study 
-#BareGround = Average percentage of bare ground within ten 1 square meter quadrats, then averaged across each sample period
-#Ind = Total number of bees collected from emergence traps for that year
+Fulldata <- read.csv("Combined full data set.csv")
 
-#Year column in "etAM" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.listAM <- as.numeric(etAM$Year)
-pch.listAM
+#Change column names so they're not so goofy.
+colnames(Fulldata)[5] <- "Floral.Cover"
+colnames(Fulldata)[6] <- "Blooming.Species"
+colnames(Fulldata)[7] <- "Bare.Ground"
 
-#Year column in "etAM" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-etAM$Year <- as.factor(etAM$Year)
+#Change "Year" column to a factor.
+Fulldata$Year <- as.factor(Fulldata$Year)
+
+#Subset large data set to include only 2014 and 2015 data.
+years12 <- filter(Fulldata, Year <= 2)
+
+#Calculate the average bare ground measured in each site during each year.
+BG12 <- years12 %>%
+  select(Site, Year, Bare.Ground) %>%
+  group_by(Year, Site) %>%
+  summarise(AverageBareGround = mean(Bare.Ground))
+
+#Sum the number of bees collected in emergence traps at each site during each year.
+ET12 <- years12 %>%
+  select(Site, Year, Emergence.Traps.Abundance) %>%
+  group_by(Year, Site) %>%
+  summarise(ETrapAbundance = sum(Emergence.Traps.Abundance))
+
+#Join BG12 and ET12 datasets into one
+BGonBA12 <- full_join(BG12, ET12, by = c("Site", "Year"))
+
+#Year column is brought in as an integer. Change to numeric for Amy's plot.
+pch.list12 <- as.numeric(BGonBA12$Year)
+pch.list12
 
 #Amy's plot: Percent Bare Ground vs. Bee Abundance
-plot(etAM$BareGround, etAM$Ind,
+plot(BGonBA12$AverageBareGround, BGonBA12$ETrapAbundance,
      xlab = "Percent Bare Ground", ylab = "Bee Abundance",
-     pch = c(pch.listAM), col = 'black')
-model=lm(etAM$Ind~etAM$BareGround)
+     pch = (pch.list12), col = "black")
+model=lm(BGonBA12$ETrapAbundance~BGonBA12$AverageBareGround)
 model
 summary(model)
 abline(model)
 legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
-model2=lm(etAM$Ind~0+etAM$BareGround)
+model2=lm(BGonBA12$ETrapAbundance~0+BGonBA12$AverageBareGround)
 summary(model2)
 abline(model2, lty="dotted")
 
 #Model for bee abundance predicted by bare ground
-BGonBAAM <- lm(Ind ~ BareGround, data = etAM)
-summary(BGonBAAM)
+BGonBA12model <- glmer(ETrapAbundance ~ AverageBareGround + Year + Site, family = poisson, data = BGonBA12)
+summary(BGonBA12model)
 
 #Find intercept and slope to plot best fit line on graph
-coef(BGonBAAM)
+coef(BGonBAmodel12)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
-BGonBAAMplot <- ggplot(etAM, aes(x = BareGround, y = Ind)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = -0.7025809, slope = 0.3164081) +
+BGonBA12plot <- ggplot(BGonBA12, aes(x = AverageBareGround,
+                                     y = ETrapAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black") +
   theme_bw() +
-  labs(x = "Percent Bare Ground", y = "Bee Abundance") +
+  labs(x = "Percent Bare Ground",
+       y = "Bee Abundance") +
   ggtitle("Influence of Bare Ground \non Bee Abundance") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BGonBAAMplot
+BGonBA12plot
 
 #-------------------------------------------------------------------#
 #                Percent Bare Ground ~ Bee Abundance                #
 #                               Year 3                              #
 #-------------------------------------------------------------------#
-#Clear environment
-rm(list=ls())
+#Subset large data set to include only 2014 and 2015 data.
+year3 <- filter(Fulldata, Year == 3)
 
-#Read in the data
-etMMM <- read.csv("ETrapBeesMMM.csv")
-#Site = Site name
-#Year = Year of study 
-#BareGround = Average percentage of bare ground within ten 1 square meter quadrats, then averaged across each sample period
-#Ind = Total number of bees collected from emergence traps for that year
+#Calculate the average bare ground measured in each site during each year.
+BG3 <- year3 %>%
+  select(Site, Year, Bare.Ground) %>%
+  group_by(Year, Site) %>%
+  summarise(AverageBareGround = mean(Bare.Ground))
 
-#Year column in "etMMM" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.listMMM <- as.numeric(etMMM$Year)
-pch.listMMM
+#Sum the number of bees collected in emergence traps at each site during each year.
+ET3 <- year3 %>%
+  select(Site, Year, Emergence.Traps.Abundance) %>%
+  group_by(Year, Site) %>%
+  summarise(ETrapAbundance = sum(Emergence.Traps.Abundance))
 
-#Year column in "etMMM" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-etMMM$Year <- as.factor(etMMM$Year)
-
-#Amy's plot: Percent Bare Ground vs. Bee Abundance
-plot(etMMM$BareGround, etMMM$Ind,
-     xlab = "Percent Bare Ground", ylab = "Bee Abundance",
-     pch = c(pch.listMMM), col = 'black')
-model=lm(etMMM$Ind~etMMM$BareGround)
-model
-summary(model)
-abline(model)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
-model2=lm(etMMM$Ind~0+etMMM$BareGround)
-summary(model2)
-abline(model2, lty="dotted")
+#Join BG12 and ET12 datasets into one
+BGonBA3 <- full_join(BG3, ET3, by = c("Site", "Year"))
 
 #Model for bee abundance predicted by bare ground
-BGonBAMMM <- lm(Ind ~ BareGround, data = etMMM)
-summary(BGonBAMMM)
+BGonBA3model <- glmer(ETrapAbundance ~ AverageBareGround + Year + Site, family = poisson, data = BGonBA3)
+summary(BGonBA3model)
+
+BGonBA12model <- glmer(ETrapAbundance ~ AverageBareGround + Year + (1|Site), family = poisson, data = BGonBA12)
+summary(BGonBA12model)
 
 #Find intercept and slope to plot best fit line on graph
-coef(BGonBAMMM)
+coef(BGonBA3model)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonBAMMMplot <- ggplot(etMMM, aes(x = BareGround, y = Ind)) +

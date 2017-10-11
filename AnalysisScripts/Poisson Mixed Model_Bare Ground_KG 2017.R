@@ -9,16 +9,14 @@ library(dplyr)
 library(lubridate)
 library(lsmeans)
 
-#Clear environemtn and set working directory
+#Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project")
 
 # Load data
 bees <- read.csv("Data/Bees/2017/2017 Bees.csv")
-plants <- read.csv("Data/Plants/2017/2017 Quadrats.csv")
+plants <- read.csv("Data/Plants/2017 Quadrats.csv")
 
-#Change Bare ground to numeric
-plants$X..Bare.Ground <- as.numeric(plants$X..Bare.Ground)
 
 ## ===================================================================================
 ## Data Manipulation 
