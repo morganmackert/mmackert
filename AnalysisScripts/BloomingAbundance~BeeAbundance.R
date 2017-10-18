@@ -11,43 +11,54 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/mmackert/Data")
+setwd("~/ISU/Project/Data")
+
+#Load libraries
+library(dplyr)
+library(ggplot2)
 
 #Read in data
-nqAM <- read.csv("Moorhouse Full data set.csv")
-#####Floral index in this data set DOES include weed species as well as forbs.
-#####PercentCover in "New_Bees_Format.csv" is the average floral coverage for all 40 quadrats in year 1; all 50 in year 2.
-#####For example: McClellan Year 1 (Site 9) had 0.3% coverage in all ten quadrats during the first sample of the year and nothing beyond that, so the average over all 4 samples is 0.3/4=0.075.
-#####Quadrats in "New_Bees_Format.csv" is the proportion of quadrats over the entire year that contained blooming species.
-#####For example: McClellan Year 1 (Site 9) had 1 quadrat during the entire year with anything blooming, so the proportion would be 1/40=0.025.
-
+Fulldata <- read.csv("Combined Full data set.csv")
 #Date = Date of sample
 #Site = Site name
-#Sampling = Sample period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016
-#Quadrats = Combined coverage of blooming forb/weed species in ten quadrats
-#SppBloomQ = Number of forb/weed species in bloom within ten quadrats
-#BareGround = Average bare ground coverage in ten quadrats
-#TotalAbundance = Total number of bees collected
-#Total.Genus.Richness = Total number of bee genera collected
-#Total.Species.Richness = Total number of bee species collected
-#Following species names correspond to number of individuals collected of that species
+#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
+#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
+#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
+#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
+#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
+#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
+#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
+#Species.Name = Number of individuals of specified species collected at the specified site/date
 
-##### REMOVE ONE OF EARLY MAY NEAL SMITH SAMPLES??? #####
-##### Try analyzing both ways
+#Change column names so they're not so goofy.
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats."] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
-#Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.listAM <- as.numeric(nqAM$Year)
-pch.listAM
+#Calculate average bare ground and number of bees collected via emergence traps at each site during each year.
+BAonBA <- Fulldata %>%
+  select(Site, Year, Floral.Cover, Total.Abundance) %>%
+  group_by(Year, Site) %>%
+  summarise(AverageFloralCover = mean(Floral.Cover),
+            BeeAbundance = sum(Total.Abundance))
 
-#Year column in "nq" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-nqAM$Year <- as.factor(nqAM$Year)
+#Subset BAonBA to include only 2014 and 2015 data.
+BAonBA12 <- filter(BAonBA, Year <= 2)
+
+#Year column brought in as an integer. Change to numeric for Amy's plot.
+pch.list12 <- as.numeric(BAonBA12$Year)
+pch.list12
+
+#Year column brought in as an integer. Change to factor for Morgan's plot.
+BAonBA12$Year <- as.factor(BAonBA12$Year)
 
 #Amy's plot: Number Quadrats vs. Bee Abundance
-plot(nqAM$Quadrats,nqAM$TotalAbundance,
+plot(BAonBA12$AverageFloralCover,BAonBA12$BeeAbundance,
      xlab="Frequency of Blooming Species",ylab="Bee Abundance",
-     pch=c(pch.listAM),col='black')
-modelAM=lm(nqAM$TotalAbundance~nqAM$Quadrats)
+     pch=c(pch.list12),col='black')
+modelAM=lm(BAonBA12$BeeAbundance~BAonBA12$AverageFloralCover)
 modelAM
 summary(modelAM)
 abline(modelAM)
@@ -55,111 +66,140 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelAM)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBAAM <- lm(TotalAbundance ~ Quadrats, data = nqAM)
-summary(BAonBAAM)
+BAonBA12model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA12)
+summary(BAonBA12model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BAonBAAM)
+coef(BAonBA12model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBAAMplot <- ggplot(nqAM, aes(x = Quadrats, y = TotalAbundance)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 54.003745, slope = 0.221903) +
+BAonBA12plot <- ggplot(BAonBA12, 
+                       aes(x = AverageFloralCover,
+                           y = BeeAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
-  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)",
+       y = "Bee Abundance") +
   ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BAonBAAMplot
+BAonBA12plot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
-#                             Year 3                                #
+#                           Years 1-3                               #
 #-------------------------------------------------------------------#
-#Clear environment and set working directory
-rm(list=ls())
+#Subset BAonBA to include only 2014-2016 data.
+BAonBA123 <- filter(BAonBA, Year <= 3)
 
-#Read in data
-nqMMM <- read.csv("Mackert Full data set.csv")
-
-#Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.listMMM <- as.numeric(nqMMM$Year)
-pch.listMMM
-
-#Year column in "nq" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-nqMMM$Year <- as.factor(nqMMM$Year)
-
-#Amy's plot: Number Quadrats vs. Bee Abundance
-plot(nqMMM$Quadrats,nqMMM$TotalAbundance,
-     xlab="Frequency of Blooming Species",ylab="Bee Abundance",
-     pch=c(pch.listMMM),col='black')
-modelMMM=lm(nqMMM$TotalAbundance~nqMMM$Quadrats)
-modelMMM
-summary(modelMMM)
-abline(modelMMM)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(modelMMM)$adj.r.squared,digits=4)))
+#Year column brought in as an integer; change to factor.
+BAonBA123$Year <- as.factor(BAonBA123$Year)
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBAMMM <- lm(TotalAbundance ~ Quadrats, data = nqMMM)
-summary(BAonBAMMM)
+BAonBA123model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA123)
+summary(BAonBA123model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BAonBAMMM)
+coef(BAonBA123)
 
-#Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBAMMMplot <- ggplot(nqMMM, aes(x = Quadrats, y = TotalAbundance)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 36.577611, slope = 3.246725) +
+#Plot: Number of blooming forb/weed species vs. Bee Abundance
+BAonBA123plot <- ggplot(BAonBA123, aes(x = AverageFloralCover,
+                                       y = BeeAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
-  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)",
+       y = "Bee Abundance") +
   ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BAonBAMMMplot
+BAonBA123plot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
-#                             Years 1-3                             #
+#                             Years 3-4                             #
 #-------------------------------------------------------------------#
-#Clear environment
-rm(list=ls())
+#Subset BAonBA to include only 2016-2017 data.
+BAonBA34 <- filter(BAonBA, Year >= 3)
 
-#Read in data
-nqfull <- read.csv("Combined Full data set.csv")
-
-#Year column in "nqfull" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.list<-as.numeric(nqfull$Year)
-pch.list
-
-#Year column in "nqfull" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-nqfull$Year <- as.factor(nqfull$Year)
-
-#Amy's plot: Number Quadrats vs. Bee Abundance
-plot(nqfull$Quadrats,nqfull$TotalAbundance,
-     xlab="Frequency of Blooming Species",ylab="Bee Abundance",
-     pch=c(pch.list),col='black')
-model=lm(nqfull$TotalAbundance~nqfull$Quadrats)
-model
-summary(model)
-abline(model)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
+#Year column brought in as an integer; change to factor.
+BAonBA34$Year <- as.factor(BAonBA34$Year)
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBAfull <- lm(TotalAbundance ~ Quadrats, data = nqfull)
-summary(BAonBAfull)
+BAonBA34model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA34)
+summary(BAonBA34model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BAonBAfull)
+coef(BAonBA34model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBAfullplot <- ggplot(nqfull, aes(x = Quadrats, y = TotalAbundance)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 45.239054, slope = 1.801929) +
+BAonBA34plot <- ggplot(BAonBA34, aes(x = AverageFloralCover,
+                                     y = BeeAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
-  labs(x = "Blooming Species Coverage (%)", y = "Bee Abundance") +
+  labs(x = "Blooming Species Coverage (%)",
+       y = "Bee Abundance") +
   ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BAonBAfullplot
+BAonBA34plot
+
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
+#Subset BAonBA to include only 2016-2017 data.
+BAonBA1234 <- filter(BAonBA, Year <= 4)
+
+#Year column brought in as an integer; change to factor.
+BAonBA1234$Year <- as.factor(BAonBA1234$Year)
+
+#Model for bee abundance predicted by frequency of blooming species
+BAonBA1234model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA1234)
+summary(BAonBA1234model)
+
+#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
+coef(BAonBA1234model)
+
+#Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
+BAonBA1234plot <- ggplot(BAonBA1234, aes(x = AverageFloralCover,
+                                         y = BeeAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Blooming Species Coverage (%)",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BAonBA1234plot

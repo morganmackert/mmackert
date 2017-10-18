@@ -20,11 +20,23 @@ library(lme4)
 
 #Read in data
 Fulldata <- read.csv("Combined full data set.csv")
+#Date = Date of sample
+#Site = Site name
+#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
+#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
+#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
+#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
+#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
+#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
+#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
+#Species.Name = Number of individuals of specified species collected at the specified site/date
 
 #Change column names so they're not so goofy.
-colnames(Fulldata)[5] <- "Floral.Cover"
-colnames(Fulldata)[6] <- "Blooming.Species"
-colnames(Fulldata)[7] <- "Bare.Ground"
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2"] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2"] <- "Bare.Ground"
 
 #Calculate average bare ground and number of bees collected via emergence traps at each site during each year.
 BGonBA <- Fulldata %>%
