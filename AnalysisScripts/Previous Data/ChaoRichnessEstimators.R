@@ -1,6 +1,7 @@
-#####################################################################
-#                      CHAO RICHNESS ESTIMATORS                     #
-#####################################################################
+#-------------------------------------------------------------------#
+#                  Chao Richness Estimators by Site                 #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
 
 #Clear environment and set working directory
 rm(list=ls())
@@ -28,11 +29,14 @@ Plunkett <- read.csv("Plunketts.csv")
 PlunkettMatrix <- as.matrix(Plunkett[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(PlunkettMatrix, abund = TRUE)
+PLspp.est1234 <- spp.est(PlunkettMatrix, abund = TRUE)
 #####How is it possible to have 16.6 observed species?
 #####Because this is the estimate.
 #####Why do I get different results each time I run the function?
 #####Because it's an estimate.
+
+#Export output as .csv file
+write.csv(PLspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/PLspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                              Bowman                               #
@@ -45,7 +49,10 @@ Bowman <- read.csv("Bowman.csv")
 BowmanMatrix <- as.matrix(Bowman[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(BowmanMatrix, abund = TRUE)
+BOspp.est1234 <- spp.est(BowmanMatrix, abund = TRUE)
+
+#Export output as .csv file
+write.csv(BOspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/BOspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                           Kaldenberg                              #
@@ -58,7 +65,10 @@ Kaldenberg <- read.csv("Kaldenberg.csv")
 KaldenbergMatrix <- as.matrix(Kaldenberg[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(KaldenbergMatrix, abund = TRUE)
+KAspp.est1234 <- spp.est(KaldenbergMatrix, abund = TRUE)
+
+#Export output as .csv file
+write.csv(KAspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/KAspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                            McClellan                              #
@@ -71,10 +81,13 @@ McClellan <- read.csv("McClellan.csv")
 McClellanMatrix <- as.matrix(McClellan[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(McClellanMatrix)
+MCspp.est1234 <- spp.est(McClellanMatrix)
+
+#Export output as .csv file
+write.csv(MCspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/MCspp.est1234.csv")
 
 #-------------------------------------------------------------------#
-#                              Sloan                               #
+#                               Sloan                               #
 #-------------------------------------------------------------------#
 
 #Read in data
@@ -84,7 +97,10 @@ Sloan <- read.csv("Sloan.csv")
 SloanMatrix <- as.matrix(Sloan[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(SloanMatrix)
+SLspp.est1234 <- spp.est(SloanMatrix)
+
+#Export output as .csv file
+write.csv(SLspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/SLspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                             Sheller                               #
@@ -97,7 +113,10 @@ Sheller <- read.csv("Sheller.csv")
 ShellerMatrix <- as.matrix(Sheller[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(ShellerMatrix)
+SHspp.est1234 <- spp.est(ShellerMatrix)
+
+#Export output as .csv file
+write.csv(SHspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/SHspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                            Cretsinger                             #
@@ -110,21 +129,27 @@ Cretsinger <- read.csv("Cretsinger.csv")
 CretsingerMatrix <- as.matrix(Cretsinger[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(CretsingerMatrix)
+CRspp.est1234 <- spp.est(CretsingerMatrix)
+
+#Export output as .csv file
+write.csv(CRspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/CRspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                        Greving and Peckumn                        #
 #-------------------------------------------------------------------#
 
 #Read in data
-GandP <- read.csv("Greving_Peckumn.csv")
+GRandPE <- read.csv("Greving_Peckumn.csv")
 #####Columns labeled as "Greving" but include both sites.
 
 #Remove the first column (Site Code) and change "GandP" from data.frame to a matrix
-GandPMatrix <- as.matrix(GandP[,-1])
+GRandPEMatrix <- as.matrix(GRandPE[,-1])
 
 #Use "spp.est" function to estimate species diversity
-spp.est(GandPMatrix)
+GRandPEspp.est1234 <- spp.est(GRandPEMatrix)
+
+#Export output as .csv file
+write.csv(GRandPEspp.est1234, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/ChaoRichness/GRandPEspp.est1234.csv")
 
 #-------------------------------------------------------------------#
 #                           Low Diversity                           #

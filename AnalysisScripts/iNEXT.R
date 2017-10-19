@@ -7,18 +7,21 @@ library(ggplot2)
 library(iNEXT)
 
 #Spider example from Hsieh et al 2016 paper
-data(spider)
+data("spider")
 iNEXT(spider, q = c(0, 1, 2), datatype = "abundance")
 ggiNEXT(spider, type = 1, se = TRUE, grey = FALSE)
 
 #Bird example from Hsieh et al 2016 paper including graphics
-data(bird)
+data("bird")
 str(bird)
 out <- iNEXT(bird, q = c(0, 1, 2), datatype = "abundance")
 
 ggiNEXT(out, type = 1, facet.var = "site")
 ggiNEXT(out, type = 1, facet.var = "site", grey = TRUE)
 ggiNEXT(out, type = 1, facet.var = "order")
+
+#Ant example from Hsieh et al 2016 paper
+data("ant")
 
 #Trying it out with a subset of the previous data!
 #Set working directory and read in the data

@@ -32,6 +32,7 @@ str(iNEXTAbundance2)
 
 #RUN THE TEST
 iNEXTResult <- iNEXT(iNEXTAbundance2, q = c(0, 1, 2), datatype = "abundance")
+#q = Hill Number; 0 = species richness, 1 = Shannon Diversity, 2 = Simpson Diversity
 
 #Make pretty graphs
 ggiNEXT(iNEXTResult, type = 1, facet.var = "site")
