@@ -112,8 +112,16 @@ PL1234BVtablewide[is.na(PL1234BVtablewide)] <- 0
 PL1234BVtablewide[] <- lapply(PL1234BVtablewide, function(x) as.numeric(as.character(x)))
 
 #Create rarefaction curve
-rarecurve(PL1234BVtablewide)
+PL1234BVrare <- rarecurve(PL1234BVtablewide)
 
+#Create species accumulation curve
+PL1234BVspacc <- specaccum(PL1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(PL1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Blue Vane\nSpecies Accumulation Curve")
 #-------------------------------------------------------------------#
 #                              PLUNKETT                             #
 #                              Bee Bowls                            #
@@ -154,6 +162,15 @@ PL1234BBtablewide[] <- lapply(PL1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(PL1234BBtablewide)
+
+#Create species accumulation curve
+PL1234BBspacc <- specaccum(PL1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(PL1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                              PLUNKETT                             #
@@ -196,6 +213,15 @@ PL1234NTtablewide[] <- lapply(PL1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(PL1234NTtablewide)
 
+#Create species accumulation curve
+PL1234NTspacc <- specaccum(PL1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(PL1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                              PLUNKETT                             #
 #                              Emergence                            #
@@ -236,6 +262,15 @@ PL1234ETtablewide[] <- lapply(PL1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(PL1234ETtablewide)
+
+#Create species accumulation curve
+PL1234ETspacc <- specaccum(PL1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(PL1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                               BOWMAN                              #
@@ -287,6 +322,15 @@ BO1234BVtablewide[] <- lapply(BO1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(BO1234BVtablewide)
 
+#Create species accumulation curve
+BO1234BVspacc <- specaccum(BO1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(BO1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Bowman Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               BOWMAN                              #
 #                              Bee Bowls                            #
@@ -327,6 +371,15 @@ BO1234BBtablewide[] <- lapply(BO1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve for
 rarecurve(BO1234BBtablewide)
+
+#Create species accumulation curve
+BO1234BBspacc <- specaccum(BO1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(BO1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Bowman Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                                BOWMAN                             #
@@ -369,6 +422,15 @@ BO1234NTtablewide[] <- lapply(BO1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(BO1234NTtablewide)
 
+#Create species accumulation curve
+BO1234NTspacc <- specaccum(BO1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(BO1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               BOWMAN                              #
 #                              Emergence                            #
@@ -409,6 +471,15 @@ BO1234ETtablewide[] <- lapply(BO1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve for Bowman Blue Vane
 rarecurve(BO1234ETtablewide)
+
+#Create species accumulation curve
+BO1234ETspacc <- specaccum(BO1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(BO1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Plunkett Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                             KALDENBERG                            #
@@ -460,6 +531,15 @@ KA1234BVtablewide[] <- lapply(KA1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(KA1234BVtablewide)
 
+#Create species accumulation curve
+KA1234BVspacc <- specaccum(KA1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(KA1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Kaldenberg Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                             KALDENBERG                            #
 #                              Bee Bowls                            #
@@ -500,6 +580,15 @@ KA1234BBtablewide[] <- lapply(KA1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(KA1234BBtablewide)
+
+#Create species accumulation curve
+KA1234BBspacc <- specaccum(KA1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(KA1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Kaldenberg Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                             KALDENBERG                            #
@@ -542,6 +631,15 @@ KA1234NTtablewide[] <- lapply(KA1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(KA1234NTtablewide)
 
+#Create species accumulation curve
+KA1234NTspacc <- specaccum(KA1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(KA1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Kaldenberg Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                             KALDENBERG                            #
 #                              Emergence                            #
@@ -582,6 +680,15 @@ KA1234ETtablewide[] <- lapply(KA1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(KA1234ETtablewide)
+
+#Create species accumulation curve
+KA1234ETspacc <- specaccum(KA1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(KA1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Kaldenberg Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                              MCCLELLAN                            #
@@ -633,6 +740,15 @@ MC1234BVtablewide[] <- lapply(MC1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(MC1234BVtablewide)
 
+#Create species accumulation curve
+MC1234BVspacc <- specaccum(MC1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(MC1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "McClellan Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                              MCCLELLAN                            #
 #                              Bee Bowls                            #
@@ -674,8 +790,17 @@ MC1234BBtablewide[] <- lapply(MC1234BBtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(MC1234BBtablewide)
 
+#Create species accumulation curve
+MC1234BBspacc <- specaccum(MC1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(MC1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "McClellan Bee Bowls\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
-#                             MCCLELLAN                            #
+#                              MCCLELLAN                            #
 #                        Non-Targeted Sweeping                      #
 #-------------------------------------------------------------------#
 #Subset MC1234 to include only McClellan samples collected via non-targeted sweeping
@@ -714,6 +839,15 @@ MC1234NTtablewide[] <- lapply(MC1234NTtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(MC1234NTtablewide)
+
+#Create species accumulation curve
+MC1234NTspacc <- specaccum(MC1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(MC1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "McClellan Non-Target\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                              MCCLELLAN                            #
@@ -755,6 +889,15 @@ MC1234ETtablewide[] <- lapply(MC1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(MC1234ETtablewide)
+
+#Create species accumulation curve
+MC1234ETspacc <- specaccum(MC1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(MC1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "McClellan Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                                SLOAN                              #
@@ -806,6 +949,15 @@ SL1234BVtablewide[] <- lapply(SL1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(SL1234BVtablewide)
 
+#Create species accumulation curve
+SL1234BVspacc <- specaccum(SL1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SL1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sloan Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                                SLOAN                              #
 #                              Bee Bowls                            #
@@ -846,6 +998,15 @@ SL1234BBtablewide[] <- lapply(SL1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(SL1234BBtablewide)
+
+#Create species accumulation curve
+SL1234BBspacc <- specaccum(SL1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SL1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sloan Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                                SLOAN                              #
@@ -888,6 +1049,15 @@ SL1234NTtablewide[] <- lapply(SL1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(SL1234NTtablewide)
 
+#Create species accumulation curve
+SL1234NTspacc <- specaccum(SL1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SL1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sloan Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                                SLOAN                              #
 #                              Emergence                            #
@@ -928,6 +1098,15 @@ SL1234ETtablewide[] <- lapply(SL1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(SL1234ETtablewide)
+
+#Create species accumulation curve
+SL1234ETspacc <- specaccum(SL1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SL1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sloan Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                               SHELLER                             #
@@ -979,6 +1158,15 @@ SH1234BVtablewide[] <- lapply(SH1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(SH1234BVtablewide)
 
+#Create species accumulation curve
+SH1234BVspacc <- specaccum(SH1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SH1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sheller Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               SHELLER                             #
 #                              Bee Bowls                            #
@@ -1019,6 +1207,15 @@ SH1234BBtablewide[] <- lapply(SH1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(SH1234BBtablewide)
+
+#Create species accumulation curve
+SH1234BBspacc <- specaccum(SH1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SH1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sheller Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                               SHELLER                             #
@@ -1061,6 +1258,15 @@ SH1234NTtablewide[] <- lapply(SH1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(SH1234NTtablewide)
 
+#Create species accumulation curve
+SH1234NTspacc <- specaccum(SH1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SH1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sheller Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               SHELLER                             #
 #                              Emergence                            #
@@ -1101,6 +1307,15 @@ SH1234ETtablewide[] <- lapply(SH1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(SH1234ETtablewide)
+
+#Create species accumulation curve
+SH1234ETspacc <- specaccum(SH1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(SH1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Sheller Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                              CRETSINGER                           #
@@ -1152,6 +1367,15 @@ CR1234BVtablewide[] <- lapply(CR1234BVtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(CR1234BVtablewide)
 
+#Create species accumulation curve
+CR1234BVspacc <- specaccum(CR1234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(CR1234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Cretsinger Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                              CRETSINGER                           #
 #                              Bee Bowls                            #
@@ -1192,6 +1416,15 @@ CR1234BBtablewide[] <- lapply(CR1234BBtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(CR1234BBtablewide)
+
+#Create species accumulation curve
+CR1234BBspacc <- specaccum(CR1234BBtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(CR1234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Cretsinger Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                              CRETSINGER                           #
@@ -1234,6 +1467,15 @@ CR1234NTtablewide[] <- lapply(CR1234NTtablewide, function(x) as.numeric(as.chara
 #Create rarefaction curve
 rarecurve(CR1234NTtablewide)
 
+#Create species accumulation curve
+CR1234NTspacc <- specaccum(CR1234NTtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(CR1234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Cretsinger Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                              CRETSINGER                           #
 #                              Emergence                            #
@@ -1274,6 +1516,15 @@ CR1234ETtablewide[] <- lapply(CR1234ETtablewide, function(x) as.numeric(as.chara
 
 #Create rarefaction curve
 rarecurve(CR1234ETtablewide)
+
+#Create species accumulation curve
+CR1234ETspacc <- specaccum(CR1234ETtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(CR1234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Cretsinger Emergence Trap\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                               PECKUMN                             #
@@ -1325,6 +1576,15 @@ PE234BVtablewide[] <- lapply(PE234BVtablewide, function(x) as.numeric(as.charact
 #Create rarefaction curve
 rarecurve(PE234BVtablewide)
 
+#Create species accumulation curve
+PE234BVspacc <- specaccum(PE234BVtablewide,
+                           method = "rarefaction",
+                           gamma = "chao")
+plot(PE234BVspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Peckumn Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               PECKUMN                             #
 #                              Bee Bowls                            #
@@ -1365,6 +1625,15 @@ PE234BBtablewide[] <- lapply(PE234BBtablewide, function(x) as.numeric(as.charact
 
 #Create rarefaction curve
 rarecurve(PE234BBtablewide)
+
+#Create species accumulation curve
+PE234BBspacc <- specaccum(PE234BBtablewide,
+                          method = "rarefaction",
+                          gamma = "chao")
+plot(PE234BBspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Peckumn Bee Bowls\nSpecies Accumulation Curve")
 
 #-------------------------------------------------------------------#
 #                               PECKUMN                             #
@@ -1407,6 +1676,15 @@ PE234NTtablewide[] <- lapply(PE234NTtablewide, function(x) as.numeric(as.charact
 #Create rarefaction curve
 rarecurve(PE234NTtablewide)
 
+#Create species accumulation curve
+PE234NTspacc <- specaccum(PE234NTtablewide,
+                          method = "rarefaction",
+                          gamma = "chao")
+plot(PE234NTspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Peckumn Non-Target\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                               PECKUMN                             #
 #                              Emergence                            #
@@ -1447,3 +1725,12 @@ PE234ETtablewide[] <- lapply(PE234ETtablewide, function(x) as.numeric(as.charact
 
 #Create rarefaction curve
 rarecurve(PE234ETtablewide)
+
+#Create species accumulation curve
+PE234ETspacc <- specaccum(PE234ETtablewide,
+                          method = "rarefaction",
+                          gamma = "chao")
+plot(PE234ETspacc,
+     xlab = "Number of Samples",
+     ylab = "Number of Species",
+     main = "Peckumn Emergence Trap\nSpecies Accumulation Curve")
