@@ -59,11 +59,6 @@ BeeIDs1234$Trap[BeeIDs1234$Trap == "Non-Target"] <- "NT"
 BeeIDs1234$Trap[BeeIDs1234$Trap == "Emergence Trap"] <- "Emergence"
 BeeIDs1234$Trap[BeeIDs1234$Trap == "Blue Vane"] <- "Blue vane"
 
-#Create a new variable for number of samples taken
-#BeeIDs1234 <- BeeIDs1234 %>%
-  #group_by(Date) %>%
-  #mutate(Sampling_Day = as.factor(dense_rank(Date)))
-
 #-------------------------------------------------------------------#
 #                              PLUNKETT                             #
 #                              Blue Vane                            #
