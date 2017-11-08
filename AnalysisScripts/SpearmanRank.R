@@ -67,6 +67,7 @@ Spearman123 <- Spearman123[-c(1:2)]
 
 #Perform Spearman's Rank Correlation test
 Spearman123cor <- cor(Spearman123, method = "spearman")
+#Based on these results, we see that Blooming.Species and Floral.Cover are correlated.
 
 #Export output as .csv file
 write.csv(Spearman123cor, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SpearmanRank/SpearmanRank123.csv")
