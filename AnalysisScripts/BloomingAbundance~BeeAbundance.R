@@ -34,10 +34,10 @@ Fulldata <- read.csv("Combined Full data set.csv")
 
 #Change column names so they're not so goofy.
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
-names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats."] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
-#Calculate average bare ground and number of bees collected via emergence traps at each site during each year.
+#Calculate average floral cover and number of bees collected via emergence traps at each site during each year.
 BAonBA <- Fulldata %>%
   select(Site, Year, Floral.Cover, Total.Abundance) %>%
   group_by(Year, Site) %>%

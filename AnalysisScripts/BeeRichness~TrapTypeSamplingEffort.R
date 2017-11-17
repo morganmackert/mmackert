@@ -117,6 +117,7 @@ plot(PL1234BVspacc,
      xlab = "Number of Samples",
      ylab = "Number of Species",
      main = "Plunkett Blue Vane\nSpecies Accumulation Curve")
+
 #-------------------------------------------------------------------#
 #                              PLUNKETT                             #
 #                              Bee Bowls                            #
