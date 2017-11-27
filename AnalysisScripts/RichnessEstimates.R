@@ -5,7 +5,7 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(dplyr)
@@ -13,9 +13,10 @@ library(lubridate)
 library(tidyr)
 library(tibble)
 library(vegan)
+library(multcompView)
 
 #Read in data
-BeeIDs1234 <- read.csv("Data/Bees/Bee IDs.csv")
+BeeIDs <- read.csv("Bees/Bee IDs.csv")
 #Number = Individual identification number assigned to each specimen
 #Date = Date of sample
 #Site = Site name
@@ -26,39 +27,34 @@ BeeIDs1234 <- read.csv("Data/Bees/Bee IDs.csv")
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
 
-#Remove unnecessary columns
-BeeIDs1234 <- BeeIDs1234[-c(10:29)]
-
 #Use lubridate to allow R to recognize the dates
-BeeIDs1234$Date <- mdy(BeeIDs1234$Date)
-#One date will fail to parse, which is "Target 2016." Don't worry about it.
+BeeIDs$Date <- mdy(BeeIDs$Date)
 
 #Add new column with only the year
-BeeIDs1234$Year <- year(BeeIDs1234$Date)
+BeeIDs$Year <- year(BeeIDs$Date)
 
-#Remove "Wasp" entries
-BeeIDs1234 <- BeeIDs1234 %>%
+#Subset only years 1-3 without target bees, wasps, or unidentifiable specimens
+BeeIDs123 <- BeeIDs %>%
+  filter(Year <= 2016) %>%
+  filter(Trap != "Target") %>%
+  filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
-  filter(Binomial != "Wasp")
+  filter(Binomial != "Unidentifiable")
 
 #Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs1234 %>%
+BeeIDs123 %>%
   group_by(Site) %>%
   summarise()
 
 #Same with "Trap"
-BeeIDs1234 %>%
+BeeIDs123 %>%
   group_by(Trap) %>%
   summarise()
 
 #We find that site names are good to go, but trap names need some work!
-BeeIDs1234$Trap[BeeIDs1234$Trap == "Non-Target"] <- "NT"
-BeeIDs1234$Trap[BeeIDs1234$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs1234$Trap[BeeIDs1234$Trap == "Blue Vane"] <- "Blue vane"
-
-#Select only years 2014-2016
-BeeIDs123 <- BeeIDs1234 %>%
-  filter(Year <= "2016")
+BeeIDs123$Trap[BeeIDs123$Trap == "Non-Target"] <- "NT"
+BeeIDs123$Trap[BeeIDs123$Trap == "Emergence Trap"] <- "Emergence"
+BeeIDs123$Trap[BeeIDs123$Trap == "Blue Vane"] <- "Blue vane"
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
@@ -72,17 +68,17 @@ PL123 <- PL123 %>%
   group_by(Site) %>%
   mutate(Sampling_Day = as.factor(dense_rank(Date)))
 
-#Determine number of unique dates to be sure it matches the original data sheet. Should be 21.
+#Determine number of unique dates to be sure it matches the original data sheet. Should be 16. (Includes pitfall collection dates)
 length(unique(PL123$Date))
 
 #Create a table showing the number of unique species collected during each sample
 PL123count <-  PL123 %>%
-  group_by(Sampling_Day) %>%
+  group_by(Date) %>%
   summarise(Number_Species = n_distinct(Binomial))
 
 #Create a table listing each species and number of individuals collected during each sample
 PL123table <- PL123 %>%
-  group_by(Sampling_Day) %>%
+  group_by(Date) %>%
   count(Binomial)
 
 #Reformat from long to wide
@@ -94,7 +90,7 @@ PL123tablewide <- as.data.frame(PL123tablewide)
 #Change row names to assigned sample number
 PL123tablewide <- PL123tablewide %>%
   remove_rownames %>%
-  column_to_rownames("Sampling_Day")
+  column_to_rownames("Date")
 
 #Fill NAs with 0
 PL123tablewide[is.na(PL123tablewide)] <- 0
@@ -441,10 +437,10 @@ GRPE123 <- BeeIDs123 %>%
 
 #Create a new variable for number of samples taken
 GRPE123 <- GRPE123 %>%
-  #group_by(Site) %>%
+  group_by(Site) %>%
   mutate(Sampling_Day = as.factor(dense_rank(Date)))
 
-#Determine number of unique dates to be sure it matches the original data sheet. Should be 15.
+#Determine number of unique dates to be sure it matches the original data sheet. Should be 16.
 length(unique(GRPE123$Date))
 
 #Create a table showing the number of unique species collected during each sample
@@ -482,3 +478,49 @@ GRPE123jack <- specpool(GRPE123tablewide)
 GRPE123simp <- diversity(GRPE123tablewide, "simpson")
 GRPE123inv <- diversity(GRPE123tablewide, "inv")
 GRPE123shan <- diversity(GRPE123tablewide, "shannon")
+
+#-------------------------------------------------------------------#
+#                              All Sites                            #
+#-------------------------------------------------------------------#
+
+#Create a table showing number of individuals of each species species collected at each site
+BeeIDs123indspecSD <- BeeIDs123 %>%
+  group_by(Date, Site) %>%
+  count(Binomial)
+BeeIDs123spec <- BeeIDs123indspecSD %>%
+  group_by(Site, Binomial) %>%
+  summarise(n = sum(n))
+
+#Reformat from long to wide
+BeeIDS123specwide <- spread(BeeIDs123spec, Binomial, n)
+
+#Convert to a dataframe
+BeeIDS123specwide <- as.data.frame(BeeIDS123specwide)
+
+#Fill NAs with 0
+BeeIDS123specwide[is.na(BeeIDS123specwide)] <- 0
+
+#Change row names to site name
+BeeIDS123specwide <- BeeIDS123specwide %>%
+  remove_rownames %>%
+  column_to_rownames("Site")
+
+#Estimate Chao1 and ACE richness
+Chao1 <- estimateR(BeeIDS123specwide)
+
+#Transpose axes in Chao1
+tChao1 <- t(Chao1)
+
+#Move rownames into "Site" variable
+tChao1 <- as.data.frame(tChao1)
+tChao1 <- rownames_to_column(tChao1, var = "Site")
+
+#Determine significance levels
+AOV <- aov(S.obs ~ Site, data = tChao1)
+tChao1Letters <- data.frame("Letters" = multcompLetters(extract_p(TukeyHSD(AOV)$"Site"))$"Letters")
+
+AOV <- aov(n ~ Site, data = BeeIDs123spec)
+summary(AOV)
+
+Sepal.Length.fm <- aov(Sepal.Length~Species, data=iris)
+Sepal.Length.Letters <- data.frame("Letters"=multcompLetters(extract_p(TukeyHSD(Sepal.Length.fm)$"Species"))$"Letters")

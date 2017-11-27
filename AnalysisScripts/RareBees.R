@@ -31,9 +31,12 @@ BeeIDs <- read.csv("Bees/Bee IDs.csv")
 #Use lubridate to allow R to recognize dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
 
-#Subset only years 1-3 without target bees or wasps
+#Add new column with only the year
+BeeIDs$Year <- year(BeeIDs$Date)
+
+#Subset only years 1-3 without target bees, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
-  filter(Year <= 3) %>%
+  filter(Year <= 2016) %>%
   filter(Trap != "Target") %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
@@ -73,3 +76,9 @@ BeeIDs123single <- BeeIDs123spec%>%
   filter(n == 1) %>%
   summarise(NumberSingletons = length(unique(Binomial)))
 
+#Determine significance levels
+BeeIDs123indspecSDAOV <- aov(n ~ Site, data = BeeIDs123indspecSD)
+summary(BeeIDs123indspecSDAOV)
+BeeIDs123indspecSDLetters <- data.frame("Letters" = multcompLetters(extract_p(TukeyHSD(BeeIDs123indspecSDAOV)$"Site"))$"Letters")
+
+AOV <- aov()
