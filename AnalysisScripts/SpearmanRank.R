@@ -5,7 +5,7 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(lubridate)
@@ -14,7 +14,7 @@ library(tibble)
 library(PerformanceAnalytics)
 
 #Read in data
-Fulldata <- read.csv("Data/Combined full data set.csv")
+Fulldata <- read.csv("Combined full data set.csv")
 #Date = Date of sample
 #Site = Site name
 #Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
@@ -38,32 +38,29 @@ Fulldata$Date <- mdy(Fulldata$Date)
 
 #Only dealing with 2014-2016, so remove 2017
 Data123 <- Fulldata %>%
-  filter(Year <= "3")
+  filter(Year <= 3)
   
-#Determine average floral coverage for each site during each year
+#Determine average floral coverage for each site for all years combined
 floralcover123 <- Data123 %>%
-  select(Year, Site, Floral.Cover) %>%
-  group_by(Year, Site) %>%
+  group_by(Site) %>%
   summarise(Average.FloralCover = mean(Floral.Cover))
 
 #Determine number of blooming species found in quadrats at each site during each year
 bsquadrats123 <- Data123 %>%
-  select(Year, Site, Blooming.Species) %>%
-  group_by(Year, Site) %>%
+  group_by(Site) %>%
   summarise(Average.BSQuadrats = mean(Blooming.Species))
 
 #Determine average bare ground coverage for each site during each year
 bareground123 <- Data123 %>%
-  select(Year, Site, Bare.Ground) %>%
-  group_by(Year, Site) %>%
+  group_by(Site) %>%
   summarise(Average.BareGround = mean(Bare.Ground))
 
 #Join datasets together (takes two steps to join all three, dumb)
-Spearman123 <- full_join(floralcover123, bsquadrats123, by = c("Year", "Site"))
-Spearman123 <- full_join(Spearman123, bareground123, by = c("Year", "Site"))
+Spearman123 <- full_join(floralcover123, bsquadrats123, by = c("Site"))
+Spearman123 <- full_join(Spearman123, bareground123, by = c("Site"))
 
-#Now we can remove Year and Site columns
-Spearman123 <- Spearman123[-c(1:2)]
+#Now we can remove Site column
+Spearman123 <- Spearman123[-c(1)]
 
 #Perform Spearman's Rank Correlation test
 Spearman123cor <- cor(Spearman123, method = "spearman")

@@ -14,6 +14,7 @@ library(tidyr)
 library(tibble)
 library(vegan)
 library(multcompView)
+library(ggplot2)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
@@ -26,9 +27,23 @@ BeeIDs <- read.csv("Bees/Bee IDs.csv")
 #Genus = Taxonimic genus to which each specimen belongs
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
+Fulldata <- read.csv("Combined full data set.csv")
+#Date = Date of sample
+#Site = Site name
+#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
+#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
+#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
+#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
+#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
+#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
+#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
+#Species.Name = Number of individuals of specified species collected at the specified site/date
 
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
+Fulldata$Date <- mdy(Fulldata$Date)
 
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
@@ -55,6 +70,14 @@ BeeIDs123 %>%
 BeeIDs123$Trap[BeeIDs123$Trap == "Non-Target"] <- "NT"
 BeeIDs123$Trap[BeeIDs123$Trap == "Emergence Trap"] <- "Emergence"
 BeeIDs123$Trap[BeeIDs123$Trap == "Blue Vane"] <- "Blue vane"
+
+#Change Full data column names so they're not so goofy.
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+
+#Filter Fulldata to include only years 1-3
+years123 <- filter(Fulldata, Year <= 3)
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
@@ -515,12 +538,94 @@ tChao1 <- t(Chao1)
 tChao1 <- as.data.frame(tChao1)
 tChao1 <- rownames_to_column(tChao1, var = "Site")
 
+#Graph it
+tChao1plot <- ggplot(tChao1,
+                      aes (x = Site,
+                           y = S.chao1)) +
+  geom_point(size = 3) +
+  theme_bw() +
+  scale_x_discrete(limits = c("Bowman", "McClellan", "Sheller", "Elkader", "Sloan", "Kaldenberg", "Cretsinger", "Greving", "Plunkett", "Peckumn", "NealSmith")) +
+  labs(x = "Site (increasing blooming plant diversity)",
+       y = "Chao1 Richness Estimate") +
+  ggtitle("Chao1 Richness Estimate at Each Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   angle = 45,
+                                   hjust = 1))
+tChao1plot
+
 #Determine significance levels
+###FIGURE THIS OUT MORGAN
 AOV <- aov(S.obs ~ Site, data = tChao1)
 tChao1Letters <- data.frame("Letters" = multcompLetters(extract_p(TukeyHSD(AOV)$"Site"))$"Letters")
 
 AOV <- aov(n ~ Site, data = BeeIDs123spec)
 summary(AOV)
 
-Sepal.Length.fm <- aov(Sepal.Length~Species, data=iris)
-Sepal.Length.Letters <- data.frame("Letters"=multcompLetters(extract_p(TukeyHSD(Sepal.Length.fm)$"Species"))$"Letters")
+#Estimate Inverse Simpson's Diversity Index
+InvSimp <- diversity(BeeIDS123specwide, "inv")
+
+#Move rownames to "Site" variable
+InvSimp <- as.data.frame(InvSimp)
+InvSimp <- rownames_to_column(InvSimp, var = "Site")
+
+#Graph it!
+InvSimpplot <- ggplot(InvSimp,
+                      aes (x = Site,
+                           y = InvSimp)) +
+  geom_point(size = 3) +
+  theme_bw() +
+  scale_x_discrete(limits = c("Bowman", "McClellan", "Sheller", "Elkader", "Sloan", "Kaldenberg", "Cretsinger", "Greving", "Plunkett", "Peckumn", "NealSmith")) +
+  labs(x = "Site (increasing blooming plant diversity)",
+       y = "Inverse Simpson's Diversity Index") +
+  ggtitle("Inverse Simpson's Diversity Index at Each Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   angle = 45,
+                                   hjust = 1))
+InvSimpplot
+
+#Calculate average number of blooming plant species at each site
+averageveg <- years123 %>%
+  group_by(Site) %>%
+  summarise(AverageVeg = mean(Blooming.Species))
+
+#Add average number of blooming plant species to InvSimp data frame
+InvSimp <- full_join(InvSimp, averageveg, by = "Site")
+
+#Graph it another way!
+InvSimpplotwithveg <-  ggplot(InvSimp,
+                              aes (x = AverageVeg,
+                                   y = InvSimp)) +
+  geom_point(aes(color = Site),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Average Number of Blooming Plant Species",
+       y = "Inverse Simpson's Diversity Index") +
+  ggtitle("Inverse Simpson's Diversity Index at Each Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   hjust = 1)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title = element_text(face = "bold")) +
+  theme(legend.title.align = 0.5)
+InvSimpplotwithveg
+
+#Model it
+###Error about grouping factors being less than the number of observations
+InvSimpmodel <- lmer(InvSimp ~ AverageVeg + (1|Site),
+                   data = InvSimp)
+summary(InvSimpmodel)
+
+glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + (1|Site),
+      data = bareground_data, family = poisson(link = "log"))
