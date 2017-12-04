@@ -1,15 +1,32 @@
-##############################################
-############### BEES BY FAMILY ###############
-##############################################
+#-------------------------------------------------------------------#
+#                          Bees by Family                           #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
 
-#Clear environment
+#Clear environment and set working directory
 rm(list=ls())
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(ggplot2)
+library(dplyr)
 
-#Read in the data
-beefamilies <- read.csv("https://raw.githubusercontent.com/morganmackert/mmackert/master/Data/bees/working/2016%20Bee%20IDs.csv")
+#Read in data; set blank entries as NA
+beefamilies <- read.csv("Bees/Bee IDs.csv", header = T, na.strings = c("", "NA"))
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet
+
+#Remove NAs
+beefamilies <- beefamilies %>%
+  filter(!is.na(Family)) %>%
+  filter(Family != "Wasp")
 
 #Create a table to visualize the data
 table(beefamilies$Family)
@@ -34,7 +51,7 @@ ggplot(beefamilies, aes(x = Family)) +
 #Create bar graph of family count data with bars broken up by site
 #This one is the best
 #SO COOL
-ggplot(beefamilies, aes(x = Family, fill = Site)) + 
+familyplot <- ggplot(beefamilies, aes(x = Family, fill = Site)) + 
   geom_bar(color = "black") +
   ggtitle("Abundance of Bee Families by Site") +
   theme_bw() +
@@ -45,9 +62,31 @@ ggplot(beefamilies, aes(x = Family, fill = Site)) +
   theme(axis.text.y = element_text(size = 12, margin = margin(0, 0, 0, 10))) +
   labs(y = "Count") +
   theme(plot.title = element_text(hjust = 0.5))
+familyplot
+
+#Plot for Amanda's Science with Practice poster
+familyplotAK <- ggplot(beefamilies,
+                       aes(x = Family)) + 
+  geom_bar(color = "black") +
+  ggtitle("Abundance of Bee Families") +
+  theme_bw() +
+  theme(legend.key.size = unit(1, "cm")) +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  margin = margin(10, 0, 10, 0))) +
+  theme(axis.title = element_text(size = 16,
+                                  face = "bold")) +
+  theme(axis.text.x = element_text(size = 14,
+                                   angle = 45,
+                                   hjust = 1)) +
+  theme(axis.text.y = element_text(size = 12,
+                                   margin = margin(0, 0, 0, 10))) +
+  labs(y = "Count") +
+  theme(plot.title = element_text(hjust = 0.5))
+familyplotAK
 
 #------------------------------------------------#
-#                Extras - Bees
+#                Extras - Bees                   #
 #------------------------------------------------#
 #Set working directory; depends on which computer
 #Personal:
