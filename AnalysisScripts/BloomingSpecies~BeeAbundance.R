@@ -118,40 +118,66 @@ BSonBAMMMplot
 rm(list=ls())
 
 #Read in data
-nqfull <- read.csv("Combined Full data set.csv")
+Fulldata <- read.csv("Combined full data set.csv")
+#Date = Date of sample
+#Site = Site name
+#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
+#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
+#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
+#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
+#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
+#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
+#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
+#Species.Name = Number of individuals of specified species collected at the specified site/date
 
-#Year column in "nqfull" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.list<-as.numeric(nqfull$Year)
-pch.list
+#Change column names so they're not so goofy.
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
-#Year column in "nqfull" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-nqfull$Year <- as.factor(nqfull$Year)
+#Only dealing with 2014-2016, so remove 2017
+Data123 <- Fulldata %>%
+  filter(Year <= 3)
 
-#Amy's plot: Number Quadrats vs. Bee Abundance
-plot(nqfull$Quadrats,nqfull$TotalAbundance,
-     xlab="Frequency of Blooming Species",ylab="Bee Abundance",
-     pch=c(pch.list),col='black')
-model=lm(nqfull$TotalAbundance~nqfull$Quadrats)
-model
-summary(model)
-abline(model)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
+#Year column is brought in as an integer. Change to factor for Morgan's plot.
+Data123$Year <- as.factor(Data123$Year)
+
+#Determine average number of blooming species found in quadrats at each site during each year
+bsquadrats123 <- Data123 %>%
+  group_by(Site, Year) %>%
+  summarise(Average.BSQuadrats = mean(Blooming.Species))
+
+#Determine average number of bees collected at each site during each year
+bees123 <- Data123 %>%
+  group_by(Site, Year) %>%
+  summarise(Average.Bees = mean(Total.Abundance))
+
+#Join all of the new data sets together
+BSonBA123 <- full_join(bees123, bsquadrats123, by = c("Site", "Year"))
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBAfull <- lm(TotalAbundance ~ Quadrats, data = nqfull)
-summary(BSonBAfull)
-
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBAfull)
+BSonBA123model <- lm(Total.Abundance ~ Blooming.Species, data = Data123)
+summary(BSonBA123model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BSonBAfullplot <- ggplot(nqfull, aes(x = SppBloomQ, y = TotalAbundance)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 45.239054, slope = 1.801929) +
+BSonBA123plot <- ggplot(BSonBA123,
+                        aes(x = Average.BSQuadrats,
+                            y = Average.Bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
-  labs(x = "Frequency of Blooming Species", y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Abundance") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
+  labs(x = "Number of Blooming Plant Species",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Plant Species \non Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
-BSonBAfullplot
+BSonBA123plot
