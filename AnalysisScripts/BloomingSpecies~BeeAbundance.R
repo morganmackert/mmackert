@@ -11,9 +11,10 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/mmackert/Data")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
+library(dplyr)
 library(ggplot2)
 
 #Read in data
@@ -173,11 +174,16 @@ BSonBA123plot <- ggplot(BSonBA123,
               color = "black",
               size = 0.5) +
   theme_bw() +
+  scale_color_manual(labels = c("2014", "2015", "2016"),
+                     values = c("darkorchid1", "#000000", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016"),
+                     values = c(16, 17, 15)) +
   labs(x = "Number of Blooming Plant Species",
        y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Plant Species \non Bee Abundance") +
+  #ggtitle("Influence of Blooming Plant Species \non Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5) 
 BSonBA123plot

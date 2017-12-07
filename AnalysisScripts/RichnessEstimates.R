@@ -543,6 +543,10 @@ tChao1plot <- ggplot(tChao1,
                       aes (x = Site,
                            y = S.chao1)) +
   geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
   scale_x_discrete(limits = c("Bowman", "McClellan", "Sheller", "Elkader", "Sloan", "Kaldenberg", "Cretsinger", "Greving", "Plunkett", "Peckumn", "NealSmith")) +
   labs(x = "Site (increasing blooming plant diversity)",
