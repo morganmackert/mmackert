@@ -539,6 +539,7 @@ tChao1 <- as.data.frame(tChao1)
 tChao1 <- rownames_to_column(tChao1, var = "Site")
 
 #Graph it
+#Sites are organized by increasing number of blooming plants present at each site.  1-10 is alphabetical.
 tChao1plot <- ggplot(tChao1,
                       aes (x = Site,
                            y = S.chao1)) +
@@ -559,6 +560,69 @@ tChao1plot <- ggplot(tChao1,
                                    angle = 45,
                                    hjust = 1))
 tChao1plot
+
+#Plot another way!
+#Calculate average number of blooming plant species at each site
+averageveg <- years123 %>%
+  group_by(Site) %>%
+  summarise(AverageVeg = mean(Blooming.Species))
+
+#Calculate number of unique blooming plant species at each site
+totalveg <- years123 %>%
+  group_by(Site) %>%
+  summarise(TotalVeg = length(unique(Blooming.Species)))
+
+#Add total average number of blooming plant species to tChao1 data frame
+tChao1 <- full_join(tChao1, averageveg, by = "Site")
+tChao1 <- full_join(tChao1, totalveg, by = "Site")
+
+#Model for relationship between Chao1 richness and average vegetation
+tChao1plotwithavgvegmodel <- lm(S.chao1 ~ AverageVeg, data = tChao1)
+summary(tChao1plotwithavgvegmodel)
+
+#Model for relationship between Chao1 richness and total numaber of blooming species at each site
+tChao1plotwithtotalvegmodel <- lm(S.chao1 ~ TotalVeg, data = tChao1)
+summary(tChao1plotwithtotalvegmodel)
+
+#Graph with average number of blooming species at eacah site
+tChao1plotwithavgveg <- ggplot(tChao1,
+                     aes (x = AverageVeg,
+                          y = S.chao1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Average Number of Blooming Plant Species",
+       y = "Chao1 Richness Estimate") +
+  ggtitle("Chao1 Richness Estimate with \nIncreasing Blooming Plant Diversity") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   hjust = 1))
+tChao1plotwithavgveg
+
+#Graph with total number of blooming species at each site
+tChao1plotwithtotalveg <- ggplot(tChao1,
+                               aes (x = TotalVeg,
+                                    y = S.chao1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Number of Blooming Plant Species",
+       y = "Chao1 Richness Estimate") +
+  ggtitle("Chao1 Richness Estimate with \nIncreasing Blooming Plant Diversity") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   hjust = 1))
+tChao1plotwithtotalveg
 
 #Determine significance levels
 ###FIGURE THIS OUT MORGAN
@@ -598,15 +662,28 @@ averageveg <- years123 %>%
   group_by(Site) %>%
   summarise(AverageVeg = mean(Blooming.Species))
 
+#Calculate number of unique blooming plant species at each site
+totalveg <- years123 %>%
+  group_by(Site) %>%
+  summarise(TotalVeg = length(unique(Blooming.Species)))
+
 #Add average number of blooming plant species to InvSimp data frame
 InvSimp <- full_join(InvSimp, averageveg, by = "Site")
+InvSimp <- full_join(InvSimp, totalveg, by = "Site")
 
-#Graph it another way!
-InvSimpplotwithveg <-  ggplot(InvSimp,
+#Model for relationship between InvSimp and average vegetation
+Invsimpwithavgvegmodel <- lm(InvSimp ~ AverageVeg, data = InvSimp)
+summary(Invsimpwithavgvegmodel)
+
+#Model for relationhip between InvSimp and total number of blooming plant species at each site
+InvSimpwithtotalvegmodel <- lm(InvSimp ~ TotalVeg, data = InvSimp)
+summary(InvSimpwithtotalvegmodel)
+
+#Graph with average number of blooming species at each site
+InvSimpplotwithavgveg <-  ggplot(InvSimp,
                               aes (x = AverageVeg,
                                    y = InvSimp)) +
-  geom_point(aes(color = Site),
-             size = 3) +
+  geom_point(size = 3) +
   geom_smooth(method = "glm",
               se = FALSE,
               color = "black",
@@ -614,7 +691,7 @@ InvSimpplotwithveg <-  ggplot(InvSimp,
   theme_bw() +
   labs(x = "Average Number of Blooming Plant Species",
        y = "Inverse Simpson's Diversity Index") +
-  ggtitle("Inverse Simpson's Diversity Index at Each Site") +
+  ggtitle("Inverse Simpson's Diversity Index with \nIncreasing Blooming Plant Diversity") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
@@ -623,7 +700,30 @@ InvSimpplotwithveg <-  ggplot(InvSimp,
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title = element_text(face = "bold")) +
   theme(legend.title.align = 0.5)
-InvSimpplotwithveg
+InvSimpplotwithavgveg
+
+#Graph with total number of blooming species at each site
+InvSimpplotwithtotalveg <-  ggplot(InvSimp,
+                                 aes (x = TotalVeg,
+                                      y = InvSimp)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Number of Blooming Plant Species",
+       y = "Inverse Simpson's Diversity Index") +
+  ggtitle("Inverse Simpson's Diversity Index with \nIncreasing Blooming Plant Diversity") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(axis.text.x = element_text(size = 11,
+                                   hjust = 1)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title = element_text(face = "bold")) +
+  theme(legend.title.align = 0.5)
+InvSimpplotwithtotalveg
 
 #Model it
 ###Error about grouping factors being less than the number of observations
