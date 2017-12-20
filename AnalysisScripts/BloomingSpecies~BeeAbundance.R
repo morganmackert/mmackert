@@ -132,31 +132,52 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
+Quadrats <- read.csv("Plants/Quadrats.csv")
+#Date = Date of sample
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Site = Site name
+#Quadrat = Quadrat number; 1-10
+#Species = Name of plant(s) in quadrat
+#X..Cover = Percent coverage of each species within quadrat
+#X..Bare.Ground = Percent coverage of bare ground within quadrat
+#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
+#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Change column names so they're not so goofy.
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
+names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
 #Only dealing with 2014-2016, so remove 2017
 Data123 <- Fulldata %>%
+  filter(Year <= 3)
+Quadrats123 <- Quadrats %>%
   filter(Year <= 3)
 
 #Year column is brought in as an integer. Change to factor for Morgan's plot.
 Data123$Year <- as.factor(Data123$Year)
 
-#Determine average number of blooming species found in quadrats at each site during each year
-bsquadrats123 <- Data123 %>%
-  group_by(Site, Year) %>%
-  summarise(Average.BSQuadrats = mean(Blooming.Species))
+#Determine number of unique blooming species found in quadrats at each site during each year
+bsquadrats123 <- Quadrats123 %>%
+  group_by(Site) %>%
+  summarise(TotalBS = length(unique(Species)))
+
+#What are the blooming species?
+bsquadrats123names <- Quadrats123 %>%
+  group_by(Site) %>%
+  count(Species)
 
 #Determine average number of bees collected at each site during each year
 bees123 <- Data123 %>%
-  group_by(Site, Year) %>%
-  summarise(Average.Bees = mean(Total.Abundance))
+  group_by(Site) %>%
+  summarise(TotalBees = sum(Total.Abundance))
 
 #Join all of the new data sets together
-BSonBA123 <- full_join(bees123, bsquadrats123, by = c("Site", "Year"))
+BSonBA123 <- full_join(bees123, bsquadrats123, by = c("Site"))
 
 #Model for bee abundance predicted by frequency of blooming species
 BSonBA123model <- lm(Total.Abundance ~ Blooming.Species, data = Data123)
@@ -164,23 +185,21 @@ summary(BSonBA123model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
 BSonBA123plot <- ggplot(BSonBA123,
-                        aes(x = Average.BSQuadrats,
-                            y = Average.Bees)) +
-  geom_point(aes(shape = Year,
-                 color = Year),
-             size = 3) +
+                        aes(x = TotalBS,
+                            y = TotalBees)) +
+  geom_point(size = 3) +
   geom_smooth(method = "glm",
               se = FALSE,
               color = "black",
               size = 0.5) +
   theme_bw() +
-  scale_color_manual(labels = c("2014", "2015", "2016"),
-                     values = c("darkorchid1", "#000000", "darkgreen")) +
-  scale_shape_manual(labels = c("2014", "2015", "2016"),
-                     values = c(16, 17, 15)) +
+  #scale_color_manual(labels = c("2014", "2015", "2016"),
+                     #values = c("darkorchid1", "#000000", "darkgreen")) +
+  #scale_shape_manual(labels = c("2014", "2015", "2016"),
+                     #values = c(16, 17, 15)) +
   labs(x = "Number of Blooming Plant Species",
        y = "Bee Abundance") +
-  #ggtitle("Influence of Blooming Plant Species \non Bee Abundance") +
+  ggtitle("Influence of Blooming Plant Species \non Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +

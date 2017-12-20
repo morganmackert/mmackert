@@ -147,7 +147,7 @@ names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
-#Subset only years 1-2
+#Subset only years 1-3
 Data123 <- filter(Fulldata, Year <= 3)
 
 #Year column in "nq" dataframe is brought in as an integer. Change to factor for Morgan's plot.

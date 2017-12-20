@@ -32,9 +32,6 @@ BeeIDs1234 <- read.csv("Data/Bees/Bee IDs.csv")
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
 
-#Remove unnecessary columns
-BeeIDs1234 <- BeeIDs1234[-c(10:29)]
-
 #Use lubridate to allow R to recognize the dates
 BeeIDs1234$Date <- mdy(BeeIDs1234$Date)
 #One date will fail to parse, which is "Target 2016." Don't worry about it.

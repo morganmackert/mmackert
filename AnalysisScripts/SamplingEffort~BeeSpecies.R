@@ -211,9 +211,3 @@ PE123 <- PE123 %>%
 
 #Create rarefaction curve for Peckumn
 rarecurve(PE123)
-
-
-
-
-
-
