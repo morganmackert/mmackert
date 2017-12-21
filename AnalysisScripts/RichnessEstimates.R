@@ -40,44 +40,60 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
+Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
+#Date = Date of sample
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Site = Site name
+#Quadrat = Quadrat number; 1-10
+#Species = Name of plant(s) in quadrat
+#X..Cover = Percent coverage of each species within quadrat
+#X..Bare.Ground = Percent coverage of bare ground within quadrat
+#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
+#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
 Fulldata$Date <- mdy(Fulldata$Date)
+Quadrats$Date <- mdy(Quadrats$Date)
 
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
 
-#Subset only years 1-3 without target bees, wasps, or unidentifiable specimens
+#Because we're sorting by "Site," we need to make sure naming conventions are consistent
+BeeIDs %>%
+  group_by(Site) %>%
+  summarise()
+
+#Same with "Trap"
+BeeIDs %>%
+  group_by(Trap) %>%
+  summarise()
+
+#We find that site names are good to go, but trap names need some work!
+BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
+BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
+BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
+
+#Change column names so they're not so goofy.
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
+names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
+
+#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
   filter(Year <= 2016) %>%
   filter(Trap != "Target") %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable")
-
-#Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs123 %>%
-  group_by(Site) %>%
-  summarise()
-
-#Same with "Trap"
-BeeIDs123 %>%
-  group_by(Trap) %>%
-  summarise()
-
-#We find that site names are good to go, but trap names need some work!
-BeeIDs123$Trap[BeeIDs123$Trap == "Non-Target"] <- "NT"
-BeeIDs123$Trap[BeeIDs123$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs123$Trap[BeeIDs123$Trap == "Blue Vane"] <- "Blue vane"
-
-#Change Full data column names so they're not so goofy.
-names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
-names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
-names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
-
-#Filter Fulldata to include only years 1-3
-years123 <- filter(Fulldata, Year <= 3)
+years123 <- Fulldata %>%
+  filter(Year <= 3)
+Quadrats123 <- Quadrats %>%
+  filter(Year <= 3)
 
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
@@ -541,8 +557,8 @@ tChao1 <- rownames_to_column(tChao1, var = "Site")
 #Graph it
 #Sites are organized by increasing number of blooming plants present at each site.  1-10 is alphabetical.
 tChao1plot <- ggplot(tChao1,
-                      aes (x = Site,
-                           y = S.chao1)) +
+                     aes (x = Site,
+                          y = S.chao1)) +
   geom_point(size = 3) +
   geom_smooth(method = "glm",
               se = FALSE,
@@ -562,26 +578,21 @@ tChao1plot <- ggplot(tChao1,
 tChao1plot
 
 #Plot another way!
-#Calculate average number of blooming plant species at each site
-averageveg <- years123 %>%
+#Determine number of unique blooming species found in quadrats at each site, not including NAs
+bsquadrats123 <- Quadrats123 %>%
   group_by(Site) %>%
-  summarise(AverageVeg = mean(Blooming.Species))
-
-#Calculate number of unique blooming plant species at each site
-totalveg <- years123 %>%
-  group_by(Site) %>%
-  summarise(TotalVeg = length(unique(Blooming.Species)))
+  filter(!is.na(Species)) %>%
+  summarise(TotalBS = length(unique(Species)))
 
 #Add total average number of blooming plant species to tChao1 data frame
-tChao1 <- full_join(tChao1, averageveg, by = "Site")
-tChao1 <- full_join(tChao1, totalveg, by = "Site")
+tChao1 <- full_join(tChao1, bsquadrats123, by = "Site")
 
 #Model for relationship between Chao1 richness and average vegetation
 tChao1plotwithavgvegmodel <- lm(S.chao1 ~ AverageVeg, data = tChao1)
 summary(tChao1plotwithavgvegmodel)
 
 #Model for relationship between Chao1 richness and total numaber of blooming species at each site
-tChao1plotwithtotalvegmodel <- lm(S.chao1 ~ TotalVeg, data = tChao1)
+tChao1plotwithtotalvegmodel <- lm(S.chao1 ~ TotalBS, data = tChao1)
 summary(tChao1plotwithtotalvegmodel)
 
 #Graph with average number of blooming species at eacah site
@@ -606,8 +617,8 @@ tChao1plotwithavgveg
 
 #Graph with total number of blooming species at each site
 tChao1plotwithtotalveg <- ggplot(tChao1,
-                               aes (x = TotalVeg,
-                                    y = S.chao1)) +
+                                 aes(x = TotalBS,
+                                     y = S.chao1)) +
   geom_point(size = 3) +
   geom_smooth(method = "glm",
               se = FALSE,
@@ -657,26 +668,15 @@ InvSimpplot <- ggplot(InvSimp,
                                    hjust = 1))
 InvSimpplot
 
-#Calculate average number of blooming plant species at each site
-averageveg <- years123 %>%
-  group_by(Site) %>%
-  summarise(AverageVeg = mean(Blooming.Species))
-
-#Calculate number of unique blooming plant species at each site
-totalveg <- years123 %>%
-  group_by(Site) %>%
-  summarise(TotalVeg = length(unique(Blooming.Species)))
-
 #Add average number of blooming plant species to InvSimp data frame
-InvSimp <- full_join(InvSimp, averageveg, by = "Site")
-InvSimp <- full_join(InvSimp, totalveg, by = "Site")
+InvSimp <- full_join(InvSimp, bsquadrats123, by = "Site")
 
 #Model for relationship between InvSimp and average vegetation
 Invsimpwithavgvegmodel <- lm(InvSimp ~ AverageVeg, data = InvSimp)
 summary(Invsimpwithavgvegmodel)
 
 #Model for relationhip between InvSimp and total number of blooming plant species at each site
-InvSimpwithtotalvegmodel <- lm(InvSimp ~ TotalVeg, data = InvSimp)
+InvSimpwithtotalvegmodel <- lm(InvSimp ~ TotalBS, data = InvSimp)
 summary(InvSimpwithtotalvegmodel)
 
 #Graph with average number of blooming species at each site
@@ -704,7 +704,7 @@ InvSimpplotwithavgveg
 
 #Graph with total number of blooming species at each site
 InvSimpplotwithtotalveg <-  ggplot(InvSimp,
-                                 aes (x = TotalVeg,
+                                 aes (x = TotalBS,
                                       y = InvSimp)) +
   geom_point(size = 3) +
   geom_smooth(method = "glm",
@@ -724,12 +724,3 @@ InvSimpplotwithtotalveg <-  ggplot(InvSimp,
   theme(legend.title = element_text(face = "bold")) +
   theme(legend.title.align = 0.5)
 InvSimpplotwithtotalveg
-
-#Model it
-###Error about grouping factors being less than the number of observations
-InvSimpmodel <- lmer(InvSimp ~ AverageVeg + (1|Site),
-                   data = InvSimp)
-summary(InvSimpmodel)
-
-glmer(Total_Bees ~ Average_BareGround + Sampling_Day + Average_BareGround * Sampling_Day + (1|Site),
-      data = bareground_data, family = poisson(link = "log"))

@@ -121,7 +121,7 @@ BAonBA123plot <- ggplot(BAonBA123, aes(x = AverageFloralCover,
               color = "black",
               size = 0.5) +
   theme_bw() +
-  labs(x = "Blooming Species Coverage (%)",
+  labs(x = "Average Blooming Plant Coverage (%)",
        y = "Bee Abundance") +
   ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15,

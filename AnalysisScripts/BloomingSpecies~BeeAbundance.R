@@ -132,7 +132,7 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
-Quadrats <- read.csv("Plants/Quadrats.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
 #Date = Date of sample
 #Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
 #Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
@@ -164,14 +164,16 @@ Data123$Year <- as.factor(Data123$Year)
 #Determine number of unique blooming species found in quadrats at each site during each year
 bsquadrats123 <- Quadrats123 %>%
   group_by(Site) %>%
+  filter(!is.na(Species)) %>%
   summarise(TotalBS = length(unique(Species)))
 
 #What are the blooming species?
 bsquadrats123names <- Quadrats123 %>%
   group_by(Site) %>%
+  filter(!is.na(Species)) %>%
   count(Species)
 
-#Determine average number of bees collected at each site during each year
+#Determine total number  of bees collected at each site
 bees123 <- Data123 %>%
   group_by(Site) %>%
   summarise(TotalBees = sum(Total.Abundance))
@@ -180,7 +182,7 @@ bees123 <- Data123 %>%
 BSonBA123 <- full_join(bees123, bsquadrats123, by = c("Site"))
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBA123model <- lm(Total.Abundance ~ Blooming.Species, data = Data123)
+BSonBA123model <- lm(TotalBees ~ TotalBS, data = BSonBA123)
 summary(BSonBA123model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
