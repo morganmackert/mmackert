@@ -90,8 +90,10 @@ BeeIDs123 <- BeeIDs %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable")
+
 years123 <- Fulldata %>%
   filter(Year <= 3)
+
 Quadrats123 <- Quadrats %>%
   filter(Year <= 3)
 
