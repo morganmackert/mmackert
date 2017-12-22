@@ -179,7 +179,7 @@ bees123 <- Data123 %>%
   summarise(TotalBees = sum(Total.Abundance))
 
 #Join all of the new data sets together
-BSonBA123 <- full_join(bees123, bsquadrats123, by = c("Site"))
+BSonBA123 <- full_join(bees123, bsquadrats123, by = "Site")
 
 #Model for bee abundance predicted by frequency of blooming species
 BSonBA123model <- lm(TotalBees ~ TotalBS, data = BSonBA123)

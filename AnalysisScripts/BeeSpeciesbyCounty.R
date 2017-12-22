@@ -64,5 +64,3 @@ BeeIDs2017bycounty <- BeeIDs2017 %>%
 
 #Export output as .csv file
 write.csv(BeeIDs2017bycounty, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/2017 Bee Species by County.csv")
-
-write.csv(Spearman123cor, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SpearmanRank/SpearmanRank123.csv")
