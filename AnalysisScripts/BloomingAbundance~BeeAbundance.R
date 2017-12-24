@@ -185,8 +185,9 @@ summary(BAonBA1234model)
 coef(BAonBA1234model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBA1234plot <- ggplot(BAonBA1234, aes(x = AverageFloralCover,
-                                         y = BeeAbundance)) +
+BAonBA1234plot <- ggplot(BAonBA1234,
+                         aes(x = AverageFloralCover,
+                             y = BeeAbundance)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +

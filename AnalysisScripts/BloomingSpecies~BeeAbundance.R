@@ -161,10 +161,15 @@ Quadrats123 <- Quadrats %>%
 #Year column is brought in as an integer. Change to factor for Morgan's plot.
 Data123$Year <- as.factor(Data123$Year)
 
-#Determine number of unique blooming species found in quadrats at each site during each year
+#Determine number of unique blooming species found in quadrats at each site
 bsquadrats123 <- Quadrats123 %>%
   group_by(Site) %>%
   filter(!is.na(Species)) %>%
+  summarise(TotalBS = length(unique(Species)))
+bsquadrats123year <- Quadrats123 %>%
+  group_by(Site, Year) %>%
+  filter(!is.na(Species)) %>%
+  arrange(Site) %>%
   summarise(TotalBS = length(unique(Species)))
 
 #What are the blooming species?
