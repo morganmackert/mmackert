@@ -41,14 +41,14 @@ BeeIDs123 <- BeeIDs %>%
 #Assign guild name to each specimen
 BeeIDs123 <- BeeIDs123 %>%
   mutate(Guild = case_when(
+    Binomial == "Bombus citrinus" ~ "Social parasite",
+    Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
     Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" ~ "Solitary ground-nester",
     Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
     Genus == "Apis" ~ "Honey bee",
     Genus == "Bombus" ~ "Bumble bee",
     Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
-    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite",
-    Binomial == "Bombus citrinus" ~ "Social parasite",
-    Binomial == "Megachile latimanus" ~ "Solitary ground-nester"
+    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
   ))
 
 #Create table showing the number of individuals within each guild by site and year
@@ -65,6 +65,9 @@ BeeIDs123byguildindwide <- spread(BeeIDs123byguildind, Guild, Abundance)
 #Fill NAs with 0
 BeeIDs123byguildindwide[is.na(BeeIDs123byguildindwide)] <- 0
 
+#Export as .csv
+write.csv(BeeIDs123byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance.csv")
+
 #Create table showing the number of species in each guild by site and year
 BeeIDs123byguildspecies <- BeeIDs123 %>%
   group_by(Site, Year, Guild) %>%
@@ -75,6 +78,9 @@ BeeIDs123byguildspecieswide <- spread(BeeIDs123byguildspecies, Guild, NumberSpec
 
 #Fill NAs with 0
 BeeIDs123byguildspecieswide[is.na(BeeIDs123byguildspecieswide)] <- 0
+
+#Export as .csv
+write.csv(BeeIDs123byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies.csv")
   
 #Create table showing number of individuals in each guild collected each year
 BeeIDs123byguildyear <- BeeIDs123 %>%
@@ -135,8 +141,6 @@ BeeIDs123numberguilds <- BeeIDs123 %>%
 
 #Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
 write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite.csv")
-
-write.csv(Spearman123cor, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SpearmanRank/SpearmanRank123.csv")
 
 #Graph that shiz
 BeeIDs123byguildsiteplot <- ggplot(BeeIDs123byguildsite,

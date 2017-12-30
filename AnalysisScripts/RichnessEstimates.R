@@ -586,6 +586,12 @@ bsquadrats123 <- Quadrats123 %>%
   filter(!is.na(Species)) %>%
   summarise(TotalBS = length(unique(Species)))
 
+#Calculate average vegetation coverage
+averageveg123 <- Quadrats123 %>%
+  group_by(Site) %>%
+  filter(!is.na(Species)) %>%
+  summarise(AverageVeg = mean(Cover))
+
 #Add total average number of blooming plant species to tChao1 data frame
 tChao1 <- full_join(tChao1, bsquadrats123, by = "Site")
 
