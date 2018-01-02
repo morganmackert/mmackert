@@ -48,22 +48,27 @@ Data123 <- Fulldata %>%
 #Year column is brought in as an integer. Change to factor for Morgan's plot.
 Data123$Year <- as.factor(Data123$Year)
 
-#Determine total number of bees collected in blue vanes by site and year
+#Determine total number of bees collected in blue vanes by site
 BAbyBV123 <- Data123 %>%
   group_by(Site) %>%
   summarise(Total.BlueVane = sum(Blue.Vane.Abundance))
 
-#Determine total number of bees collected in bee bowls by site and year
+#Determine total number of bees collected in bee bowls by site
 BAbyBB123 <- Data123 %>%
   group_by(Site) %>%
   summarise(Total.BeeBowls = sum(Bee.Bowls.Abundance))
 
-#Determine total number of bees collected by non-target by site and year
+#Determine total number of bees collected by non-target by site
 BAbyNT123 <- Data123 %>%
   group_by(Site) %>%
   summarise(Total.NT = sum(Non.Target.Sweeping.Abundance))
 
-#Determine total number of bees collected in emergence traps by site and year
+#Determine total number of bees collected in emergence traps by site
 BAbyET123 <- Data123 %>%
   group_by(Site) %>%
+  summarise(Total.Emergence = sum(Emergence.Traps.Abundance))
+
+#Determine total number of bees collected in emergence traps by site
+BAbyET123 <- Data123 %>%
+  group_by(Site, Date) %>%
   summarise(Total.Emergence = sum(Emergence.Traps.Abundance))

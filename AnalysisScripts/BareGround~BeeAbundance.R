@@ -14,6 +14,7 @@ rm(list=ls())
 setwd("~/ISU/Project/Data")
 
 #Load libraries
+library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(lme4)
@@ -34,14 +35,22 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Species.Name = Number of individuals of specified species collected at the specified site/date
 
 #Change column names so they're not so goofy.
-names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2"] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
-names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2"] <- "Bare.Ground"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
-#Calculate average bare ground and number of bees collected via emergence traps at each site during each year.
+#Use lubridate to allow R to read the dates
+Fulldata$Date <- mdy(Fulldata$Date)
+
+#Calculate average bare ground and number of bees collected via emergence traps at each site during each sampling event.
 BGonBA <- Fulldata %>%
-  select(Site, Year, Bare.Ground, Emergence.Traps.Abundance) %>%
-  group_by(Year, Site) %>%
+  group_by(Date, Site, Year) %>%
+  summarise(AverageBareGround = mean(Bare.Ground),
+            ETrapAbundance = sum(Emergence.Traps.Abundance))
+
+#Condense data by combining all sampling dates for each site
+BGonBAcondensed <- Fulldata %>%
+  group_by(Site, Year) %>%
   summarise(AverageBareGround = mean(Bare.Ground),
             ETrapAbundance = sum(Emergence.Traps.Abundance))
 
@@ -106,20 +115,22 @@ BGonBA12plot
 #                Percent Bare Ground ~ Bee Abundance                #
 #                            Years 1-3                              #
 #-------------------------------------------------------------------#
-#Subset BGonBA to include only 2014-2016 data.
+#Subset data frames to include only 2014-2016 data.
 BGonBA123 <- filter(BGonBA, Year <= 3)
+BGonBA123condensed <- filter(BGonBAcondensed, Year <= 3)
 
-#Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGYSonBA123model <- glm(ETrapAbundance ~ AverageBareGround + Year + Site,
-                      family = poisson,
-                      data = BGonBA123)
+#Model for bee abundance predicted by bare ground including Year and Site as a random effects.
+BGYSonBA123model <- glmer(ETrapAbundance ~ AverageBareGround + (1|Date) + (1|Site),
+                          family = poisson,
+                          data = BGonBA123)
 summary(BGYSonBA123model)
 coef(BGYSonBA123model)
 
-#Model for bee abundance predicted by bare ground without Year and Site.
-BGonBA123model <- glm(ETrapAbundance ~ AverageBareGround,
-                     data = BGonBA123)
-summary(BGonBA123model)
+#Model for emergence trap bee abundance predicted by bare ground using Year and Site as random effects.
+BGYSonBA123condensedmodel <- glmer(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
+                                   family = poisson,
+                                   data = BGonBA123condensed)
+summary(BGYSonBA123condensedmodel)
 
 #Find intercept and slope to plot best fit line on graph
 coef(BGonBA123model)
@@ -129,7 +140,7 @@ BGonBA123$Year <- as.factor(BGonBA123$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonBA123plot <- ggplot(BGonBA123, aes(x = AverageBareGround,
-                                     y = ETrapAbundance)) +
+                                       y = ETrapAbundance)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
