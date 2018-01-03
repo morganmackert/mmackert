@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------#
-#                          Guild Chi-Square                         #
+#                       Guild Chi-Squared Test                      #
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
@@ -38,22 +38,10 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
-Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
-#Date = Date of sample
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
-#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Site = Site name
-#Quadrat = Quadrat number; 1-10
-#Species = Name of plant(s) in quadrat
-#X..Cover = Percent coverage of each species within quadrat
-#X..Bare.Ground = Percent coverage of bare ground within quadrat
-#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
-#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
 Fulldata$Date <- mdy(Fulldata$Date)
-Quadrats$Date <- mdy(Quadrats$Date)
 
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
@@ -77,9 +65,6 @@ BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
-names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
 #Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
@@ -90,9 +75,6 @@ BeeIDs123 <- BeeIDs %>%
   filter(Binomial != "Unidentifiable")
 
 years123 <- Fulldata %>%
-  filter(Year <= 3)
-
-Quadrats123 <- Quadrats %>%
   filter(Year <= 3)
 
 #Assign guild name to each specimen
@@ -107,12 +89,6 @@ BeeIDs123 <- BeeIDs123 %>%
     Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
     Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
   ))
-
-#Determine number of unique blooming species found in quadrats at each site, not including NAs
-bsquadrats123 <- Quadrats123 %>%
-  group_by(Site) %>%
-  filter(!is.na(Species)) %>%
-  summarise(TotalBS = length(unique(Species)))
 
 #Calculate number of species within each guild at each site
 Guildsppbysite123 <- BeeIDs123 %>%
@@ -138,3 +114,8 @@ Guildsppbysite123wide <- Guildsppbysite123wide[!names(Guildsppbysite123wide) %in
 
 #Perform Chi-Squared test
 chisq.test(Guildsppbysite123wide)
+
+#-------------------------------------------------------------------#
+#                   Cleptoparasite Chi-Squared Test                 #
+#                             Years 1-3                             #
+#-------------------------------------------------------------------#
