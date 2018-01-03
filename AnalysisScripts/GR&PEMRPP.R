@@ -3,6 +3,11 @@
 #                         Greving and Peckumn                       #
 #-------------------------------------------------------------------#
 
+#Research Question: Are the vegetation communities at Greving and Peckumn statistically similar? Is it appropriate to replace Greving with Peckumn?
+
+#Objectives:
+#Perform MRPP analysis on vegetation communities at Greving and Peckumn to show Peckumn is similar to Greving
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -29,6 +34,9 @@ Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA")
 #Use lubridate to allow R to recognize the dates
 Quadrats$Date <- mdy(Quadrats$Date)
 
+#Reformat Year column to be full year
+Quadrats$Year <- year(Quadrats$Date)
+
 #Change column names so they're not so goofy.
 names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
 names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
@@ -36,11 +44,11 @@ names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Str
 
 #Subset only years 1-3 and Greving/Peckumn
 Quadrats123GR <- Quadrats %>%
-  filter(Year <= 3) %>%
+  filter(Year <= 2016) %>%
   filter(Site == "Greving")
 
 Quadrats123PE <- Quadrats %>%
-  filter(Year <= 3) %>%
+  filter(Year <= 2016) %>%
   filter(Site == "Peckumn")
 
 #Determine number of unique blooming species found in quadrats at each site, not including NAs

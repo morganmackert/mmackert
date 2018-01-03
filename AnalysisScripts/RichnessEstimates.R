@@ -3,6 +3,12 @@
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
+#Research Question: How do richness estimates of the bee community vary between sites of differing vegetation diversities?
+
+#Objectives:
+#Determine Chao1 richness estimate and Inverse Simpson's Diversity Index for the bee community at each site
+#Create models and graphs to visually represent the changing richness estimates
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
