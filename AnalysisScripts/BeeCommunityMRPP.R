@@ -17,6 +17,7 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(vegan)
+library(MASS)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
@@ -69,11 +70,17 @@ names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
 names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
 names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
+#Subset only years 1-3; BeeIDs without target/pitfall bees, bees that were collected during times when quadrats weren't conducted, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
   filter(Year <= 2016) %>%
   filter(!is.na(Binomial)) %>%
+  filter(Date != "2014-07-09") %>%
+  filter(Date != "2014-08-12") %>%
+  filter(Date != "2015-06-13") %>%
+  filter(Date != "2015-06-10") %>%
+  filter(Date != "2015-08-11") %>%
   filter(Trap != "Target") %>%
+  filter(Trap != "Pitfall") %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable")
@@ -92,36 +99,15 @@ BeeIDs123bysitewide <- spread(BeeIDs123bysite, Binomial, n)
 #Fill NAs with 0
 BeeIDs123bysitewide[is.na(BeeIDs123bysitewide)] <- 0
 
+#Move "Site" column from BeeIDs123bysitewide to another data frame
+BeeIDs123bysitewidesites <- BeeIDs123bysitewide["Site"]
+
 #Remove "Site" and "Date" columns
 BeeIDs123bysitewide <- BeeIDs123bysitewide[!names(BeeIDs123bysitewide) %in% c("Site", "Date")]
 
-#Determine number of unique blooming species found in quadrats at each site, not including NAs
-bsquadrats123 <- Quadrats123 %>%
-  group_by(Date, Site) %>%
-  filter(!is.na(Species)) %>%
-  summarise(TotalBS = length(unique(Species)))
-
-#Convert to data.frames
+#Convert to data.frame
 BeeIDs123bysitewide <- as.data.frame(BeeIDs123bysitewide)
-bsquadrats123 <- as.data.frame(bsquadrats123)
 
 #Perform MRPP analysis
-BeeCommunityMRPP <- mrpp(BeeIDs123bysitewide, bsquadrats123$Site, distance = "bray")
+BeeCommunityMRPP <- mrpp(BeeIDs123bysitewide, BeeIDs123bysitewidesites$Site, distance = "bray")
 BeeCommunityMRPP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
