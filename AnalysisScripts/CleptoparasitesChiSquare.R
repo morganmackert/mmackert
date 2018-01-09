@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------#
-#                       Guild Chi-Squared Test                      #
+#                   Cleptoparasite Chi-Squared Test                 #
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
@@ -68,21 +68,16 @@ BeeIDs123 <- BeeIDs123 %>%
     Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
   ))
 
-#Calculate number of species within each guild at each site
-Guildsppbysite123 <- BeeIDs123 %>%
-  group_by(Site, Guild) %>%
-  filter(!is.na(Binomial)) %>%
-  summarise(Species = length(unique(Binomial)))
+#Transform BeeIDs123 to include only cleptoparasites
+BeeIDS123CP <- BeeIDs123 %>%
+  filter(Guild == "Cleptoparasite")
 
-#What are the species in Guildsppbysite123? Double check.
-Guildsppbysite123nums <- BeeIDs123 %>%
-  group_by(Site, Guild) %>%
-  filter(!is.na(Binomial)) %>%
-  count(Binomial)
-#Looks good.
+#Use BeeIDs123CP data frame to determine whether or not the host is present.
+#Import that data set because you don't know how to do it in R, idiot.
+Cleptoparasites <- read.csv("Bees/Cleptoparasites.csv")
 
 #Reformat from long to wide
-Guildsppbysite123wide <- spread(Guildsppbysite123, Guild, Species)
+Cleptoparasiteswide <- spread(Cleptoparasites, Binomial, Host_Present)
 
 #Fill NAs with 0
 Guildsppbysite123wide[is.na(Guildsppbysite123wide)] <- 0
@@ -93,24 +88,5 @@ Guildsppbysite123wide <- Guildsppbysite123wide[!names(Guildsppbysite123wide) %in
 #Perform Chi-Squared test
 chisq.test(Guildsppbysite123wide)
 
-#-------------------------------------------------------------------#
-#                   Cleptoparasite Chi-Squared Test                 #
-#                             Years 1-3                             #
-#-------------------------------------------------------------------#
 
-#Transform BeeIDs123 to include only cleptoparasites
-BeeIDS123CP <- BeeIDs123 %>%
-  filter(Guild == "Cleptoparasite")
 
-#Create column denoting 
-BeeIDs123 <- BeeIDs123 %>%
-  mutate(Guild = case_when(
-    Binomial == "Bombus citrinus" ~ "Social parasite",
-    Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
-    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" ~ "Solitary ground-nester",
-    Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
-    Genus == "Apis" ~ "Honey bee",
-    Genus == "Bombus" ~ "Bumble bee",
-    Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
-    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
-  ))

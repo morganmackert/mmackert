@@ -30,45 +30,17 @@ BeeIDs <- read.csv("Bees/Bee IDs.csv")
 #Genus = Taxonimic genus to which each specimen belongs
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
-Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"), stringsAsFactors = TRUE)
-#Date = Date of sample
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
-#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Site = Site name
-#Quadrat = Quadrat number; 1-10
-#Species = Name of plant(s) in quadrat
-#X..Cover = Percent coverage of each species within quadrat
-#X..Bare.Ground = Percent coverage of bare ground within quadrat
-#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
-#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
-Quadrats$Date <- mdy(Quadrats$Date)
 
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
-Quadrats$Year <- year(Quadrats$Date)
 
 #Because we're sorting by "Site," we need to make sure naming conventions are consistent
 BeeIDs %>%
   group_by(Site) %>%
   summarise()
-
-#Same with "Trap"
-BeeIDs %>%
-  group_by(Trap) %>%
-  summarise()
-
-#We find that site names are good to go, but trap names need some work!
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
-
-#Change column names so they're not so goofy.
-names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
-names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
 #Subset only years 1-3; BeeIDs without target/pitfall bees, bees that were collected during times when quadrats weren't conducted, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
@@ -84,9 +56,6 @@ BeeIDs123 <- BeeIDs %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable")
-
-Quadrats123 <- Quadrats %>%
-  filter(Year <= 2016)
 
 #Determine number of individuals per bee species collected at each site
 BeeIDs123bysite <- BeeIDs123 %>%
