@@ -92,25 +92,3 @@ Guildsppbysite123wide <- Guildsppbysite123wide[!names(Guildsppbysite123wide) %in
 
 #Perform Chi-Squared test
 chisq.test(Guildsppbysite123wide)
-
-#-------------------------------------------------------------------#
-#                   Cleptoparasite Chi-Squared Test                 #
-#                             Years 1-3                             #
-#-------------------------------------------------------------------#
-
-#Transform BeeIDs123 to include only cleptoparasites
-BeeIDS123CP <- BeeIDs123 %>%
-  filter(Guild == "Cleptoparasite")
-
-#Create column denoting 
-BeeIDs123 <- BeeIDs123 %>%
-  mutate(Guild = case_when(
-    Binomial == "Bombus citrinus" ~ "Social parasite",
-    Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
-    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" ~ "Solitary ground-nester",
-    Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
-    Genus == "Apis" ~ "Honey bee",
-    Genus == "Bombus" ~ "Bumble bee",
-    Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
-    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
-  ))
