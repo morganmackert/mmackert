@@ -70,23 +70,17 @@ BeeIDs123 <- BeeIDs123 %>%
 
 #Transform BeeIDs123 to include only cleptoparasites
 BeeIDS123CP <- BeeIDs123 %>%
-  filter(Guild == "Cleptoparasite")
+  filter(Guild == "Social parasite" | Guild == "Cleptoparasite")
 
 #Use BeeIDs123CP data frame to determine whether or not the host is present.
 #Import that data set because you don't know how to do it in R, idiot.
-Cleptoparasites <- read.csv("Bees/Cleptoparasites.csv")
+Cleptoparasites <- read.csv("Bees/CleptoparasitesCondensed.csv")
 
-#Reformat from long to wide
-Cleptoparasiteswide <- spread(Cleptoparasites, Binomial, Host_Present)
-
-#Fill NAs with 0
-Guildsppbysite123wide[is.na(Guildsppbysite123wide)] <- 0
-
-#Remove "Site" column from GuildbyVeg123 data frame
-Guildsppbysite123wide <- Guildsppbysite123wide[!names(Guildsppbysite123wide) %in% c("Site")]
+#Remove "Site" column from data frame
+Cleptoparasites <- Cleptoparasites[!names(Cleptoparasites) %in% c("Site", "Species")]
 
 #Perform Chi-Squared test
-chisq.test(Guildsppbysite123wide)
+chisq.test(Cleptoparasites)
 
 
 
