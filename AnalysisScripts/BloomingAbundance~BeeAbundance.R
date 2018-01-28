@@ -15,8 +15,9 @@ setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(dplyr)
-library(ggplot2)
 library(lme4)
+library(MuMIn)
+library(ggplot2)
 
 #Read in data
 Fulldata <- read.csv("Combined Full data set.csv")
@@ -180,19 +181,21 @@ BAonBA1234$Year <- as.factor(BAonBA1234$Year)
 #Model for bee abundance predicted by blooming plant coverage
 BAonBA1234model <- lmer(BeeAbundance ~ AverageFloralCover + (1|Sampling.Period) + (1|Site) + (1|Year),
                         data = BAonBA1234)
-BAonBA1234model
 summary(BAonBA1234model)
 
 #Null model not including average floral cover
 BAonBA1234null <- lmer(BeeAbundance ~ (1|Sampling.Period) + (1|Site) + (1|Year),
                        data = BAonBA1234)
-BAonBA1234null
+summary(BAonBA1234null)
 
 #Likelihood ratio test between null and full models
 anova(BAonBA1234null, BAonBA1234model)
 
 #Plot residuals from the full model to ensure no deviations from normality
 plot(fitted(BAonBA1234model, residuals(BAonBA1234model)))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BAonBA1234model)
 
 #Graph that shiz
 BAonBA1234plot <- ggplot(BAonBA1234,

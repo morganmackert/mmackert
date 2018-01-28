@@ -25,7 +25,6 @@ library(ggplot2)
 
 #Read in data
 BSonBS12 <- read.csv("mmackert/Data/Moorhouse Full data set.csv")
-
 #Date = Date of sample
 #Site = Site name
 #Sampling = Sample period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
@@ -346,6 +345,9 @@ anova(BSonBS1234null, BSonBS1234model)
 
 #Plot residuals from the full model to ensure no deviations from normality
 plot(fitted(BSonBS1234model, residuals(BSonBS1234model)))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BSonBS1234model)
 
 #Plot of the number of blooming forb/weed species vs. bee species richness
 BSonBS1234plot <- ggplot(years1234, 
