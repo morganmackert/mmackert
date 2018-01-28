@@ -530,7 +530,7 @@ GRPE123shan <- diversity(GRPE123tablewide, "shannon")
 #                              All Sites                            #
 #-------------------------------------------------------------------#
 
-#Create a table showing number of individuals of each species species collected at each site
+#Create a table showing number of individuals of each species collected at each site
 BeeIDs123indspecSD <- BeeIDs123 %>%
   group_by(Date, Site) %>%
   count(Binomial)

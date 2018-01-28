@@ -81,6 +81,3 @@ Cleptoparasites <- Cleptoparasites[!names(Cleptoparasites) %in% c("Site", "Speci
 
 #Perform Chi-Squared test
 chisq.test(Cleptoparasites)
-
-
-

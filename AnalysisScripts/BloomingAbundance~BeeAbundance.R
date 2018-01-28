@@ -16,6 +16,7 @@ setwd("~/ISU/Project/Data")
 #Load libraries
 library(dplyr)
 library(ggplot2)
+library(lme4)
 
 #Read in data
 Fulldata <- read.csv("Combined Full data set.csv")
@@ -39,8 +40,7 @@ names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 
 #Calculate average floral cover and number of bees collected via emergence traps at each site during each year.
 BAonBA <- Fulldata %>%
-  select(Site, Year, Floral.Cover, Total.Abundance) %>%
-  group_by(Year, Site) %>%
+  group_by(Year, Site, Sampling.Period) %>%
   summarise(AverageFloralCover = mean(Floral.Cover),
             BeeAbundance = sum(Total.Abundance))
 
@@ -171,20 +171,30 @@ BAonBA34plot
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
-#Subset BAonBA to include only 2016-2017 data.
+#Subset BAonBA to include only 2014-2017 data.
 BAonBA1234 <- filter(BAonBA, Year <= 4)
 
 #Year column brought in as an integer; change to factor.
 BAonBA1234$Year <- as.factor(BAonBA1234$Year)
 
-#Model for bee abundance predicted by frequency of blooming species
-BAonBA1234model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA1234)
+#Model for bee abundance predicted by blooming plant coverage
+BAonBA1234model <- lmer(BeeAbundance ~ AverageFloralCover + (1|Sampling.Period) + (1|Site) + (1|Year),
+                        data = BAonBA1234)
+BAonBA1234model
 summary(BAonBA1234model)
 
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BAonBA1234model)
+#Null model not including average floral cover
+BAonBA1234null <- lmer(BeeAbundance ~ (1|Sampling.Period) + (1|Site) + (1|Year),
+                       data = BAonBA1234)
+BAonBA1234null
 
-#Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
+#Likelihood ratio test between null and full models
+anova(BAonBA1234null, BAonBA1234model)
+
+#Plot residuals from the full model to ensure no deviations from normality
+plot(fitted(BAonBA1234model, residuals(BAonBA1234model)))
+
+#Graph that shiz
 BAonBA1234plot <- ggplot(BAonBA1234,
                          aes(x = AverageFloralCover,
                              y = BeeAbundance)) +
@@ -195,6 +205,10 @@ BAonBA1234plot <- ggplot(BAonBA1234,
               se = FALSE,
               color = "black",
               size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
   theme_bw() +
   labs(x = "Blooming Species Coverage (%)",
        y = "Bee Abundance") +

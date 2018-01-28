@@ -210,7 +210,7 @@ BGonBA34plot
 BGonBA1234 <- filter(BGonBA, Year <= 4)
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGYSonBA1234model <- glm(ETrapAbundance ~ AverageBareGround + Year + Site,
+BGYSonBA1234model <- lm(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
                        family = poisson,
                        data = BGonBA1234)
 summary(BGYSonBA1234model)
