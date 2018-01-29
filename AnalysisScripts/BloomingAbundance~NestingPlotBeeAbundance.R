@@ -44,9 +44,6 @@ names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 year4 <- Fulldata %>%
   filter(Year == 2017)
 
-#Convert "Year" to a  factor
-year4$Year <- as.factor(year4$Year)
-
 #Model for bee species richness predicted by number of blooming species
 BAonNPBA4model <- lmer(Nesting.Plot.Abundance ~ Floral.Cover + (1|Site) + (1|Sampling.Period),
                        data = year4)
@@ -65,6 +62,9 @@ plot(fitted(BAonNPBA4model, residuals(BAonNPBA4model)))
 
 #Use MuMIn to get R-squared value of full model
 r.squaredGLMM(BAonNPBA4model)
+
+#Convert "Year" to a  factor
+year4$Year <- as.factor(year4$Year)
 
 #Plot of the number of blooming forb/weed species vs. nesting plot bee species richness
 BAonNPBA4plot <- ggplot(year4, 
