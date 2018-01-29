@@ -77,7 +77,7 @@ BAonNPBA4plot <- ggplot(year4,
               size = 0.5) +
   theme_bw() +
   labs(x = "Average Blooming Forb/Weed Coverage (%)",
-       y = "Number of Nesting Plot Bee Species") +
+       y = "Bee Abundance") +
   ggtitle("Influence of Blooming Plant Abundance \non Nesting Plot Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",

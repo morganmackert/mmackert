@@ -215,7 +215,7 @@ BAonBA1234plot <- ggplot(BAonBA1234,
   theme_bw() +
   labs(x = "Blooming Species Coverage (%)",
        y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
+  ggtitle("Influence of Blooming Forb \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
