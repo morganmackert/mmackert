@@ -11,7 +11,7 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(dplyr)
@@ -24,127 +24,6 @@ library(multcompView)
 library(ggplot2)
 
 #Read in data
-BSonBS12 <- read.csv("mmackert/Data/Moorhouse Full data set.csv")
-#Date = Date of sample
-#Site = Site name
-#Sampling = Sample period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016
-#Quadrats = Combined coverage of blooming forb/weed species in ten quadrats
-#SppBloomQ = Number of forb/weed species in bloom within ten quadrats
-#BareGround = Average bare ground coverage in ten quadrats
-#TotalAbundance = Total number of bees collected
-#Total.Genus.Richness = Total number of bee genera collected
-#Total.Species.Richness = Total number of bee species collected
-#Following species names correspond to number of individuals collected of that species
-
-#Floral index in this data set DOES include weed species as well as forbs.
-#PercentCover in "New_Bees_Format.csv" is the average floral coverage for all 40 quadrats in year 1; all 50 in year 2.
-#For example: McClellan Year 1 (Site 9) had 0.3% coverage in all ten quadrats during the first sample of the year and nothing beyond that, so the average over all 4 samples is 0.3/4=0.075.
-#Quadrats in "New_Bees_Format.csv" is the proportion of quadrats over the entire year that contained blooming species.
-#For example: McClellan Year 1 (Site 9) had 1 quadrat during the entire year with anything blooming, so the proportion would be 1/40=0.025.
-
-#Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.list12 <- as.numeric(BSonBS12$Year)
-pch.list12
-
-#Year column in "nq" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-BSonBS12$Year <- as.factor(BSonBS12$Year)
-
-#Amy's plot: Blooming species richness vs. Bee species richness
-plot(BSonBS12$SppBloomQ,BSonBS12$Total.Species.Richness,
-     xlab="Number of Blooming Species",ylab="Number of Bee Species",
-     pch=c(pch.listAM),col='black')
-model12=lm(BSonBS12$SppBloomQ~nqAM$Total.Species.Richness)
-model12
-summary(model12)
-abline(model12)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model12)$adj.r.squared,digits=4)))
-
-#Model for bee abundance predicted by frequency of blooming species
-BSonBS12model <- lm(Total.Species.Richness ~ SppBloomQ, data = BSonBS12)
-summary(BSonBS12model)
-
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBS12model)
-
-#Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS12plot <- ggplot(BSonBS12, aes(x = SppBloomQ, y = Total.Species.Richness)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 8.406818, slope = 1.071947) +
-  theme_bw() +
-  labs(x = "Number of Blooming Species", y = "Number of Bee Species") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
-BSonBS12plot
-
-#-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Species            #
-#                             Year 3                                #
-#-------------------------------------------------------------------#
-#Clear environment
-rm(list=ls())
-
-#Read in data
-BSonBS3 <- read.csv("mmackert/Data/Condensed3.csv")
-
-#Year column in "nq" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.list3 <- as.numeric(BSonBS3$Year)
-pch.list3
-
-#Year column in "nq" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-BSonBS3$Year <- as.factor(BSonBS3$Year)
-
-#Amy's plot: Blooming species richness vs. Bee species richness
-plot(BSonBS3$SppBloomQ,BSonBS3$Total.Species.Richness,
-     xlab="Number of Blooming Species",ylab="Number of Bee Species",
-     pch=c(pch.listMMM),col='black')
-model3=lm(BSonBS3$SppBloomQ~BSonBS3$Total.Species.Richness)
-model3
-summary(model3)
-abline(model3)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model3)$adj.r.squared,digits=4)))
-
-#Model for bee abundance predicted by frequency of blooming species
-BSonBS3model <- lm(Total.Species.Richness ~ SppBloomQ, data = BSonBS3)
-summary(BSonBS3model)
-
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBS3model)
-
-#Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS3plot <- ggplot(BSonBS3, aes(x = SppBloomQ, y = Total.Species.Richness)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = XXX, slope = XXX) +
-  theme_bw() +
-  labs(x = "Number of Blooming Species", y = "Number of Bee Species") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
-BSonBS3plot
-
-#-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Species            #
-#                             Years 1-3                             #
-#-------------------------------------------------------------------#
-
-#Clear environment and set working directory
-rm(list=ls())
-setwd("~/ISU/Project/Data")
-
-#Read in data
-BeeIDs <- read.csv("Data/Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
 Fulldata <- read.csv("Combined full data set.csv")
 #Date = Date of sample
 #Site = Site name
@@ -158,80 +37,81 @@ Fulldata <- read.csv("Combined full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
-Quadrats <- read.csv("Data/Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
-#Date = Date of sample
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
-#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Site = Site name
-#Quadrat = Quadrat number; 1-10
-#Species = Name of plant(s) in quadrat
-#X..Cover = Percent coverage of each species within quadrat
-#X..Bare.Ground = Percent coverage of bare ground within quadrat
-#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
-#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
 Fulldata$Date <- mdy(Fulldata$Date)
-Quadrats$Date <- mdy(Quadrats$Date)
 
-#Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs %>%
-  group_by(Site) %>%
-  summarise()
-
-#Same with "Trap"
-BeeIDs %>%
-  group_by(Trap) %>%
-  summarise()
-
-#We find that site names are good to go, but trap names need some work!
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
+#Add new column with only the year
+Fulldata$Year <- year(Fulldata$Date)
 
 #Change column names so they're not so goofy.
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
-names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs123 <- BeeIDs %>%
-  filter(Year <= 2016) %>%
-  filter(Trap != "Target") %>%
-  filter(Binomial != "Wasp") %>%
-  filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable")
+#Subset Fulldata for only 2014-2015
+years12 <- Fulldata %>%
+  filter(Year <= 2015)
 
-years123 <- Fulldata %>%
-  filter(Year <= 3)
+#Change year to factor
+years12$Year <- as.factor(years12$Year)
 
-Quadrats123 <- Quadrats %>%
-  filter(Year <= 3)
-
-#Amy's plot: Blooming species richness vs. Bee species richness
-plot(years123$SppBloomQ,nqfull$Total.Species.Richness,
-     xlab="Number of Blooming Species",ylab="Number of Bee Species",
-     pch=c(pch.listfull),col='black')
-modelfull=lm(nqfull$SppBloomQ~nqfull$Total.Species.Richness)
-modelfull
-summary(modelfull)
-abline(modelfull)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(modelfull)$adj.r.squared,digits=4)))
-
-#Model for bee species richness predicted by number of blooming species
-BSonBS123model <- lm(Total.Species.Richness ~ Blooming.Species, data = BSonBS123)
-summary(BSonBS123model)
-
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBS123model)
+#Model for bee abundance predicted by frequency of blooming species
+BSonBS12model <- lm(Total.Species.Richness ~ Blooming.Species,
+                    data = years12)
+summary(BSonBS12model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS123plot <- ggplot(BSonBS123,
+BSonBS12plot <- ggplot(years12, aes(x = Blooming.Species,
+                                     y = Total.Species.Richness)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  scale_color_manual(labels = c("2014", "2015"),
+                     values = c("darkorchid1", "#000000")) +
+  scale_shape_manual(labels = c("2014", "2015"),
+                     values = c(16, 17)) +
+  labs(x = "Number of Blooming Species",
+       y = "Number of Bee Species") +
+  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
+BSonBS12plot
+
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Species ~ Bee Species            #
+#                             Years 1-3                             #
+#-------------------------------------------------------------------#
+#Subset Fulldata for only years 2014-2016
+years123 <- Fulldata %>%
+  filter(Year <= 2016)
+
+#Change year to factor
+years123$Year <- as.factor(years123$Year)
+
+#Model for bee species richness predicted by number of blooming species
+BSonBS123model <- lm(Total.Species.Richness ~ Blooming.Species,
+                     data = years123)
+summary(BSonBS123model)
+
+#Null model not including number of blooming species
+BSonBS123null <- lmer(Total.Species.Richness ~ (1|Site) + (1|Sampling.Period) + (1|Year),
+                         data = years123)
+summary(BSonBS123null)
+
+#Likelihood ratio test between the full and null models
+anova(BSonBS123null, BSonBS123model)
+
+#Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
+BSonBS123plot <- ggplot(years123,
                         aes(x = Blooming.Species,
                             y = Total.Species.Richness)) +
   geom_point(aes(shape = Year,
@@ -248,65 +128,65 @@ BSonBS123plot <- ggplot(BSonBS123,
                      values = c(16, 17, 15)) +
   labs(x = "Number of Blooming Species",
        y = "Number of Bee Species") +
-  #ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
+  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5)
 BSonBS123plot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Species            #
-#                             Years 3-4                             #
+#           Years 1-3, excluding NealSmith and Elkader              #
 #-------------------------------------------------------------------#
-#Clear environment and set working directory
-rm(list=ls())
-setwd("~/ISU/Project")
+#Subset Fulldata for only years 2014-2016
+years123NSE <- Fulldata %>%
+  filter(Site != "NealSmith") %>%
+  filter(Site != "Elkader") %>%
+  filter(Year <= 2016)
 
-#Read in data
-years34 <- read.csv("Data/Condensed34.csv")
-
-#Year column in "years34" dataframe is brought in as an integer. Change to numeric for Amy's plot.
-pch.listfull <- as.numeric(years34$Year)
-pch.listfull
-
-#Year column in "years34" dataframe is brought in as an integer. Change to factor for Morgan's plot.
-years34$Year <- as.factor(years34$Year)
-
-#Amy's plot: Blooming species richness vs. Bee species richness
-plot(years34$SppBloomQ,years34$Total.Species.Richness,
-     xlab="Number of Blooming Species",ylab="Number of Bee Species",
-     pch=c(pch.listfull),col='black')
-modelfull=lm(years34$SppBloomQ~years34$Total.Species.Richness)
-modelfull
-summary(modelfull)
-abline(modelfull)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(modelfull)$adj.r.squared,digits=4)))
+#Change year to factor
+years123NSE$Year <- as.factor(years123NSE$Year)
 
 #Model for bee species richness predicted by number of blooming species
-BSonBS34 <- lm(TotalSpeciesRichness ~ SppBloomQ, data = years34)
-summary(BSonBS34)
+BSonBS123NSEmodel <- lmer(Total.Species.Richness ~ Blooming.Species + (1|Site) + (1|Sampling.Period) + (1|Year),
+                     data = years123NSE)
+summary(BSonBS123NSEmodel)
 
-#Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BSonBS34)
+#Null model not including number of blooming species
+BSonBS123NSEnull <- lmer(Total.Species.Richness ~ (1|Site) + (1|Sampling.Period) + (1|Year),
+                       data = years123NSE)
+summary(BSonBS123NSEnull)
 
-#Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS34plot <- ggplot(years34, aes(x = SppBloomQ, y = TotalSpeciesRichness)) +
-  geom_point(aes(shape = Year, color = Year), size = 3) +
-  geom_abline(intercept = 16.492068, slope = 1.484885) +
-  #annotate("text", x = 4, y = 41, label = "R^2 = 0.8286") +
-  #annotate("text", x = 5, y = 45, label = "y = 1.48x + 16.49") +
-  scale_color_hue(labels = c("2016", "2017")) +
-  scale_shape_manual(labels = c("2016", "2017"), values = c(16, 17)) +
+#Likelihood ratio test between the full and null models
+anova(BSonBS123NSEnull, BSonBS123NSEmodel)
+
+#Plot of number of blooming forb/weed species vs. Bee species richness
+BSonBS123NSEplot <- ggplot(years123NSE,
+                        aes(x = Blooming.Species,
+                            y = Total.Species.Richness)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
   theme_bw() +
-  labs(x = "Number of Plant Species in Bloom", y = "Number of Bee Species") +
+  scale_color_manual(labels = c("2014", "2015", "2016"),
+                     values = c("darkorchid1", "#000000", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016"),
+                     values = c(16, 17, 15)) +
+  labs(x = "Number of Blooming Species",
+       y = "Number of Bee Species") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
   ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
-  theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
-  theme(legend.title.align  = 0.5)
-BSonBS34plot
+  theme(legend.title.align = 0.5)
+BSonBS123NSEplot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Species            #
@@ -314,21 +194,10 @@ BSonBS34plot
 #-------------------------------------------------------------------#
 #Subset Fulldata to include years 1-4
 years1234 <- Fulldata %>%
-  filter(Year <= 4)
+  filter(Year <= 2017)
 
 #Convert "Year" to a  factor
 years1234$Year <- as.factor(years1234$Year)
-
-#Amy's plot: Blooming species richness vs. Bee species richness
-plot(years1234$SppBloomQ,years1234$Total.Species.Richness,
-     xlab="Number of Blooming Species",ylab="Number of Bee Species",
-     pch=c(pch.listfull),col='black')
-modelfull=lm(years1234$SppBloomQ~years1234$Total.Species.Richness)
-modelfull
-summary(modelfull)
-abline(modelfull)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(modelfull)$adj.r.squared,digits=4)))
 
 #Model for bee species richness predicted by number of blooming species
 BSonBS1234model <- lmer(Total.Species.Richness ~ Blooming.Species + (1|Site) + (1|Sampling.Period) + (1|Year),

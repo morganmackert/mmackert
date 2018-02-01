@@ -142,6 +142,10 @@ InvSimpplotwithtotalveg <-  ggplot(InvSimpbsquadrats1234,
               se = FALSE,
               color = "black",
               size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
   theme_bw() +
   labs(x = "Number of Blooming Plant Species",
        y = "Inverse Simpson's Diversity Index") +
@@ -155,3 +159,22 @@ InvSimpplotwithtotalveg <-  ggplot(InvSimpbsquadrats1234,
   theme(legend.title = element_text(face = "bold")) +
   theme(legend.title.align = 0.5)
 InvSimpplotwithtotalveg
+
+#Model for Inverse Simplson's Diversity Index predicted by number of blooming Species
+BSonInvSimp1234model <- lmer(InvSimp1234 ~ TotalBS + (1|Site) + (1|Year),
+                             data = InvSimpbsquadrats1234)
+summary(BSonInvSimp1234model)
+
+#Null model not including number of blooming species
+BSonInvSimp1234null <- lmer(InvSimp1234 ~ (1|Site) + (1|Year),
+                       data = InvSimpbsquadrats1234)
+summary(BSonInvSimp1234null)
+
+#Likelihood ratio test between the full and null models
+anova(BSonInvSimp1234null, BSonInvSimp1234model)
+
+#Plot residuals from the full model to ensure no deviations from normality
+plot(fitted(BSonInvSimp1234model, residuals(BSonInvSimp1234model)))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BSonInvSimp1234model)

@@ -592,6 +592,11 @@ bsquadrats123 <- Quadrats123 %>%
   filter(!is.na(Species)) %>%
   summarise(TotalBS = length(unique(Species)))
 
+bsquadrats123spp <- Quadrats123 %>%
+  group_by(Site) %>%
+  filter(!is.na(Species)) %>%
+  count(Species)
+
 #Calculate average vegetation coverage
 averageveg123 <- Quadrats123 %>%
   group_by(Site) %>%
