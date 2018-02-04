@@ -10,7 +10,7 @@
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/Data")
+setwd("~/ISU/Project")
 
 #Load libraries
 library(lubridate)
@@ -20,7 +20,7 @@ library(vegan)
 library(MASS)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
+BeeIDs <- read.csv("Data/Bees/Bee IDs.csv")
 #Number = Individual identification number assigned to each specimen
 #Date = Date of sample
 #Site = Site name
@@ -36,11 +36,6 @@ BeeIDs$Date <- mdy(BeeIDs$Date)
 
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
-
-#Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs %>%
-  group_by(Site) %>%
-  summarise()
 
 #Subset only years 1-3; BeeIDs without target/pitfall bees, bees that were collected during times when quadrats weren't conducted, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
@@ -80,3 +75,16 @@ BeeIDs123bysitewide <- as.data.frame(BeeIDs123bysitewide)
 #Perform MRPP analysis
 BeeCommunityMRPP <- mrpp(BeeIDs123bysitewide, BeeIDs123bysitewidesites$Site, distance = "bray")
 BeeCommunityMRPP
+
+#Read in BeeCommunityMRPP results to graph
+MRPP <- read.csv("mmackert/Graphs/BeeCommunityMRPP/Bee Community by Site MRPP Results.csv")
+
+#Graph results
+BeeCommunityMRPPplot <- ggplot(MRPP,
+                               aes(x = Site,
+                                   y = Delta)) +
+  geom_point(size = 3) +
+  theme_bw() +
+  labs(y = "Δ")
+  #scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8"))
+BeeCommunityMRPPplot

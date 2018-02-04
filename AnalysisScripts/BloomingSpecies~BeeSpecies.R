@@ -98,7 +98,7 @@ years123 <- Fulldata %>%
 years123$Year <- as.factor(years123$Year)
 
 #Model for bee species richness predicted by number of blooming species
-BSonBS123model <- lm(Total.Species.Richness ~ Blooming.Species,
+BSonBS123model <- lm(Total.Species.Richness ~ Blooming.Species (1|Site) + (1|Sampling.Period) + (1|Year),
                      data = years123)
 summary(BSonBS123model)
 
