@@ -19,6 +19,7 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(vegan)
+library(goeveg)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
@@ -111,11 +112,11 @@ Bee.Community <- BeeIDs123TTcountsitewide[3:172]
 #Use metaMDS in vegan to create a "dissimilarity matrix" to measure similarity between samples; use k = 2 to denote the number of dimensions we're reducing to
 Bee.Community.mds <- metaMDS(comm = Bee.Community,
                              autotransform = FALSE,
-                             k = 2)
+                             k = 2,
+                             trymax = 500)
 
-#Stressplot to visualize new distances against the original distances
-stressplot(Bee.Community.mds)
-#Looks okay I think?
+#Check to make sure we're using the correct number of dimensions; 2 is good
+dimcheckMDS(Bee.Community)
 
 #Check stress value; if over 0.2 will have to figure out something else
 #Stress value provides a measure of the degree to which the distance between samples in reduced dimensional space corresponds to the actual multivariate distance between the samples. Lower stress values indicate greater conformity.
@@ -124,28 +125,11 @@ Bee.Community.mds$stress
 
 #Plot it
 ordiplot(Bee.Community.mds)
-ordiellipse(Bee.Community.mds,
-         groups = BeeIDs123TTcountsitewide$Trap)
+ordihull(Bee.Community.mds,
+         groups = BeeIDs123TTcountsitewide$Trap,
+         label = TRUE)
 
-#Extract x and y coordinates
-Bee.Community.mds.xy <- data.frame(Bee.Community.mds$points)
-
-#Add in site and trap type factors
-Bee.Community.mds.xy$Site <- BeeIDs123TTcountsitewide$Site
-Bee.Community.mds.xy$Trap <- BeeIDs123TTcountsitewide$Trap
-
-#Plot again
-Bee.Community.mds.plot <- ggplot(Bee.Community.mds.xy,
-                                 aes(x = MDS1,
-                                     y = MDS2,
-                                     color = Trap)) +
-  geom_path(data = Bee.Community.mds.xy,
-            aes(x = NMDS1,
-                y = NMDS2)) +
-  geom_point() +
-  theme_bw()
-
-##Communicating results: The written description of the MDS analyses (often in the figure legend) should mention what dissimilarity metric was used, whether data were transformed or standardised, and present the stress value. In a formal analysis, MDS plots are usually accompanied by some multivariate statistical test of dissimilarity between treatment/observational groups, e.g., via the adonis function in vegan
+#Communicating results: The written description of the MDS analyses (often in the figure legend) should mention what dissimilarity metric was used, whether data were transformed or standardised, and present the stress value. In a formal analysis, MDS plots are usually accompanied by some multivariate statistical test of dissimilarity between treatment/observational groups, e.g., via the adonis function in vegan
 #http://environmentalcomputing.net/multidimensional-scaling/
 
 #-------------------------------------------------------------------#
