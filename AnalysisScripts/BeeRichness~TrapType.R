@@ -36,6 +36,9 @@ BeeIDs <- read.csv("Bees/Bee IDs.csv")
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
 
+#Create new column in BeeIDs for the year
+BeeIDs$Year <- year(BeeIDs$Date)
+
 #Fix trap names
 BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
 BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
@@ -53,6 +56,12 @@ BeeIDs123 <- BeeIDs %>%
 BeeIDs123TTcount <- BeeIDs123 %>%
   group_by(Trap) %>%
   count(Binomial)
+
+#Convert from long to wide format
+BeeIDs123TTcountwide <- spread(BeeIDs123TTcount, Trap, n)
+
+#Export to .csv
+#write.csv(BeeIDs123TTcountwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness~TrapType/BeeSpeciesbyTrapType123.csv")
 
 #Group BeeIDs by Site and Trap Type
 BeeIDs123TTcountsite <- BeeIDs123 %>%
@@ -124,7 +133,8 @@ Bee.Community.mds$stress
 #We're good!
 
 #Plot it
-ordiplot(Bee.Community.mds)
+ordiplot(Bee.Community.mds, type = "n")
+orditorp(Bee.Community.mds, display = "species", col = "red", air = 0.01)
 ordihull(Bee.Community.mds,
          groups = BeeIDs123TTcountsitewide$Trap,
          label = TRUE)
