@@ -141,6 +141,9 @@ ordihull(Bee.Community.mds,
 #Communicating results: The written description of the MDS analyses (often in the figure legend) should mention what dissimilarity metric was used, whether data were transformed or standardised, and present the stress value. In a formal analysis, MDS plots are usually accompanied by some multivariate statistical test of dissimilarity between treatment/observational groups, e.g., via the adonis function in vegan
 #http://environmentalcomputing.net/multidimensional-scaling/
 
+#Try K-means stuff?
+
+
 #-------------------------------------------------------------------#
 #          Bee Species Richness by Sample Period ~ Trap Type        #
 #                             Years 1-4                             #
