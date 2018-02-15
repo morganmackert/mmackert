@@ -116,7 +116,7 @@ BeeIDs123TTcountsitewide <- spread(BeeIDs123TTcountsite, Binomial, n)
 BeeIDs123TTcountsitewide[is.na(BeeIDs123TTcountsitewide)] <- 0
 
 #Make another data frame removing the Trap and Site columns from BeeIDs123TTcountsitewide
-Bee.Community <- BeeIDs123TTcountsitewide[3:172]
+Bee.Community <- BeeIDs123TTcountsitewide[, -which(names(BeeIDs123TTcountsitewide) %in% c("Trap", "Site"))]
 
 #Use metaMDS in vegan to create a "dissimilarity matrix" to measure similarity between samples; use k = 2 to denote the number of dimensions we're reducing to
 Bee.Community.mds <- metaMDS(comm = Bee.Community,
@@ -133,8 +133,7 @@ Bee.Community.mds$stress
 #We're good!
 
 #Plot it
-ordiplot(Bee.Community.mds, type = "n")
-orditorp(Bee.Community.mds, display = "species", col = "red", air = 0.01)
+ordiplot(Bee.Community.mds)
 ordihull(Bee.Community.mds,
          groups = BeeIDs123TTcountsitewide$Trap,
          label = TRUE)
@@ -144,7 +143,7 @@ ordihull(Bee.Community.mds,
 
 #-------------------------------------------------------------------#
 #          Bee Species Richness by Sample Period ~ Trap Type        #
-#                             Years 1-3                             #
+#                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Research Question: How does bee species richness vary with respect of the type of trap used to collect them? Does this number also vary with sampling period? Can we maximize our collection effort by using fewer, more effective trapping methods?
 
@@ -152,22 +151,42 @@ ordihull(Bee.Community.mds,
 #Create model(s) to explore relationship between bee species richness and trap type
 #Use created model(s) to visualize the relationship graphically
 
-#Read in data
-BSTTSP123 <- read.csv("Bees/Bee Species by Trap by Sampling Period 123.csv")
-#Trap Type = trap used to collect bees
-#Months = Corresponds to the sampling period in which samples were taken
-#Values = Number of bee species collected in each sample period by trap type
+#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
+BeeIDs1234 <- BeeIDs %>%
+  filter(Year <= 2017) %>%
+  filter(Trap != "Target") %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable")
+
+#Group BeeIDs by Trap Type
+BeeIDs1234TTcount <- BeeIDs1234 %>%
+  group_by(Trap) %>%
+  count(Binomial)
+
+#Convert from long to wide format
+BeeIDs1234TTcountwide <- spread(BeeIDs1234TTcount, Trap, n)
+
+#Export to .csv
+#write.csv(BeeIDs1234TTcountwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness~TrapType/BeeSpeciesbyTrapType1234.csv")
+
+#Group BeeIDs by Site and Trap Type
+BeeIDs1234TTcountsite <- BeeIDs1234 %>%
+  group_by(Trap, Site) %>%
+  count(Binomial)
+
+#Determine number of species collected by each trap type
+BeeIDs1234TTspp <- BeeIDs1234 %>%
+  group_by(Trap) %>%
+  summarise(Total.Species = length(unique(Binomial)))
 
 #Plot: Bee Species Richness vs. Trap Type plot using ggplot2
-BSbyTTSP123plot <- ggplot(BSTTSP123, aes(x = Sampling.Period,
-                                        y = Number.Bee.Species)) +
-  geom_bar(aes(fill = Trap),
-           stat = "identity",
+BSbyTT1234plot <- ggplot(BeeIDs1234TTspp, aes(x = Trap,
+                                              y = Total.Species)) +
+  geom_bar(stat = "identity",
            color = "black") +
-  scale_fill_manual(labels = c("Bee bowls", "Blue vane", "Emergence", "Non-Target", "Pitfall"),
-                    values = c("deepskyblue4", "darkorchid1", "#FFB90F", "#000000", "darkgreen")) +
   theme_bw() +
-  labs(x = "Sampling Period",
+  labs(x = "Trap Type",
        y = "Number of Bee Species") +
   ggtitle("Number of Bee Species Collected by \nDifferent Trap Types") +
   theme(plot.title = element_text(size = 15,
@@ -175,15 +194,51 @@ BSbyTTSP123plot <- ggplot(BSTTSP123, aes(x = Sampling.Period,
                                   hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
   theme(axis.text.x = element_text(size = 10,
-                                   hjust = 0.5))
-BSbyTTSP123plot
+                                   angle = 45,
+                                   hjust = 1))
+BSbyTT1234plot
+
+#Group BeeIDs123 by site and date
+BeeIDs1234TTsitedate <- BeeIDs1234 %>%
+  group_by(Site, Date, Trap) %>%
+  summarise(Total.Species = length(unique(Binomial)))
 
 #Test for significance between groups
 #Run an ANOVA to test for significance of bee species richness based on trap type
-BSbyTTSP123ANOVA <- aov(Number.Bee.Species ~ Trap + Sampling.Period, data = BSTTSP123)
-summary(BSbyTTSP123ANOVA)
+BSbyTT1234ANOVA <- aov(Total.Species ~ Trap,
+                       data = BeeIDs1234TTsitedate)
+summary(BSbyTT1234ANOVA)
 
 #Based on the outcome of the ANOVA (p < 0.001), we know that there are significant differences between the number of bee species collected by each trap type.
 
 #Use Tukey Honest Significant Differences function to perform multiple pairwise-comparisons between the means of each trap type.
-TukeyHSD(BSbyTTSP123ANOVA)
+TukeyHSD(BSbyTT1234ANOVA)
+
+#Reformat BeeIDs123TTcountsite from long to wide
+BeeIDs1234TTcountsitewide <- spread(BeeIDs1234TTcountsite, Binomial, n)
+
+#Fill NAs with 0
+BeeIDs1234TTcountsitewide[is.na(BeeIDs1234TTcountsitewide)] <- 0
+
+#Make another data frame removing the Trap and Site columns from BeeIDs123TTcountsitewide
+Bee.Community1234 <- BeeIDs1234TTcountsitewide[, -which(names(BeeIDs1234TTcountsitewide) %in% c("Trap", "Site"))]
+
+#Use metaMDS in vegan to create a "dissimilarity matrix" to measure similarity between samples; use k = 2 to denote the number of dimensions we're reducing to
+Bee.Community1234.mds <- metaMDS(comm = Bee.Community1234,
+                                 autotransform = FALSE,
+                                 k = 2,
+                                 trymax = 500)
+
+#Check to make sure we're using the correct number of dimensions; 2 is good
+dimcheckMDS(Bee.Community1234)
+
+#Check stress value; if over 0.2 will have to figure out something else
+#Stress value provides a measure of the degree to which the distance between samples in reduced dimensional space corresponds to the actual multivariate distance between the samples. Lower stress values indicate greater conformity.
+Bee.Community1234.mds$stress
+#We're good!
+
+#Plot it
+ordiplot(Bee.Community1234.mds)
+ordihull(Bee.Community1234.mds,
+         groups = BeeIDs1234TTcountsitewide$Trap,
+         label = TRUE)
