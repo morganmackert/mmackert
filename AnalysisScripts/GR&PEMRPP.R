@@ -17,6 +17,7 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(vegan)
+library(goeveg)
 
 #Read in data
 Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"), stringsAsFactors = TRUE)
@@ -51,16 +52,7 @@ Quadrats123PE <- Quadrats %>%
   filter(Year <= 2016) %>%
   filter(Site == "Peckumn")
 
-#Determine number of unique blooming species found in quadrats at each site, not including NAs
-numbsquadrats123GR <- Quadrats123GR %>%
-  filter(!is.na(Species)) %>%
-  summarise(TotalBS = length(unique(Species)))
-
-numbsquadrats123PE <- Quadrats123PE %>%
-  filter(!is.na(Species)) %>%
-  summarise(TotalBS = length(unique(Species)))
-
-#Determine what the blooming species are for Greving and Peckumn by date, while retaining site names
+#Determine what the blooming species are for Greving and Peckumn by date, while retaining site names and dates
 bsquadrats123GR <- Quadrats123GR %>%
   group_by(Date, Site) %>%
   filter(!is.na(Species)) %>%
@@ -80,8 +72,8 @@ bsquadrats123GRPEwide <- spread(bsquadrats123GRPE, Species, n)
 #Fill NAs with 0
 bsquadrats123GRPEwide[is.na(bsquadrats123GRPEwide)] <- 0
 
-#Export data file for Mary
-write.csv(bsquadrats123GRPEwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/MRPP/Greving and Peckumn Blooming Species")
+#Export data file
+#write.csv(bsquadrats123GRPEwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/MRPP/Greving and Peckumn Blooming Species")
 
 #Remove "Date" and "Site" columns from bsquadrats123GRPEwide data frame
 bsquadrats123GRPEwide <- bsquadrats123GRPEwide[!names(bsquadrats123GRPEwide) %in% c("Date", "Site")]
@@ -100,8 +92,8 @@ averageveg123PE <- Quadrats123PE %>%
 #Join Greving and Peckumn data frames
 averageveg123GRPE <- full_join(averageveg123GR, averageveg123PE, by = c("Site", "Date", "AverageVeg"))
 
-#Export data file for Mary
-write.csv(averageveg123GRPE, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/MRPP/Greving and Peckumn Average Vegetation Coverage")
+#Export data file 
+#write.csv(averageveg123GRPE, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/MRPP/Greving and Peckumn Average Vegetation Coverage")
 
 #Convert to data.frames
 averageveg123GRPE <- as.data.frame(averageveg123GRPE)
@@ -110,3 +102,24 @@ bsquadrats123GRPEwide <- as.data.frame(bsquadrats123GRPEwide)
 #MRPP analysis
 GRPE.MRPP <- mrpp(bsquadrats123GRPEwide, averageveg123GRPE$Site, distance = "bray")
 GRPE.MRPP
+
+#Use metaMDS in vegan to create a "dissimilarity matrix" to measure similarity between samples; use k = 2 to denote the number of dimensions we're reducing to
+GRPE.mds <- metaMDS(comm = bsquadrats123GRPEwide,
+                    autotransform = FALSE,
+                    k = 2,
+                    trymax = 500)
+
+#Check to make sure we're using the correct number of dimensions; 2 is good
+dimcheckMDS(bsquadrats123GRPEwide)
+
+#Check stress value; if over 0.2 will have to figure out something else
+#Stress value provides a measure of the degree to which the distance between samples in reduced dimensional space corresponds to the actual multivariate distance between the samples. Lower stress values indicate greater conformity.
+GRPE.mds$stress
+#We're good!
+
+#Plot it
+ordiplot(GRPE.mds)
+ordihull(GRPE.mds,
+         groups = averageveg123GRPE$Site,
+         label = TRUE)
+#We've got overlapping communities! Yay!
