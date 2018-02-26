@@ -8,12 +8,12 @@ rm(list=ls())
 setwd("~/ISU/Project/Data")
 
 #Load libraries
-library(dplyr)
 library(lubridate)
-library(ggplot2)
+library(dplyr)
+library(tidyr)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
+BeeIDs <- read.csv("Bees/Bee IDs.csv", na.strings=c("", "NA"))
 #Number = Individual identification number assigned to each specimen
 #Date = Date of sample
 #Site = Site name
@@ -37,7 +37,7 @@ BeeIDs %>%
 #They look good!
 
 #Subset BeeIDs to include only 2017 data and appropriate data
-BeeIDs2017 <- BeeIDs %>%
+BeeIDs4 <- BeeIDs %>%
   filter(Year == 2017) %>%
   filter(Trap != "Target") %>%
   filter(Binomial != "Wasp") %>%
@@ -45,8 +45,13 @@ BeeIDs2017 <- BeeIDs %>%
   filter(Binomial != "Unidentifiable") %>%
   filter(!is.na(Binomial))
 
+#Determine total number of bee species
+BeeIDs4 %>%
+  group_by(Binomial) %>%
+  summarise()
+
 #Apply county names to corresponding sites (ugly but it works)
-BeeIDs2017 <- BeeIDs2017 %>%
+BeeIDs4 <- BeeIDs4 %>%
   mutate(County = ifelse(Site == "Plunkett", "Story",
                 ifelse(Site == "Bowman", "Dallas",
                        ifelse(Site == "Kaldenberg", "Jasper",
@@ -54,13 +59,98 @@ BeeIDs2017 <- BeeIDs2017 %>%
                                      ifelse(Site == "Sloan", "Buchanan",
                                             ifelse(Site == "Sheller", "Grundy",
                                                    ifelse(Site == "Cretsinger", "Guthrie",
-                                                          ifelse(Site == "Peckumn", "Greene")
-                                                          ))))))))
+                                                          ifelse(Site == "Peckumn", "Greene",
+                                                                 NA
+                                                          )))))))))
+
+#Check to make sure mutate function worked
+BeeIDs4 %>%
+  group_by(Site, County) %>%
+  summarise()
+#BOOM
 
 #Determine number of species and numbers of individuals in each county
-BeeIDs2017bycounty <- BeeIDs2017 %>%
+BeeIDs4bycounty <- BeeIDs4 %>%
   group_by(County) %>%
   count(Binomial)
 
 #Export output as .csv file
-write.csv(BeeIDs2017bycounty, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/2017 Bee Species by County.csv")
+write.csv(BeeIDs4bycounty, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/2017 Bee Species by County.csv")
+
+#-------------------------------------------------------------------#
+#                         Bee Species by County                     #
+#                               2014-2017                           #
+#-------------------------------------------------------------------#
+
+#Subset BeeIDs to include only 2014-2017 dates and appropriate data
+BeeIDs1234 <- BeeIDs %>%
+  filter(Year <= 2017) %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Binomial)) %>%
+  filter(!is.na(Site))
+
+#Determine total number of bee species
+BeeIDs1234 %>%
+  group_by(Binomial) %>%
+  summarise()
+
+#Apply county names to corresponding sites (ugly but it works)
+BeeIDs1234 <- BeeIDs1234 %>%
+  mutate(County = ifelse(Site == "Plunkett", "Story",
+                         ifelse(Site == "Bowman", "Dallas",
+                                ifelse(Site == "Kaldenberg", "Jasper",
+                                       ifelse(Site == "McClellan", "Jasper",
+                                              ifelse(Site == "Sloan", "Buchanan",
+                                                     ifelse(Site == "Sheller", "Grundy",
+                                                            ifelse(Site == "Cretsinger", "Guthrie",
+                                                                   ifelse(Site == "Peckumn", "Greene",
+                                                                          ifelse(Site == "Greving", "Carroll",
+                                                                                 ifelse(Site == "NealSmith", "Jasper",
+                                                                                        ifelse(Site == "Elkader", "Clayton",
+                                                                                               NA
+                                                                                        ))))))))))))
+
+#Check to make sure mutate function worked
+BeeIDs1234 %>%
+  group_by(Site, County) %>%
+  summarise()
+
+#Apply RRW (yes or no) to counties
+BeeIDs1234 <- BeeIDs1234 %>%
+  mutate(RRW = ifelse(County == "Story", "Non-RRW",
+                      ifelse(County == "Dallas", "RRW",
+                             ifelse(County == "Jasper", "Non-RRW",
+                                    ifelse(County == "Buchanan", "Non-RRW",
+                                           ifelse(County == "Grundy", "Non-RRW",
+                                                  ifelse(County == "Guthrie", "RRW",
+                                                         ifelse(County == "Greene", "RRW",
+                                                                ifelse(County == "Carroll", "RRW",
+                                                                       ifelse(County == "Clayton", "Non-RRW",
+                                                                              NA
+                                                                       ))))))))))
+
+#Determine number of species and numbers of individuals in each county
+BeeIDs1234bycounty <- BeeIDs1234 %>%
+  group_by(County) %>%
+  count(Binomial)
+
+#Determine number of bees collected in RRW and outside
+BeeIDs1234RRW <- BeeIDs1234 %>%
+  group_by(RRW) %>%
+  count(Binomial) %>%
+  summarise(Total.Bees = sum(n))
+
+#Determine number of bee species collected in RRW and outside
+BeeIDs1234RRWspecies <- BeeIDs1234 %>%
+  group_by(RRW) %>%
+  summarise(Total.Species = length(unique(Binomial)))
+
+#Which species caught in which locations?
+BeeIDs1234RRWunique <- BeeIDs1234 %>%
+  group_by(RRW) %>%
+  count(Binomial)
+
+#Export as .csv
+write.csv(BeeIDs1234RRWunique, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/RRW Bees.csv")
