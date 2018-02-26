@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------#
 #                             Bee Guilds                            #
-#                             Years 1-3                             #
+#                             2014-2016                             #
 #-------------------------------------------------------------------#
 
 #Clear environment and set working directory
@@ -10,6 +10,7 @@ setwd("~/ISU/Project/Data")
 #LOad libraries
 library(lubridate)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 
 #Read in data
@@ -30,26 +31,35 @@ BeeIDs$Date <- mdy(BeeIDs$Date)
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
 
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs123 <- BeeIDs %>%
-  filter(Year <= 2016) %>%
+#Subset BeeIDs without target bees, wasps, or unidentifiable specimens
+BeeIDs <- BeeIDs %>%
   filter(Trap != "Target") %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable")
 
 #Assign guild name to each specimen
-BeeIDs123 <- BeeIDs123 %>%
+BeeIDs <- BeeIDs %>%
   mutate(Guild = case_when(
     Binomial == "Bombus citrinus" ~ "Social parasite",
     Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
-    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" ~ "Solitary ground-nester",
+    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" | Genus == "Protandrena" ~ "Solitary ground-nester",
     Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
     Genus == "Apis" ~ "Honey bee",
     Genus == "Bombus" ~ "Bumble bee",
     Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
     Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
   ))
+
+#Check to make sure all species have been assigned a guild
+BeeIDs %>% 
+  group_by(Guild) %>% 
+  tally()
+#Good!
+
+#Subset BeeIDs to include only 2014-2016
+BeeIDs123 <- BeeIDs %>%
+  filter(Year <= 2016)
 
 #Create table showing the number of individuals within each guild by site and year
 BeeIDs123byguildind <- BeeIDs123 %>%
@@ -66,7 +76,7 @@ BeeIDs123byguildindwide <- spread(BeeIDs123byguildind, Guild, Abundance)
 BeeIDs123byguildindwide[is.na(BeeIDs123byguildindwide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs123byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance.csv")
+write.csv(BeeIDs123byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance123.csv")
 
 #Create table showing the number of species in each guild by site and year
 BeeIDs123byguildspecies <- BeeIDs123 %>%
@@ -80,7 +90,7 @@ BeeIDs123byguildspecieswide <- spread(BeeIDs123byguildspecies, Guild, NumberSpec
 BeeIDs123byguildspecieswide[is.na(BeeIDs123byguildspecieswide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs123byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies.csv")
+write.csv(BeeIDs123byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies123.csv")
   
 #Create table showing number of individuals in each guild collected each year
 BeeIDs123byguildyear <- BeeIDs123 %>%
@@ -88,10 +98,10 @@ BeeIDs123byguildyear <- BeeIDs123 %>%
   count(Guild)
 
 #Change "Year" to a factor
-BeeIDs123byguild$Year <- as.factor(BeeIDs123byguild$Year)
+BeeIDs123byguildyear$Year <- as.factor(BeeIDs123byguildyear$Year)
 
 #Plot number of specimens collected in each guild by year
-BeeIDs123byguildplot <- ggplot(BeeIDs123byguild,
+BeeIDs123byguildplot <- ggplot(BeeIDs123byguildyear,
                                aes(x = Guild,
                                    y = n)) +
   geom_point(aes(shape = Year,
@@ -111,7 +121,7 @@ BeeIDs123byguildplot <- ggplot(BeeIDs123byguild,
 BeeIDs123byguildplot
 
 #Do the same but in a grouped bar plot
-BeeIDs123byguildbarplot <- ggplot(BeeIDs123byguild,
+BeeIDs123byguildbarplot <- ggplot(BeeIDs123byguildyear,
                                   aes(x = Guild,
                                       y = n,
                                       fill = Year)) +
@@ -140,7 +150,7 @@ BeeIDs123numberguilds <- BeeIDs123 %>%
   summarise(NumberGuilds = length(unique(Guild)))
 
 #Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
-write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite.csv")
+write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite123.csv")
 
 #Graph that shiz
 BeeIDs123byguildsiteplot <- ggplot(BeeIDs123byguildsite,
@@ -180,3 +190,141 @@ BeeIDs123byguildsitebarplot <- ggplot(BeeIDs123byguildsite,
                                    angle = 45,
                                    hjust = 1))
 BeeIDs123byguildsitebarplot
+
+#-------------------------------------------------------------------#
+#                             Bee Guilds                            #
+#                             2014-2017                             #
+#-------------------------------------------------------------------#
+#Subset BeeIDs to include only 2014-2017
+BeeIDs1234 <- BeeIDs %>%
+  filter(Year <= 2017)
+
+#Create table showing the number of individuals within each guild by site and year
+BeeIDs1234byguildind <- BeeIDs1234 %>%
+  group_by(Site, Year, Guild) %>%
+  count(Binomial)
+BeeIDs1234byguildind <- BeeIDs1234byguildind %>%
+  group_by(Site, Year, Guild) %>%
+  summarise(Abundance = sum(n))
+
+#Reformat from long to wide
+BeeIDs1234byguildindwide <- spread(BeeIDs1234byguildind, Guild, Abundance)
+
+#Fill NAs with 0
+BeeIDs1234byguildindwide[is.na(BeeIDs1234byguildindwide)] <- 0
+
+#Export as .csv
+write.csv(BeeIDs1234byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance1234.csv")
+
+#Create table showing the number of species in each guild by site and year
+BeeIDs1234byguildspecies <- BeeIDs1234 %>%
+  group_by(Site, Year, Guild) %>%
+  summarise(NumberSpecies = length(unique(Binomial)))
+
+#Reformat from long to wide format
+BeeIDs1234byguildspecieswide <- spread(BeeIDs1234byguildspecies, Guild, NumberSpecies)
+
+#Fill NAs with 0
+BeeIDs1234byguildspecieswide[is.na(BeeIDs1234byguildspecieswide)] <- 0
+
+#Export as .csv
+write.csv(BeeIDs1234byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies1234.csv")
+
+#Create table showing number of individuals in each guild collected each year
+BeeIDs1234byguildyear <- BeeIDs1234 %>%
+  group_by(Year) %>%
+  count(Guild)
+
+#Change "Year" to a factor
+BeeIDs1234byguildyear$Year <- as.factor(BeeIDs1234byguildyear$Year)
+
+#Plot number of specimens collected in each guild by year
+BeeIDs1234byguildplot <- ggplot(BeeIDs1234byguildyear,
+                                aes(x = Guild,
+                                    y = n)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 4) +
+  theme_bw() + 
+  labs(y = "Bee Abundance") +
+  ggtitle("Number of Specimens Belonging to Each Guild by Year") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+BeeIDs1234byguildplot
+
+#Do the same but in a grouped bar plot
+BeeIDs1234byguildbarplot <- ggplot(BeeIDs1234byguildyear,
+                                   aes(x = Guild,
+                                       y = n,
+                                       fill = Year)) +
+  geom_bar(color = "black",
+           position = "dodge",
+           stat = "identity") +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Number of Specimens Belonging to Each Guild by Year") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+BeeIDs1234byguildbarplot
+
+#Create table showing number of individuals collected at each site during each year
+BeeIDs1234byguildsite <- BeeIDs1234 %>%
+  group_by(Year, Site) %>%
+  count(Guild)
+BeeIDs1234numberguilds <- BeeIDs1234 %>%
+  group_by(Year, Site) %>%
+  summarise(NumberGuilds = length(unique(Guild)))
+
+#Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
+write.csv(BeeIDs1234byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite1234.csv")
+
+#Graph that shiz
+BeeIDs1234byguildsiteplot <- ggplot(BeeIDs1234byguildsite,
+                                    aes(x = Guild,
+                                        y = n)) +
+  geom_point(aes(color = Site)) +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Number of Specimens Belonging to Each Guild by Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+BeeIDs1234byguildsiteplot
+
+#Bar graph
+BeeIDs1234byguildsitebarplot <- ggplot(BeeIDs1234byguildsite,
+                                       aes(x = Guild,
+                                           y = n,
+                                           fill = Site)) +
+  geom_bar(color = "black",
+           position = "dodge",
+           stat = "identity") +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Number of Specimens Belonging to Each Guild by Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+BeeIDs1234byguildsitebarplot

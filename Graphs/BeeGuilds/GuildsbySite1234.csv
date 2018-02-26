@@ -1,0 +1,182 @@
+"","Year","Site","Guild","n"
+"1",2014,"Bowman","Bumble bee",2
+"2",2014,"Bowman","Honey bee",6
+"3",2014,"Bowman","Social ground-nester",15
+"4",2014,"Bowman","Solitary ground-nester",98
+"5",2014,"Cretsinger","Bumble bee",4
+"6",2014,"Cretsinger","Cavity nester",48
+"7",2014,"Cretsinger","Honey bee",1
+"8",2014,"Cretsinger","Social ground-nester",138
+"9",2014,"Cretsinger","Solitary ground-nester",97
+"10",2014,"Elkader","Bumble bee",3
+"11",2014,"Elkader","Cavity nester",18
+"12",2014,"Elkader","Cleptoparasite",8
+"13",2014,"Elkader","Honey bee",14
+"14",2014,"Elkader","Social ground-nester",84
+"15",2014,"Elkader","Solitary ground-nester",99
+"16",2014,"Greving","Bumble bee",5
+"17",2014,"Greving","Cavity nester",29
+"18",2014,"Greving","Cleptoparasite",6
+"19",2014,"Greving","Social ground-nester",299
+"20",2014,"Greving","Solitary ground-nester",143
+"21",2014,"Kaldenberg","Bumble bee",1
+"22",2014,"Kaldenberg","Cavity nester",18
+"23",2014,"Kaldenberg","Social ground-nester",250
+"24",2014,"Kaldenberg","Solitary ground-nester",117
+"25",2014,"McClellan","Bumble bee",2
+"26",2014,"McClellan","Cavity nester",1
+"27",2014,"McClellan","Social ground-nester",53
+"28",2014,"McClellan","Solitary ground-nester",104
+"29",2014,"NealSmith","Bumble bee",1
+"30",2014,"NealSmith","Cavity nester",25
+"31",2014,"NealSmith","Cleptoparasite",8
+"32",2014,"NealSmith","Honey bee",13
+"33",2014,"NealSmith","Social ground-nester",198
+"34",2014,"NealSmith","Social parasite",1
+"35",2014,"NealSmith","Solitary ground-nester",266
+"36",2014,"Plunkett","Bumble bee",2
+"37",2014,"Plunkett","Cavity nester",1
+"38",2014,"Plunkett","Cleptoparasite",1
+"39",2014,"Plunkett","Honey bee",5
+"40",2014,"Plunkett","Social ground-nester",122
+"41",2014,"Plunkett","Solitary ground-nester",63
+"42",2014,"Sheller","Bumble bee",2
+"43",2014,"Sheller","Cavity nester",4
+"44",2014,"Sheller","Social ground-nester",100
+"45",2014,"Sheller","Solitary ground-nester",91
+"46",2014,"Sloan","Bumble bee",4
+"47",2014,"Sloan","Cavity nester",18
+"48",2014,"Sloan","Social ground-nester",26
+"49",2014,"Sloan","Solitary ground-nester",81
+"50",2015,"Bowman","Bumble bee",3
+"51",2015,"Bowman","Honey bee",1
+"52",2015,"Bowman","Social ground-nester",17
+"53",2015,"Bowman","Solitary ground-nester",17
+"54",2015,"Cretsinger","Bumble bee",3
+"55",2015,"Cretsinger","Cavity nester",13
+"56",2015,"Cretsinger","Cleptoparasite",1
+"57",2015,"Cretsinger","Social ground-nester",135
+"58",2015,"Cretsinger","Solitary ground-nester",64
+"59",2015,"Elkader","Bumble bee",8
+"60",2015,"Elkader","Cavity nester",30
+"61",2015,"Elkader","Cleptoparasite",7
+"62",2015,"Elkader","Honey bee",53
+"63",2015,"Elkader","Social ground-nester",148
+"64",2015,"Elkader","Solitary ground-nester",103
+"65",2015,"Kaldenberg","Bumble bee",10
+"66",2015,"Kaldenberg","Cavity nester",4
+"67",2015,"Kaldenberg","Honey bee",1
+"68",2015,"Kaldenberg","Social ground-nester",76
+"69",2015,"Kaldenberg","Solitary ground-nester",66
+"70",2015,"McClellan","Bumble bee",5
+"71",2015,"McClellan","Cavity nester",2
+"72",2015,"McClellan","Social ground-nester",126
+"73",2015,"McClellan","Solitary ground-nester",53
+"74",2015,"NealSmith","Bumble bee",8
+"75",2015,"NealSmith","Cavity nester",15
+"76",2015,"NealSmith","Cleptoparasite",1
+"77",2015,"NealSmith","Social ground-nester",251
+"78",2015,"NealSmith","Solitary ground-nester",73
+"79",2015,"Peckumn","Bumble bee",2
+"80",2015,"Peckumn","Cavity nester",5
+"81",2015,"Peckumn","Cleptoparasite",2
+"82",2015,"Peckumn","Honey bee",9
+"83",2015,"Peckumn","Social ground-nester",109
+"84",2015,"Peckumn","Solitary ground-nester",68
+"85",2015,"Plunkett","Bumble bee",23
+"86",2015,"Plunkett","Cavity nester",1
+"87",2015,"Plunkett","Cleptoparasite",1
+"88",2015,"Plunkett","Honey bee",36
+"89",2015,"Plunkett","Social ground-nester",64
+"90",2015,"Plunkett","Solitary ground-nester",57
+"91",2015,"Sheller","Bumble bee",9
+"92",2015,"Sheller","Cleptoparasite",2
+"93",2015,"Sheller","Social ground-nester",36
+"94",2015,"Sheller","Solitary ground-nester",72
+"95",2015,"Sloan","Bumble bee",7
+"96",2015,"Sloan","Cavity nester",5
+"97",2015,"Sloan","Cleptoparasite",2
+"98",2015,"Sloan","Social ground-nester",144
+"99",2015,"Sloan","Solitary ground-nester",73
+"100",2016,"Bowman","Bumble bee",6
+"101",2016,"Bowman","Cavity nester",1
+"102",2016,"Bowman","Honey bee",2
+"103",2016,"Bowman","Social ground-nester",23
+"104",2016,"Bowman","Solitary ground-nester",47
+"105",2016,"Cretsinger","Bumble bee",17
+"106",2016,"Cretsinger","Cavity nester",21
+"107",2016,"Cretsinger","Social ground-nester",287
+"108",2016,"Cretsinger","Solitary ground-nester",77
+"109",2016,"Kaldenberg","Bumble bee",7
+"110",2016,"Kaldenberg","Cavity nester",19
+"111",2016,"Kaldenberg","Cleptoparasite",2
+"112",2016,"Kaldenberg","Social ground-nester",231
+"113",2016,"Kaldenberg","Solitary ground-nester",49
+"114",2016,"McClellan","Bumble bee",8
+"115",2016,"McClellan","Cavity nester",1
+"116",2016,"McClellan","Social ground-nester",151
+"117",2016,"McClellan","Solitary ground-nester",51
+"118",2016,"Peckumn","Bumble bee",17
+"119",2016,"Peckumn","Cavity nester",25
+"120",2016,"Peckumn","Cleptoparasite",6
+"121",2016,"Peckumn","Honey bee",3
+"122",2016,"Peckumn","Social ground-nester",216
+"123",2016,"Peckumn","Solitary ground-nester",132
+"124",2016,"Plunkett","Bumble bee",133
+"125",2016,"Plunkett","Cavity nester",11
+"126",2016,"Plunkett","Cleptoparasite",3
+"127",2016,"Plunkett","Honey bee",3
+"128",2016,"Plunkett","Social ground-nester",448
+"129",2016,"Plunkett","Solitary ground-nester",206
+"130",2016,"Sheller","Bumble bee",2
+"131",2016,"Sheller","Cavity nester",6
+"132",2016,"Sheller","Cleptoparasite",2
+"133",2016,"Sheller","Social ground-nester",137
+"134",2016,"Sheller","Solitary ground-nester",51
+"135",2016,"Sloan","Bumble bee",2
+"136",2016,"Sloan","Cavity nester",12
+"137",2016,"Sloan","Cleptoparasite",1
+"138",2016,"Sloan","Honey bee",1
+"139",2016,"Sloan","Social ground-nester",210
+"140",2016,"Sloan","Solitary ground-nester",73
+"141",2017,"Bowman","Bumble bee",3
+"142",2017,"Bowman","Cavity nester",3
+"143",2017,"Bowman","Honey bee",2
+"144",2017,"Bowman","Social ground-nester",246
+"145",2017,"Bowman","Solitary ground-nester",44
+"146",2017,"Cretsinger","Bumble bee",10
+"147",2017,"Cretsinger","Cavity nester",53
+"148",2017,"Cretsinger","Cleptoparasite",3
+"149",2017,"Cretsinger","Social ground-nester",736
+"150",2017,"Cretsinger","Solitary ground-nester",105
+"151",2017,"Kaldenberg","Bumble bee",8
+"152",2017,"Kaldenberg","Cavity nester",7
+"153",2017,"Kaldenberg","Cleptoparasite",3
+"154",2017,"Kaldenberg","Social ground-nester",302
+"155",2017,"Kaldenberg","Solitary ground-nester",69
+"156",2017,"McClellan","Bumble bee",1
+"157",2017,"McClellan","Cavity nester",3
+"158",2017,"McClellan","Honey bee",1
+"159",2017,"McClellan","Social ground-nester",447
+"160",2017,"McClellan","Solitary ground-nester",124
+"161",2017,"Peckumn","Bumble bee",10
+"162",2017,"Peckumn","Cavity nester",63
+"163",2017,"Peckumn","Cleptoparasite",5
+"164",2017,"Peckumn","Honey bee",5
+"165",2017,"Peckumn","Social ground-nester",290
+"166",2017,"Peckumn","Solitary ground-nester",121
+"167",2017,"Plunkett","Bumble bee",18
+"168",2017,"Plunkett","Cavity nester",12
+"169",2017,"Plunkett","Cleptoparasite",1
+"170",2017,"Plunkett","Honey bee",7
+"171",2017,"Plunkett","Social ground-nester",426
+"172",2017,"Plunkett","Social parasite",1
+"173",2017,"Plunkett","Solitary ground-nester",91
+"174",2017,"Sheller","Bumble bee",1
+"175",2017,"Sheller","Cavity nester",1
+"176",2017,"Sheller","Social ground-nester",117
+"177",2017,"Sheller","Solitary ground-nester",31
+"178",2017,"Sloan","Bumble bee",1
+"179",2017,"Sloan","Cavity nester",14
+"180",2017,"Sloan","Social ground-nester",158
+"181",2017,"Sloan","Solitary ground-nester",88
