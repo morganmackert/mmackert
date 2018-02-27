@@ -1,6 +1,7 @@
 #-------------------------------------------------------------------#
-#                             Bee Guilds                            #
-#                             2014-2016                             #
+#                                                                   #
+#                             BEE GUILDS                            #
+#                                                                   #
 #-------------------------------------------------------------------#
 
 #Clear environment and set working directory
@@ -12,6 +13,7 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(scales)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
@@ -57,6 +59,11 @@ BeeIDs %>%
   tally()
 #Good!
 
+#-------------------------------------------------------------------#
+#                             Bee Guilds                            #
+#                             2014-2016                             #
+#-------------------------------------------------------------------#
+
 #Subset BeeIDs to include only 2014-2016
 BeeIDs123 <- BeeIDs %>%
   filter(Year <= 2016)
@@ -90,7 +97,7 @@ BeeIDs123byguildspecieswide <- spread(BeeIDs123byguildspecies, Guild, NumberSpec
 BeeIDs123byguildspecieswide[is.na(BeeIDs123byguildspecieswide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs123byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies123.csv")
+#write.csv(BeeIDs123byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies123.csv")
   
 #Create table showing number of individuals in each guild collected each year
 BeeIDs123byguildyear <- BeeIDs123 %>%
@@ -150,7 +157,7 @@ BeeIDs123numberguilds <- BeeIDs123 %>%
   summarise(NumberGuilds = length(unique(Guild)))
 
 #Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
-write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite123.csv")
+#write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite123.csv")
 
 #Graph that shiz
 BeeIDs123byguildsiteplot <- ggplot(BeeIDs123byguildsite,
@@ -199,6 +206,46 @@ BeeIDs123byguildsitebarplot
 BeeIDs1234 <- BeeIDs %>%
   filter(Year <= 2017)
 
+#Apply county names to corresponding sites (ugly but it works)
+BeeIDs1234 <- BeeIDs1234 %>%
+  mutate(County = ifelse(Site == "Plunkett", "Story",
+                         ifelse(Site == "Bowman", "Dallas",
+                                ifelse(Site == "Kaldenberg", "Jasper",
+                                       ifelse(Site == "McClellan", "Jasper",
+                                              ifelse(Site == "Sloan", "Buchanan",
+                                                     ifelse(Site == "Sheller", "Grundy",
+                                                            ifelse(Site == "Cretsinger", "Guthrie",
+                                                                   ifelse(Site == "Peckumn", "Greene",
+                                                                          ifelse(Site == "Greving", "Carroll",
+                                                                                 ifelse(Site == "NealSmith", "Jasper",
+                                                                                        ifelse(Site == "Elkader", "Clayton",
+                                                                                               NA
+                                                                                        ))))))))))))
+
+#Check to make sure mutate function worked
+BeeIDs1234 %>%
+  group_by(Site, County) %>%
+  summarise()
+
+#Apply RRW (yes or no) to counties
+BeeIDs1234 <- BeeIDs1234 %>%
+  mutate(RRW = ifelse(County == "Story", "Non-RRW",
+                      ifelse(County == "Dallas", "RRW",
+                             ifelse(County == "Jasper", "Non-RRW",
+                                    ifelse(County == "Buchanan", "Non-RRW",
+                                           ifelse(County == "Grundy", "Non-RRW",
+                                                  ifelse(County == "Guthrie", "RRW",
+                                                         ifelse(County == "Greene", "RRW",
+                                                                ifelse(County == "Carroll", "RRW",
+                                                                       ifelse(County == "Clayton", "Non-RRW",
+                                                                              NA
+                                                                       ))))))))))
+#Check to make sure RRW worked
+BeeIDs1234 %>%
+  group_by(Site, RRW) %>%
+  summarise()
+#Good!
+
 #Create table showing the number of individuals within each guild by site and year
 BeeIDs1234byguildind <- BeeIDs1234 %>%
   group_by(Site, Year, Guild) %>%
@@ -214,7 +261,7 @@ BeeIDs1234byguildindwide <- spread(BeeIDs1234byguildind, Guild, Abundance)
 BeeIDs1234byguildindwide[is.na(BeeIDs1234byguildindwide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs1234byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance1234.csv")
+#write.csv(BeeIDs1234byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance1234.csv")
 
 #Create table showing the number of species in each guild by site and year
 BeeIDs1234byguildspecies <- BeeIDs1234 %>%
@@ -228,7 +275,24 @@ BeeIDs1234byguildspecieswide <- spread(BeeIDs1234byguildspecies, Guild, NumberSp
 BeeIDs1234byguildspecieswide[is.na(BeeIDs1234byguildspecieswide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs1234byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies1234.csv")
+#write.csv(BeeIDs1234byguildspecieswide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySpecies1234.csv")
+
+#Create table showing the number of individuals within each guild by RRW
+BeeIDs1234byguildRRW <- BeeIDs1234 %>%
+  group_by(RRW, Guild) %>%
+  count(Binomial)
+BeeIDs1234byguildRRW <- BeeIDs1234byguildRRW %>%
+  group_by(RRW, Guild) %>%
+  summarise(Abundance = sum(n))
+
+#Reformat from long to wide format
+BeeIDs1234byguildRRWwide <- spread(BeeIDs1234byguildRRW, Guild, Abundance)
+
+#Fill NAs with 0
+BeeIDs1234byguildRRWwide[is.na(BeeIDs1234byguildRRWwide)] <- 0
+
+#Export as .csv
+#write.csv(BeeIDs1234byguildRRWwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyRRW1234.csv")
 
 #Create table showing number of individuals in each guild collected each year
 BeeIDs1234byguildyear <- BeeIDs1234 %>%
@@ -328,3 +392,27 @@ BeeIDs1234byguildsitebarplot <- ggplot(BeeIDs1234byguildsite,
                                    angle = 45,
                                    hjust = 1))
 BeeIDs1234byguildsitebarplot
+
+#Plot guild abundance by RRW
+BeeIDs1234byguildRRWstack <- ggplot(BeeIDs1234byguildRRW) +
+  geom_bar((aes(x = Guild,
+              y = Abundance,
+              fill = RRW)),
+           stat = "identity",
+           color = "black") +
+  theme_bw() +
+  labs(x = "",
+       y = "Bee Abundance") +
+  theme(legend.text = element_text(size = 10)) +
+  guides(fill = guide_legend("Sites")) +
+  theme(legend.title.align = 0.5) +
+  theme(legend.title = element_text(face = "bold")) +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1)) +
+  scale_x_discrete(labels = wrap_format(20)) +
+  scale_fill_manual(values = c("#66C2A5", "#FC8D62"))
+BeeIDs1234byguildRRWstack
+
+ggplot(mtcars, aes(x=as.factor(cyl), fill=as.factor(cyl) )) +  geom_bar( ) +
+  scale_fill_manual(values = c("red", "green", "blue") )
