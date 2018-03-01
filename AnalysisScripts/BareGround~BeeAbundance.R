@@ -210,15 +210,19 @@ BGonBA34plot
 BGonBA1234 <- filter(BGonBA, Year <= 4)
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGYSonBA1234model <- lm(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
-                       family = poisson,
-                       data = BGonBA1234)
-summary(BGYSonBA1234model)
+BGonBA1234model <- lmer(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
+                         data = BGonBA1234)
+summary(BGonBA1234model)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonBA1234model <- glm(ETrapAbundance ~ AverageBareGround,
-                     data = BGonBA1234)
-summary(BGonBA1234model)
+BGonBA1234null <- glm(ETrapAbundance ~ (1|Year) + (1|Site),
+                       family = poisson,
+                       data = BGonBA1234)
+summary(BGonBA1234null)
+#Doesn't converge ugh
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonBA1234model)
 
 #Find intercept and slope to plot best fit line on graph
 coef(BGonBA1234model)

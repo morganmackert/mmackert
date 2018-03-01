@@ -1,6 +1,6 @@
-#####################################################################
-#                         SOIL COMPOSITION                          #
-#####################################################################
+#-------------------------------------------------------------------#
+#                          SOIL COMPOSITION                         #
+#-------------------------------------------------------------------#
 
 #Research Question:  Does soil composition influence bee abundance/richness within the nesting plots?
 
@@ -283,3 +283,66 @@ fullsoilsbar <- ggplot(soilsbarjoined,
   labs(y = "Composition (%)",
        fill = "Soil Type")
 fullsoilsbar
+
+#-------------------------------------------------------------------#
+#                        Full Ternary with RRW                      #
+#-------------------------------------------------------------------#
+#Apply county names to corresponding sites (ugly but it works)
+soils <- soils %>%
+  mutate(County = ifelse(Site == "Plunkett", "Story",
+                         ifelse(Site == "Bowman", "Dallas",
+                                ifelse(Site == "Kaldenberg", "Jasper",
+                                       ifelse(Site == "McClellan", "Jasper",
+                                              ifelse(Site == "Sloan", "Buchanan",
+                                                     ifelse(Site == "Sheller", "Grundy",
+                                                            ifelse(Site == "Cretsinger", "Guthrie",
+                                                                   ifelse(Site == "Peckumn", "Greene",
+                                                                          ifelse(Site == "Greving", "Carroll",
+                                                                                 ifelse(Site == "NealSmith", "Jasper",
+                                                                                        ifelse(Site == "Elkader", "Clayton",
+                                                                                               NA
+                                                                                        ))))))))))))
+
+#Check to make sure mutate function worked
+soils %>%
+  group_by(Site, County) %>%
+  summarise()
+
+#Apply RRW (yes or no) to counties
+soils <- soils %>%
+  mutate(RRW = ifelse(County == "Story", "Non-RRW",
+                      ifelse(County == "Dallas", "RRW",
+                             ifelse(County == "Jasper", "Non-RRW",
+                                    ifelse(County == "Buchanan", "Non-RRW",
+                                           ifelse(County == "Grundy", "Non-RRW",
+                                                  ifelse(County == "Guthrie", "RRW",
+                                                         ifelse(County == "Greene", "RRW",
+                                                                ifelse(County == "Carroll", "RRW",
+                                                                       ifelse(County == "Clayton", "Non-RRW",
+                                                                              NA
+                                                                       ))))))))))
+#Check to make sure RRW worked
+soils %>%
+  group_by(Site, RRW) %>%
+  summarise()
+#Good!
+
+#Create full ternary diagram colored by site
+fullsoilsternRRW <- ggtern(data = soils,
+                        aes(x = Sand, y = Silt, z = Clay)) +
+  geom_mask() +
+  geom_point(aes(color = RRW),
+             size = 4) +
+  geom_point(shape = 21,
+             size = 4) +
+  theme_bw() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  theme_nomask()
+fullsoilsternRRW

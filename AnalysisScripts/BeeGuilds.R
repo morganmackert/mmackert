@@ -1,7 +1,5 @@
 #-------------------------------------------------------------------#
-#                                                                   #
 #                             BEE GUILDS                            #
-#                                                                   #
 #-------------------------------------------------------------------#
 
 #Clear environment and set working directory
@@ -83,7 +81,7 @@ BeeIDs123byguildindwide <- spread(BeeIDs123byguildind, Guild, Abundance)
 BeeIDs123byguildindwide[is.na(BeeIDs123byguildindwide)] <- 0
 
 #Export as .csv
-write.csv(BeeIDs123byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance123.csv")
+#write.csv(BeeIDs123byguildindwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbyAbundance123.csv")
 
 #Create table showing the number of species in each guild by site and year
 BeeIDs123byguildspecies <- BeeIDs123 %>%
@@ -352,7 +350,7 @@ BeeIDs1234numberguilds <- BeeIDs1234 %>%
   summarise(NumberGuilds = length(unique(Guild)))
 
 #Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
-write.csv(BeeIDs1234byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite1234.csv")
+#write.csv(BeeIDs1234byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite1234.csv")
 
 #Graph that shiz
 BeeIDs1234byguildsiteplot <- ggplot(BeeIDs1234byguildsite,
@@ -413,6 +411,3 @@ BeeIDs1234byguildRRWstack <- ggplot(BeeIDs1234byguildRRW) +
   scale_x_discrete(labels = wrap_format(20)) +
   scale_fill_manual(values = c("#66C2A5", "#FC8D62"))
 BeeIDs1234byguildRRWstack
-
-ggplot(mtcars, aes(x=as.factor(cyl), fill=as.factor(cyl) )) +  geom_bar( ) +
-  scale_fill_manual(values = c("red", "green", "blue") )
