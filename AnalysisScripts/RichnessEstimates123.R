@@ -368,7 +368,6 @@ SL123simp <- diversity(SL123tablewide, "simpson")
 SL123inv <- diversity(SL123tablewide, "inv")
 SL123shan <- diversity(SL123tablewide, "shannon")
 
-
 #-------------------------------------------------------------------#
 #                             Sheller                               #
 #-------------------------------------------------------------------#
@@ -525,6 +524,54 @@ GRPE123jack <- specpool(GRPE123tablewide)
 GRPE123simp <- diversity(GRPE123tablewide, "simpson")
 GRPE123inv <- diversity(GRPE123tablewide, "inv")
 GRPE123shan <- diversity(GRPE123tablewide, "shannon")
+
+#-------------------------------------------------------------------#
+#                              Elkader                              #
+#-------------------------------------------------------------------#
+#Subset BeeIDs123 to include only McClellan samples
+EL12 <- BeeIDs %>%
+  filter(Site == "Elkader") %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable")
+
+#Create a new variable for number of samples taken
+EL12 <- EL12 %>%
+  group_by(Site) %>%
+  mutate(Sampling_Day = as.factor(dense_rank(Date)))
+
+#Determine number of unique dates to be sure it matches the original data sheet. Should be 18.
+length(unique(EL12$Date))
+
+#Create a table showing the number of unique species collected during each sample
+EL12speciesnum <-  EL12 %>%
+  group_by(Date) %>%
+  summarise(Number_Species = n_distinct(Binomial))
+
+#Create a table listing each species and number of individuals collected during each sample
+EL12sppbydate <- EL12 %>%
+  group_by(Date) %>%
+  count(Binomial)
+
+#Determine total number of bee species
+EL12species <- EL12 %>%
+  count(Binomial)
+
+#Determine total abundance
+EL12abundance <- EL12species %>%
+  summarise(Abundance = sum(n))
+
+#Subset Quadrats to include only Elkader
+EL12quad <- Quadrats %>%
+  filter(Site == "Elkader")
+
+#Determine total number of plant species in quadrats
+EL12quadplantspp <- EL12quad %>%
+  count(Species)
+
+#Determine total number of plant species in strip
+EL12stripplantspp <- EL12quad %>%
+  count(Outside.Species)
 
 #-------------------------------------------------------------------#
 #                              All Sites                            #
