@@ -75,7 +75,7 @@ BeeIDs4bycounty <- BeeIDs4 %>%
   count(Binomial)
 
 #Export output as .csv file
-write.csv(BeeIDs4bycounty, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/2017 Bee Species by County.csv")
+#write.csv(BeeIDs4bycounty, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/2017 Bee Species by County.csv")
 
 #-------------------------------------------------------------------#
 #                         Bee Species by County                     #
@@ -92,9 +92,19 @@ BeeIDs1234 <- BeeIDs %>%
   filter(!is.na(Site))
 
 #Determine total number of bee species
-BeeIDs1234 %>%
+BeeIDs1234species <- BeeIDs1234 %>%
   group_by(Binomial) %>%
   summarise()
+
+#Determine number of bee species by site
+BeeIDs1234speciesbysite <- BeeIDs1234 %>%
+  group_by(Site, Date) %>%
+  summarise(Total.Species = length(unique(Binomial)))
+
+#Determine number of bees collected at each site
+BeeIDs1234abundance <- BeeIDs1234 %>%
+  group_by(Site, Date) %>%
+  count()
 
 #Apply county names to corresponding sites (ugly but it works)
 BeeIDs1234 <- BeeIDs1234 %>%
@@ -153,4 +163,4 @@ BeeIDs1234RRWunique <- BeeIDs1234 %>%
   count(Binomial)
 
 #Export as .csv
-write.csv(BeeIDs1234RRWunique, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/RRW Bees.csv")
+#write.csv(BeeIDs1234RRWunique, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/RRW Bees.csv")
