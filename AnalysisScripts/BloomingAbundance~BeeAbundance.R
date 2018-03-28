@@ -170,6 +170,49 @@ BAonBA34plot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
+#                             Year 4                                #
+#-------------------------------------------------------------------#
+#Subset BAonBA to include only 2016-2017 data.
+BAonBA4 <- filter(BAonBA, Year == 4)
+
+#Year column brought in as an integer; change to factor.
+BAonBA4$Year <- as.factor(BAonBA4$Year)
+
+#Model for bee abundance predicted by blooming plant coverage
+BAonBA4model <- glmer(BeeAbundance ~ AverageFloralCover + (1|Sampling.Period) + (1|Site),
+                      data = BAonBA4,
+                      family = "poisson")
+summary(BAonBA4model)
+
+#Null model not including average floral cover
+BAonBA4null <- glmer(BeeAbundance ~ (1|Sampling.Period) + (1|Site),
+                     data = BAonBA4,
+                     family = "poisson")
+summary(BAonBA4null)
+
+#Likelihood ratio test between null and full models
+anova(BAonBA4null, BAonBA4model)
+
+#Plot residuals from the full model to ensure no deviations from normality
+plot(fitted(BAonBA4model, residuals(BAonBA4model)))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BAonBA4model)
+
+#Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
+BAonBA4plot <- ggplot(BAonBA4, aes(x = AverageFloralCover,y = BeeAbundance)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Blooming Species Coverage (%)",
+       y = "Bee Abundance")
+BAonBA4plot
+
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Subset BAonBA to include only 2014-2017 data.

@@ -44,7 +44,7 @@ Fulldata$Date <- mdy(Fulldata$Date)
 
 #Calculate average bare ground and number of bees collected via emergence traps at each site during each sampling event.
 BGonBA <- Fulldata %>%
-  group_by(Date, Site, Year) %>%
+  group_by(Date, Site, Year, Sampling.Period) %>%
   summarise(AverageBareGround = mean(Bare.Ground),
             ETrapAbundance = sum(Emergence.Traps.Abundance))
 
@@ -201,6 +201,55 @@ BGonBA34plot <- ggplot(BGonBA34, aes(x = AverageBareGround,
                                   hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 BGonBA34plot
+
+#-------------------------------------------------------------------#
+#                Percent Bare Ground ~ Bee Abundance                #
+#                              Year 4                               #
+#-------------------------------------------------------------------#
+#Subset BGonBA to include only 2017 data.
+BGonBA4 <- filter(BGonBA, Year == 2017)
+
+#Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
+BGonBA4model <- glmer(ETrapAbundance ~ AverageBareGround + (1|Sampling.Period) + (1|Site),
+                      data = BGonBA4,
+                      family = "poisson")
+summary(BGonBA4model)
+
+#Model for bee abundance predicted by bare ground without Year and Site.
+BGonBA4null <- glmer(ETrapAbundance ~ (1|Sampling.Period) + (1|Site),
+                     data = BGonBA4,
+                     family = "poisson")
+summary(BGonBA4null)
+
+#Likelihood ratio test between the full and null models
+anova(BGonBA4null, BGonBA4model)
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonBA4model)
+
+#Find intercept and slope to plot best fit line on graph
+coef(BGonBA4model)
+
+#Change "Year" column to factor.
+BGonBA4$Year <- as.factor(BGonBA4$Year)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonBA4plot <- ggplot(BGonBA4, aes(x = AverageBareGround,
+                                   y = ETrapAbundance)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Percent Bare Ground",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BGonBA4plot
 
 #-------------------------------------------------------------------#
 #                Percent Bare Ground ~ Bee Abundance                #

@@ -37,6 +37,9 @@ BeeIDs$Date <- mdy(BeeIDs$Date)
 #Add new column with only the year
 BeeIDs$Year <- year(BeeIDs$Date)
 
+#-------------------------------------------------------------------#
+#                             2014-2016                             #
+#-------------------------------------------------------------------#
 #Subset only years 1-3; BeeIDs without target/pitfall bees, bees that were collected during times when quadrats weren't conducted, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
   filter(Year <= 2016) %>%
@@ -87,4 +90,54 @@ BeeCommunityMRPPplot <- ggplot(MRPP,
   theme_bw() +
   labs(y = "Δ")
   #scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8"))
+BeeCommunityMRPPplot
+
+#-------------------------------------------------------------------#
+#                               2017                                #
+#-------------------------------------------------------------------#
+#Subset only years 1-3; BeeIDs without target/pitfall bees, bees that were collected during times when quadrats weren't conducted, wasps, or unidentifiable specimens
+BeeIDs4 <- BeeIDs %>%
+  filter(Year == 2017) %>%
+  filter(!is.na(Binomial)) %>%
+  filter(Trap != "Target") %>%
+  filter(Trap != "Pitfall") %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable")
+
+#Determine number of individuals per bee species collected at each site
+BeeIDs4bysite <- BeeIDs4 %>%
+  group_by(Date, Site) %>%
+  count(Binomial)
+
+#Reformat from long to wide
+BeeIDs4bysitewide <- spread(BeeIDs4bysite, Binomial, n)
+
+#Fill NAs with 0
+BeeIDs4bysitewide[is.na(BeeIDs4bysitewide)] <- 0
+
+#Move "Site" column from BeeIDs4bysitewide to another data frame
+BeeIDs4bysitewidesites <- BeeIDs4bysitewide["Site"]
+
+#Remove "Site" and "Date" columns
+BeeIDs4bysitewide <- BeeIDs4bysitewide[!names(BeeIDs4bysitewide) %in% c("Site", "Date")]
+
+#Convert to data.frame
+BeeIDs4bysitewide <- as.data.frame(BeeIDs4bysitewide)
+
+#Perform MRPP analysis
+BeeCommunityMRPP4 <- mrpp(BeeIDs4bysitewide, BeeIDs4bysitewidesites$Site, distance = "bray")
+BeeCommunityMRPP4
+
+#Read in BeeCommunityMRPP results to graph
+MRPP <- read.csv("mmackert/Graphs/BeeCommunityMRPP/Bee Community by Site MRPP Results.csv")
+
+#Graph results
+BeeCommunityMRPPplot <- ggplot(MRPP,
+                               aes(x = Site,
+                                   y = Delta)) +
+  geom_point(size = 3) +
+  theme_bw() +
+  labs(y = "Δ")
+#scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8"))
 BeeCommunityMRPPplot

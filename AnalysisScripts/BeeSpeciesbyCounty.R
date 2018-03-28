@@ -50,6 +50,24 @@ BeeIDs4 %>%
   group_by(Binomial) %>%
   summarise()
 
+#Determine total number of individuals for each species
+BeeIDs4sppabundance <- BeeIDs4 %>%
+  group_by(Binomial) %>%
+  count()
+
+#Determine bee abundance by site
+BeeIDs4bysite <- BeeIDs4 %>%
+  group_by(Site, Binomial) %>%
+  count()
+BeeIDs4bysite2 <- BeeIDs4bysite %>%
+  group_by(Site) %>%
+  summarise(Total.Abundance = sum(n))
+
+#Determine species richness by site
+BeeIDs4spp <- BeeIDs4 %>%
+  group_by(Site) %>%
+  summarise(Total.Species = length(unique(Binomial)))
+
 #Apply county names to corresponding sites (ugly but it works)
 BeeIDs4 <- BeeIDs4 %>%
   mutate(County = ifelse(Site == "Plunkett", "Story",

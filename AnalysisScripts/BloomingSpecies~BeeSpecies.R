@@ -189,6 +189,53 @@ BSonBS123NSEplot
 
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Species            #
+#                             Year 4                                #
+#-------------------------------------------------------------------#
+#Subset Fulldata to include year 4
+year4 <- Fulldata %>%
+  filter(Year == 2017)
+
+#Convert "Year" to a  factor
+year4$Year <- as.factor(year4$Year)
+
+#Model for bee species richness predicted by number of blooming species
+BSonBS4model <- glmer(Total.Species.Richness ~ Blooming.Species + (1|Site) + (1|Sampling.Period),
+                      data = year4,
+                      family = "poisson")
+summary(BSonBS4model)
+
+#Null model not including number of blooming species
+BSonBS4null <- glmer(Total.Species.Richness ~ (1|Site) + (1|Sampling.Period),
+                     data = year4,
+                     family = "poisson")
+summary(BSonBS4null)
+
+#Likelihood ratio test between the full and null models
+anova(BSonBS4null, BSonBS4model)
+
+#Plot residuals from the full model to ensure no deviations from normality
+plot(fitted(BSonBS4model, residuals(BSonBS4model)))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BSonBS4model)
+
+#Plot of the number of blooming forb/weed species vs. bee species richness
+BSonBS4plot <- ggplot(year4, 
+                         aes(x = Blooming.Species,
+                             y = Total.Species.Richness)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Number of Plant Species in Bloom",
+       y = "Number of Bee Species")
+BSonBS4plot
+
+
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Subset Fulldata to include years 1-4
