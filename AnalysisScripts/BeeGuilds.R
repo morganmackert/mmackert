@@ -43,12 +43,12 @@ BeeIDs <- BeeIDs %>%
   mutate(Guild = case_when(
     Binomial == "Bombus citrinus" ~ "Social parasite",
     Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
-    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Duforea" | Genus == "Protandrena" ~ "Solitary ground-nester",
+    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Dufourea" | Genus == "Protandrena" ~ "Solitary ground-nester",
     Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
     Genus == "Apis" ~ "Honey bee",
     Genus == "Bombus" ~ "Bumble bee",
     Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
-    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
+    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" | Genus == "Xeromelecta" ~ "Cleptoparasite"
   ))
 
 #Check to make sure all species have been assigned a guild
@@ -336,6 +336,7 @@ BeeIDs1234byguildbarplot <- ggplot(BeeIDs1234byguildyear,
                                   hjust = 0.5)) +
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5)  +
+  scale_x_discrete(labels = wrap_format(20)) +
   theme(axis.text.x = element_text(size = 12,
                                    angle = 45,
                                    hjust = 1))
