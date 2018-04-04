@@ -216,7 +216,7 @@ BAonBA4plot
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Subset BAonBA to include only 2014-2017 data.
-BAonBA1234 <- filter(BAonBA, Year <= 4)
+BAonBA1234 <- filter(BAonBA, Year <= 2017)
 
 #Year column brought in as an integer; change to factor.
 BAonBA1234$Year <- as.factor(BAonBA1234$Year)

@@ -18,6 +18,7 @@ library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(lme4)
+library(MuMIn)
 
 #Read in data
 Fulldata <- read.csv("Combined full data set.csv")
@@ -42,11 +43,15 @@ names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
 #Use lubridate to allow R to read the dates
 Fulldata$Date <- mdy(Fulldata$Date)
 
+#Use lubridate to change year number to actual year
+Fulldata$Year <- year(Fulldata$Date)
+
 #Calculate average bare ground and number of bees collected via emergence traps at each site during each sampling event.
 BGonBA <- Fulldata %>%
   group_by(Date, Site, Year, Sampling.Period) %>%
   summarise(AverageBareGround = mean(Bare.Ground),
-            ETrapAbundance = sum(Emergence.Traps.Abundance))
+            ETrapAbundance = sum(Emergence.Traps.Abundance),
+            TotalAbundance = sum(Total.Abundance))
 
 #Condense data by combining all sampling dates for each site
 BGonBAcondensed <- Fulldata %>%
@@ -252,23 +257,85 @@ BGonBA4plot <- ggplot(BGonBA4, aes(x = AverageBareGround,
 BGonBA4plot
 
 #-------------------------------------------------------------------#
-#                Percent Bare Ground ~ Bee Abundance                #
+#          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Subset BGonBA to include only 2014-2017 data.
-BGonBA1234 <- filter(BGonBA, Year <= 4)
+BGonBA1234 <- BGonBA %>%
+  filter(Year <= 2017) %>%
+  filter(!is.na(AverageBareGround))
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonBA1234model <- lmer(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
+BGonETBA1234model <- lmer(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
+                          data = BGonBA1234)
+summary(BGonETBA1234model)
+
+#Model for bee abundance predicted by bare ground without Year and Site.
+BGonETBA1234null <- lmer(ETrapAbundance ~ (1|Year) + (1|Site),
                          data = BGonBA1234)
+summary(BGonETBA1234null)
+
+#Likelihood ratio test between the full and null models
+anova(BGonETBA1234null, BGonETBA1234model)
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonETBA1234model)
+
+#Find intercept and slope to plot best fit line on graph
+coef(BGonETBA1234model)
+
+#Change "Year" column to factor.
+BGonBA1234$Year <- as.factor(BGonBA1234$Year)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonETBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
+                                           y = ETrapAbundance)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
+  theme_bw() +
+  labs(x = "Bare Ground (%)",
+       y = "Emergence Trap Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance in Emergence Traps") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BGonETBA1234plot
+
+#-------------------------------------------------------------------#
+#              Percent Bare Ground ~ Total Bee Abundance            #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
+#Subset BGonBA to include only 2014-2017 data.
+BGonBA1234 <- BGonBA %>%
+  filter(Year <= 2017) %>%
+  filter(!is.na(AverageBareGround))
+
+#Scale continuous variables
+#BGonBA1234$AverageBareGround.scaled <- scale(BGonBA1234$AverageBareGround)
+#BGonBA1234$TotalAbundance.scaled <- scale(BGonBA1234$TotalAbundance)
+
+#Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
+BGonBA1234model <- lmer(TotalAbundance ~ AverageBareGround + (1|Year) + (1|Site) + (1|Sampling.Period),
+                        data = BGonBA1234)
 summary(BGonBA1234model)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonBA1234null <- glm(ETrapAbundance ~ (1|Year) + (1|Site),
-                       family = poisson,
-                       data = BGonBA1234)
+BGonBA1234null <- lmer(TotalAbundance ~ (1|Year) + (1|Site),
+                        data = BGonBA1234)
 summary(BGonBA1234null)
-#Doesn't converge ugh
+
+#Likelihood ratio test between the full and null models
+anova(BGonBA1234null, BGonBA1234model)
 
 #Use MuMIn to get R-squared value of full model
 r.squaredGLMM(BGonBA1234model)
@@ -281,7 +348,7 @@ BGonBA1234$Year <- as.factor(BGonBA1234$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
-                                     y = ETrapAbundance)) +
+                                         y = TotalAbundance)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -289,9 +356,13 @@ BGonBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
               se = FALSE,
               color = "black",
               size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
   theme_bw() +
-  labs(x = "Percent Bare Ground",
-       y = "Bee Abundance") +
+  labs(x = "Bare Ground (%)",
+       y = "Total Bee Abundance") +
   ggtitle("Influence of Bare Ground on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
