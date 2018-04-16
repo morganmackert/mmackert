@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------#
 #                  Summary Statistics for Full Dataset              #
-#                                2017                               #
+#                              2014-2017                            #
 #-------------------------------------------------------------------#
 
 #Clear environment and set working directory
@@ -33,7 +33,7 @@ AbundTrap <- AbundTrap %>%
 AbundTrapwide <- spread(AbundTrap, Trap, Bee.Abundance)
 
 #Export as .csv
-write.csv(AbundTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness/AbundancebyTrap1234.csv")
+#write.csv(AbundTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/AbundancebyTrap1234.csv")
 
 #Determine species richness by trap for each site/date
 SpecRichTrap <- BeeIDs %>%
@@ -44,7 +44,7 @@ SpecRichTrap <- BeeIDs %>%
 SpecRichTrapwide <- spread(SpecRichTrap, Trap, Bee.Species.Richness)
 
 #Export as .csv
-write.csv(SpecRichTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness/SpeciesRichnessbyTrap1234.csv")
+#write.csv(SpecRichTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessbyTrap1234.csv")
 
 #Determine genus richness for each site/date
 GenusRich <- BeeIDs %>%
@@ -54,7 +54,7 @@ GenusRich <- BeeIDs %>%
   summarise(Bee.Genus.Richness = length(unique(Genus)))
 
 #Export as .csv
-write.csv(GenusRich, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness/GenusRichness1234.csv")
+#write.csv(GenusRich, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/GenusRichness1234.csv")
 
 #Determine number of individuals of each species collected for each site/date
 SpecRichAbund <- BeeIDs %>%
@@ -63,7 +63,8 @@ SpecRichAbund <- BeeIDs %>%
   group_by(Site, Date) %>%
   count(Binomial)
 SpecRichAbundwide <- spread(SpecRichAbund, Binomial, n)
+SpecRichAbundwide[is.na(SpecRichAbundwide)] <- 0
 
 #Export as .csv
-write.csv(SpecRichAbundwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness/SpeciesRichnessandAbundance1234.csv")
+#write.csv(SpecRichAbundwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessandAbundance1234.csv")
 

@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
-#                             Years 1-2                             #
 #-------------------------------------------------------------------#
 
 #Research Question: How does blooming forb/weed abundance influence bee abundance?
@@ -14,6 +13,7 @@ rm(list=ls())
 setwd("~/ISU/Project/Data")
 
 #Load libraries
+library(lubridate)
 library(dplyr)
 library(lme4)
 library(MuMIn)
@@ -33,11 +33,59 @@ Fulldata <- read.csv("Combined Full data set.csv")
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
+BeeIDs <- read.csv("Bees/Bee IDs.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv")
 
-#Change column names so they're not so goofy.
+#Format date with lubridate
+BeeIDs$Date <- mdy(BeeIDs$Date)
+Quadrats$Date <- mdy(Quadrats$Date)
+
+#Change year from number to year
+BeeIDs$Year <- year(BeeIDs$Date)
+Quadrats$Year <- year(Quadrats$Date)
+
+#Change names so they're not so goofy
+names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Floral.Cover"
+names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Species"
+
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
-names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
-names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+
+#Fill NAs with 0 in Quadrats$Floral.Cover to indicate no plants were blooming at that point
+Quadrats$Floral.Cover[is.na(Quadrats$Floral.Cover)] <- 0
+
+#Determine number of individuals of each species collected for each site/date
+SpecRichAbund <- BeeIDs %>%
+  group_by(Site, Date) %>%
+  filter(Trap != "Target") %>%
+  filter(Trap != "Pitfall") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(Date != "2014-07-09") %>%
+  filter(Date != "2014-08-12") %>%
+  filter(Date != "2015-06-13") %>%
+  filter(Date != "2015-06-10") %>%
+  filter(Date != "2015-08-11") %>%
+  filter(Date != "2015-08-31") %>%
+  filter(!is.na(Binomial)) %>%
+  count(Binomial)
+SpecRichAbund <- SpecRichAbund %>%
+  group_by(Site, Date) %>%
+  summarise(Total.Abundance = sum(n))
+
+#Determine average floral cover for each site/date
+FloralCover <- Quadrats %>%
+  group_by(Site, Date, Quadrat) %>%
+  summarise(TotalFloralCover = sum(Floral.Cover))
+FloralCover <- FloralCover %>%
+  group_by(Site, Date) %>%
+  summarise(AvgFloralCover = mean(TotalFloralCover))
+
+#Join SpecRichAbund and FloralCover datasets together
+BAonBA <- full_join(SpecRichAbund, FloralCover, by = c("Site", "Date"))
+
+#Fill in 0 for any NAs in Total.Abundance (showing we sampled vegetation, but collected no bees)
+BAonBA$Total.Abundance[is.na(BAonBA$Total.Abundance)] <- 0
 
 #Calculate average floral cover and number of bees collected via emergence traps at each site during each year.
 BAonBA <- Fulldata %>%
@@ -45,6 +93,10 @@ BAonBA <- Fulldata %>%
   summarise(AverageFloralCover = mean(Floral.Cover),
             BeeAbundance = sum(Total.Abundance))
 
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
+#                           Years 1-2                               #
+#-------------------------------------------------------------------#
 #Subset BAonBA to include only 2014 and 2015 data.
 BAonBA12 <- filter(BAonBA, Year <= 2)
 
@@ -121,6 +173,10 @@ BAonBA123plot <- ggplot(BAonBA123, aes(x = AverageFloralCover,
               se = FALSE,
               color = "black",
               size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016"),
+                     values = c("darkorchid1", "#000000", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016"),
+                     values = c(16, 17, 15)) +
   theme_bw() +
   labs(x = "Average Blooming Plant Coverage (%)",
        y = "Bee Abundance") +
@@ -128,7 +184,8 @@ BAonBA123plot <- ggplot(BAonBA123, aes(x = AverageFloralCover,
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
 BAonBA123plot
 
 #-------------------------------------------------------------------#
