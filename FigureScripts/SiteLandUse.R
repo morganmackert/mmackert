@@ -1,10 +1,10 @@
-#####################################################################
-#                         LAND USE GRAPHS                           #
-#####################################################################
+#-------------------------------------------------------------------#
+#                          Land Use Graphs                          #
+#-------------------------------------------------------------------#
 
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project/mmackert/Data")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(ggplot2)
@@ -15,7 +15,7 @@ library(dplyr)
 #                             Plunkett                              #
 #-------------------------------------------------------------------#
 #Read in data
-PlunkettLandUse <- read.csv("sites/PlunkettLandUse.csv")
+PlunkettLandUse <- read.csv("Sites/PlunkettLandUse.csv")
 
 #Change Land Type column to "character" and Coverage column to "numeric"
 PlunkettLandUse$LandType <- as.character(PlunkettLandUse$LandType)
@@ -335,10 +335,130 @@ PElandusepie <- plot_ly(PeckumnLandUse, labels = PeckumnLandUse$LandType, values
 PElandusepie
 
 #-------------------------------------------------------------------#
+#                              Elkader                              #
+#-------------------------------------------------------------------#
+#Read in data
+ElkaderLandUse <- read.csv("sites/ElkaderLandUse.csv")
+
+#Change Land Type column to "character" and Coverage column to "numeric"
+ElkaderLandUse$LandType <- as.character(ElkaderLandUse$LandType)
+ElkaderLandUse$Coverage <- as.numeric(ElkaderLandUse$Coverage)
+
+#Determine proportions of land coverage rather than raw values
+ElkaderLandUse$Proportions <- ElkaderLandUse$Coverage/sum(ElkaderLandUse$Coverage)*100
+
+#Create graphs
+ELlandusepoint <- ggplot(data = ElkaderLandUse, aes(x = LandType, y = Proportions)) +
+  geom_point() +
+  labs(x = "Land Cover Type", y = "Percent Coverage") +
+  ggtitle("Land Coverage Surrounding \nElkader (3 km)") +
+  theme_bw() +
+  theme(plot.title= element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ELlandusepoint
+
+ELlandusebar <- ggplot(data = ElkaderLandUse, aes(x = LandType, y = Coverage)) +
+  geom_bar(stat = "identity")
+ELlandusebar
+
+#Create pie chart using Plotly
+ELlandusepie <- plot_ly(ElkaderLandUse, labels = ElkaderLandUse$LandType, values = ElkaderLandUse$Coverage, type = 'pie',
+                        textposition = 'outside',
+                        textinfo = 'label+percent',
+                        insidetextfont = list(color = '#FFFFFF'),
+                        marker = list(colors = colors,
+                                      line = list(color = '#FFFFFF', width = 1)),
+                        showlegend = FALSE) %>%
+  layout(title = 'Land Coverage Surrounding Elkader (3 km)',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ELlandusepie
+
+#-------------------------------------------------------------------#
+#                              Greving                              #
+#-------------------------------------------------------------------#
+#Read in data
+GrevingLandUse <- read.csv("sites/GrevingLandUse.csv")
+
+#Change Land Type column to "character" and Coverage column to "numeric"
+GrevingLandUse$LandType <- as.character(GrevingLandUse$LandType)
+GrevingLandUse$Coverage <- as.numeric(GrevingLandUse$Coverage)
+
+#Determine proportions of land coverage rather than raw values
+GrevingLandUse$Proportions <- GrevingLandUse$Coverage/sum(GrevingLandUse$Coverage)*100
+
+#Create graphs
+GRlandusepoint <- ggplot(data = GrevingLandUse, aes(x = LandType, y = Proportions)) +
+  geom_point() +
+  labs(x = "Land Cover Type", y = "Percent Coverage") +
+  ggtitle("Land Coverage Surrounding \nGreving (3 km)") +
+  theme_bw() +
+  theme(plot.title= element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+GRlandusepoint
+
+GRlandusebar <- ggplot(data = GrevingLandUse, aes(x = LandType, y = Coverage)) +
+  geom_bar(stat = "identity")
+GRlandusebar
+
+#Create pie chart using Plotly
+GRlandusepie <- plot_ly(GrevingLandUse, labels = GrevingLandUse$LandType, values = GrevingLandUse$Coverage, type = 'pie',
+                        textposition = 'outside',
+                        textinfo = 'label+percent',
+                        insidetextfont = list(color = '#FFFFFF'),
+                        marker = list(colors = colors,
+                                      line = list(color = '#FFFFFF', width = 1)),
+                        showlegend = FALSE) %>%
+  layout(title = 'Land Coverage Surrounding Greving (3 km)',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+GRlandusepie
+
+#-------------------------------------------------------------------#
+#                           Neal Smith                              #
+#-------------------------------------------------------------------#
+#Read in data
+NealSmithLandUse <- read.csv("sites/NealSmithLandUse.csv")
+
+#Change Land Type column to "character" and Coverage column to "numeric"
+NealSmithLandUse$LandType <- as.character(NealSmithLandUse$LandType)
+NealSmithLandUse$Coverage <- as.numeric(NealSmithLandUse$Coverage)
+
+#Determine proportions of land coverage rather than raw values
+NealSmithLandUse$Proportions <- NealSmithLandUse$Coverage/sum(NealSmithLandUse$Coverage)*100
+
+#Create graphs
+NSlandusepoint <- ggplot(data = NealSmithLandUse, aes(x = LandType, y = Proportions)) +
+  geom_point() +
+  labs(x = "Land Cover Type", y = "Percent Coverage") +
+  ggtitle("Land Coverage Surrounding \nNealSmith (3 km)") +
+  theme_bw() +
+  theme(plot.title= element_text(size = 15, face = "bold", hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+NSlandusepoint
+
+NSlandusebar <- ggplot(data = NealSmithLandUse, aes(x = LandType, y = Coverage)) +
+  geom_bar(stat = "identity")
+NSlandusebar
+
+#Create pie chart using Plotly
+NSlandusepie <- plot_ly(NealSmithLandUse, labels = NealSmithLandUse$LandType, values = NealSmithLandUse$Coverage, type = 'pie',
+                        textposition = 'outside',
+                        textinfo = 'label+percent',
+                        insidetextfont = list(color = '#FFFFFF'),
+                        marker = list(colors = colors,
+                                      line = list(color = '#FFFFFF', width = 1)),
+                        showlegend = FALSE) %>%
+  layout(title = 'Land Coverage Surrounding Neal Smith (3 km)',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+NSlandusepie
+
+#-------------------------------------------------------------------#
 #                        Stacked Bar Graph                          #
 #-------------------------------------------------------------------#
 #Read in data
-FullLandUse <- read.csv("sites/FullLandUse.csv")
+FullLandUse <- read.csv("Sites/FullLandUse.csv")
 
 #Figure out proportions of each land type per each site
 #Determine sum of land cover for each site 
@@ -353,11 +473,13 @@ FullLandUseJoined <- full_join(FullLandUse, SumLandUse, by = c("Site"))
 FullLandUseJoined$Proportion <- (FullLandUseJoined$Coverage/FullLandUseJoined$TotalCoverage)*100
 
 #Define specific colors for each land type
-barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed" = "gray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
+barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed Land" = "darkgray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
 
 #Make graph of Land Coverage (km^2)
 Fulllandusebarcover <- ggplot(FullLandUseJoined,
-                              aes(x = Site, y = Coverage, fill = LandType)) +
+                              aes(x = Site,
+                                  y = Coverage,
+                                  fill = LandType)) +
   geom_bar(stat = "identity",
            color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
