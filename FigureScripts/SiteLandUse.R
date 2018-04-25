@@ -460,14 +460,31 @@ NSlandusepie
 #Read in data
 FullLandUse <- read.csv("Sites/FullLandUse.csv")
 
+#Assign number to each site
+FullLandUse <- FullLandUse %>%
+  mutate(SiteNum = ifelse(Site == "Bowman", "1",
+                          ifelse(Site == "Cretsinger", "2",
+                                 ifelse(Site == "Elkader", "3",
+                                        ifelse(Site == "Greving", "4",
+                                               ifelse(Site == "Kaldenberg", "5",
+                                                      ifelse(Site == "McClellan", "6",
+                                                             ifelse(Site == "NealSmith", "7",
+                                                                    ifelse(Site == "Peckumn", "8",
+                                                                           ifelse(Site == "Plunkett", "9",
+                                                                                  ifelse(Site == "Sheller", "10",
+                                                                                         ifelse(Site == "Sloan", "11",
+                                                                                                NA
+                                                                                                ))))))))))))
+
+
 #Figure out proportions of each land type per each site
 #Determine sum of land cover for each site 
 SumLandUse <- FullLandUse %>%
-  group_by(Site) %>%
+  group_by(SiteNum) %>%
   summarise(TotalCoverage = sum(Coverage))
 
 #Join these two datasets together
-FullLandUseJoined <- full_join(FullLandUse, SumLandUse, by = c("Site")) 
+FullLandUseJoined <- full_join(FullLandUse, SumLandUse, by = c("SiteNum")) 
 
 #Determine proportions using new summed values
 FullLandUseJoined$Proportion <- (FullLandUseJoined$Coverage/FullLandUseJoined$TotalCoverage)*100
@@ -477,7 +494,7 @@ barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen
 
 #Make graph of Land Coverage (km^2)
 Fulllandusebarcover <- ggplot(FullLandUseJoined,
-                              aes(x = Site,
+                              aes(x = SiteNum,
                                   y = Coverage,
                                   fill = LandType)) +
   geom_bar(stat = "identity",
@@ -485,30 +502,33 @@ Fulllandusebarcover <- ggplot(FullLandUseJoined,
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
+  scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8")) +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1)) +
   theme(legend.title.align = 0.5) +
-  labs(y = "Coverage (sq. km)",
+  labs(x = "Site Number",
+       y = "Coverage (sq. km)",
        fill = "Land Type")
 Fulllandusebarcover
 
 #Make graph of Land Coverage (%)
 Fulllandusebarprop <- ggplot(FullLandUseJoined,
-                             aes(x = Site, y = Proportion, fill = LandType)) +
+                             aes(x = SiteNum,
+                                 y = Proportion,
+                                 fill = LandType)) +
   geom_bar(stat = "identity",
            color = "black") +
   ggtitle("Land Use Surrounding Each Site \nWithin a 3km Radius") +
   theme_bw() +
   scale_fill_manual(values = barcolors) +
+  scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8")) +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1)) +
+  theme(axis.text.x = element_text(hjust = 1)) +
   theme(legend.title.align = 0.5) +
-  labs(y = "Coverage (%)",
+  labs(x = "Site Number",
+       y = "Coverage (%)",
        fill = "Land Type")
 Fulllandusebarprop
