@@ -157,7 +157,8 @@ BAonBA123 <- filter(BAonBA, Year <= 3)
 BAonBA123$Year <- as.factor(BAonBA123$Year)
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBA123model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA123)
+BAonBA123model <- lm(BeeAbundance ~ AverageFloralCover,
+                     data = BAonBA123)
 summary(BAonBA123model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
@@ -257,7 +258,8 @@ plot(fitted(BAonBA4model, residuals(BAonBA4model)))
 r.squaredGLMM(BAonBA4model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBA4plot <- ggplot(BAonBA4, aes(x = AverageFloralCover,y = BeeAbundance)) +
+BAonBA4plot <- ggplot(BAonBA4, aes(x = AverageFloralCover,
+                                   y = BeeAbundance)) +
   geom_point(size = 3) +
   geom_smooth(method = "glm",
               se = FALSE,
