@@ -238,6 +238,17 @@ BSonBS4plot
 #           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
+#Read in bee identification data
+BeeIDs <- read.csv("Bees/Bee IDs.csv")
+
+#Format date and year in BeeIDs with lubridate
+BeeIDs$Date <- mdy(BeeIDs$Date)
+BeeIDs$Year <- year(BeeIDs$Date)
+
+#Create a table to determine total number of species collected
+BeeIDsTable <- BeeIDs %>%
+  length(unique(Binomial))
+
 #Subset Fulldata to include years 1-4
 years1234 <- Fulldata %>%
   filter(Year <= 2017)

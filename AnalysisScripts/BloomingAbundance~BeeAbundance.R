@@ -39,6 +39,8 @@ Quadrats <- read.csv("Plants/Quadrats.csv")
 #Format date with lubridate
 BeeIDs$Date <- mdy(BeeIDs$Date)
 Quadrats$Date <- mdy(Quadrats$Date)
+BeeIDs$Year <- year(BeeIDs$Date)
+Quadrats$Year <- year(Quadrats$Date)
 
 #Change year from number to year
 BeeIDs$Year <- year(BeeIDs$Date)
@@ -80,6 +82,14 @@ FloralCover <- Quadrats %>%
 FloralCover <- FloralCover %>%
   group_by(Site, Date) %>%
   summarise(AvgFloralCover = mean(TotalFloralCover))
+
+#Determine average floral cover for each site (for data table)
+#AverageFloralCover <- Quadrats %>%
+  #group_by(Site, Date, Quadrat) %>%
+  #summarise(TotalFloralCover = sum(Floral.Cover))
+#AverageFloralCover <- AverageFloralCover %>%
+  #group_by(Site) %>%
+  #summarise(AverageFloralCover = mean(TotalFloralCover))
 
 #Join SpecRichAbund and FloralCover datasets together
 BAonBA <- full_join(SpecRichAbund, FloralCover, by = c("Site", "Date"))

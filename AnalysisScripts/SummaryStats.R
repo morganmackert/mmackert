@@ -14,12 +14,41 @@ library(tidyr)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv")
 
 #Format date with lubridate
 BeeIDs$Date <- mdy(BeeIDs$Date)
+Quadrats$Date <- mdy(Quadrats$Date)
 
-#Change year from number to year
+#Change Year from number to year
 BeeIDs$Year <- year(BeeIDs$Date)
+Quadrats$Year <- year(Quadrats$Date)
+
+#Change column names so they're not so DUMB
+names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Floral.Cover"
+names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Species"
+names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
+
+#Format Bare.Ground column as numeric
+Quadrats$Bare.Ground <- as.numeric(Quadrats$Bare.Ground)
+
+#Determine average bare ground coverage for each site
+AverageBareGround <- Quadrats %>%
+  select(Date, Site, Quadrat, Bare.Ground) %>%
+  group_by(Date, Site, Quadrat) %>%
+  summarise(Bare.Ground = Bare.Ground[1]) %>%
+  group_by(Site) %>%
+  summarise(Average.Bare.Ground = mean(Bare.Ground))
+
+#Determine abundance for each site
+AbundSite <- BeeIDs %>%
+  filter(Trap != "Target") %>%
+  filter(Family != "Wasp") %>%
+  group_by(Site) %>%
+  count(Binomial)
+AbundSite <- AbundSite %>%
+  group_by(Site) %>%
+  summarise(Bee.Abundance = sum(n))
 
 #Determine abundance by trap for each site/date
 AbundTrap <- BeeIDs %>%
@@ -34,6 +63,13 @@ AbundTrapwide <- spread(AbundTrap, Trap, Bee.Abundance)
 
 #Export as .csv
 #write.csv(AbundTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/AbundancebyTrap1234.csv")
+
+#Determine species richness for each site
+SpeciesRichnessSite <- BeeIDs %>%
+  filter(Trap != "Target") %>%
+  filter(Family != "Wasp") %>%
+  group_by(Site) %>%
+  summarise(length(unique(Binomial)))
 
 #Determine species richness by trap for each site/date
 SpecRichTrap <- BeeIDs %>%
