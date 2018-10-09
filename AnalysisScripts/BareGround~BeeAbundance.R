@@ -1,13 +1,14 @@
 #-------------------------------------------------------------------#
 #                Percent Bare Ground ~ Bee Abundance                #
-#                             Years 1-2                             #
 #-------------------------------------------------------------------#
 
-#Research Question: How does the presence/absence of bare ground within the strips influence bee abundance?
+#Research Question: How does the amount of bare ground present within the strips influence bee abundance?
 
 #Objectives:
 #Create model(s) to explore relationship between bare ground abundance and bee abundance
 #Use created model(s) to visualize the relationship graphically
+
+#Start ####
 
 #Clear environment and set working directory
 rm(list=ls())
@@ -18,47 +19,56 @@ library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(lme4)
+library(lmerTest)
 library(MuMIn)
 
 #Read in data
-Fulldata <- read.csv("Combined full data set.csv")
-#Date = Date of sample
-#Site = Site name
-#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
-#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
-#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
-#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
-#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
-#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
-#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
-#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
-#Species.Name = Number of individuals of specified species collected at the specified site/date
-
-#Change column names so they're not so goofy.
-names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
-names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
-names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+Quadrats <- read.csv("Plants/Quadrats.csv")
+Bees <- read.csv("Bees/Bee IDs.csv")
 
 #Use lubridate to allow R to read the dates
-Fulldata$Date <- mdy(Fulldata$Date)
+Quadrats$Date <- mdy(Quadrats$Date)
+Quadrats$Year <- year(Quadrats$Date)
+Bees$Date <- mdy(Bees$Date)
+Bees$Year <- year(Bees$Date)
 
-#Use lubridate to change year number to actual year
-Fulldata$Year <- year(Fulldata$Date)
+#Set BareGround column to numeric (must change to character first though)
+Quadrats$BareGround <- as.numeric(as.character(Quadrats$BareGround))
 
-#Calculate average bare ground and number of bees collected via emergence traps at each site during each sampling event.
-BGonBA <- Fulldata %>%
-  group_by(Date, Site, Year, Sampling.Period) %>%
-  summarise(AverageBareGround = mean(Bare.Ground),
-            ETrapAbundance = sum(Emergence.Traps.Abundance),
-            TotalAbundance = sum(Total.Abundance))
+#Calculate total bare ground
+bareground <- Quadrats %>%
+  filter(!is.na(BareGround)) %>%
+  select(Date, Site, Quadrat, BareGround) %>%
+  group_by(Date, Site, Quadrat) %>%
+  summarise(total.bareground = BareGround[1])
 
-#Condense data by combining all sampling dates for each site
-BGonBAcondensed <- Fulldata %>%
-  group_by(Site, Year) %>%
-  summarise(AverageBareGround = mean(Bare.Ground),
-            ETrapAbundance = sum(Emergence.Traps.Abundance))
+#Calculate average bare ground cover for each site and date
+avg.bareground <- bareground %>%
+  group_by(Date, Site) %>%
+  summarise(avg.bareground = mean(total.bareground), 
+            number.quadrats = length(total.bareground))
 
+#Calculate number of bees collected via emergence traps
+total.bees <- Bees %>%
+  group_by(Site, Date) %>%
+  filter(Family != "Wasp") %>%
+  count(Binomial) %>%
+  group_by(Site, Date) %>%
+  summarise(number.bees = sum(n))
+
+#Join the two datasets together
+bareground.bees <- full_join(total.bees, avg.bareground, by = c("Date", "Site"))
+
+#Fill NAs in bareground.bees with 0 (no bees were collected on these days)
+bareground.bees$number.bees[is.na(bareground.bees$number.bees)] <- 0
+
+#Create Year column in bareground.bees
+bareground.bees$Year <- year(bareground.bees$Date)
+
+#Years 1-2 ####
+#-------------------------------------------------------------------#
+#                           Years 1-2                               #
+#-------------------------------------------------------------------#
 #Subset BGonBA to include only 2014 and 2015 data.
 BGonBA12 <- filter(BGonBA, Year <= 2)
 
@@ -116,8 +126,8 @@ BGonBA12plot <- ggplot(BGonBA12, aes(x = AverageBareGround,
   theme(legend.text = element_text(size = 10))
 BGonBA12plot
 
+#Years 1-3 ####
 #-------------------------------------------------------------------#
-#                Percent Bare Ground ~ Bee Abundance                #
 #                            Years 1-3                              #
 #-------------------------------------------------------------------#
 #Subset data frames to include only 2014-2016 data.
@@ -163,8 +173,8 @@ BGonBA123plot <- ggplot(BGonBA123, aes(x = AverageBareGround,
   theme(legend.text = element_text(size = 10))
 BGonBA123plot
 
+#Years 3-4 ####
 #-------------------------------------------------------------------#
-#                Percent Bare Ground ~ Bee Abundance                #
 #                             Years 3-4                             #
 #-------------------------------------------------------------------#
 #Subset BGonBA to include only 2016-2017 data.
@@ -207,8 +217,8 @@ BGonBA34plot <- ggplot(BGonBA34, aes(x = AverageBareGround,
   theme(legend.text = element_text(size = 10))
 BGonBA34plot
 
+#Year 4 ####
 #-------------------------------------------------------------------#
-#                Percent Bare Ground ~ Bee Abundance                #
 #                              Year 4                               #
 #-------------------------------------------------------------------#
 #Subset BGonBA to include only 2017 data.
@@ -256,6 +266,7 @@ BGonBA4plot <- ggplot(BGonBA4, aes(x = AverageBareGround,
   theme(legend.text = element_text(size = 10))
 BGonBA4plot
 
+#Years 1-4 ####
 #-------------------------------------------------------------------#
 #          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
 #                             Years 1-4                             #
@@ -369,3 +380,147 @@ BGonBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
                                   hjust = 0.5)) +
   theme(legend.text = element_text(size = 10))
 BGonBA1234plot
+
+#Years 1-5 ####
+#-------------------------------------------------------------------#
+#              Percent Bare Ground ~ Total Bee Abundance            #
+#                             Years 1-5                             #
+#-------------------------------------------------------------------#
+
+#Model for bee abundance predicted by bare ground including Year, Site, and their interaction as fixed effects.
+BGonBA12345model <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
+                        data = bareground.bees)
+summary(BGonBA12345model)
+anova(BGonBA12345model)
+
+#Check residuals
+qqnorm(resid(BGonBA12345model))
+qqline(resid(BGonBA12345model))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonBA12345model)
+
+#Change "Year" column to factor.
+bareground.bees$Year <- as.factor(bareground.bees$Year)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonBA12345plot <- ggplot(bareground.bees,
+                          aes(x = avg.bareground,
+                              y = number.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c(15, 1, 17, 18, 25)) +
+  theme_bw() +
+  labs(x = "Bare Ground (%)",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BGonBA12345plot
+
+#-------------------------------------------------------------------#
+#          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
+#                             Years 1-5                             #
+#-------------------------------------------------------------------#
+#Subset total.bees to include only emergence trap bees
+et.bees <- Bees %>%
+  group_by(Site, Date) %>%
+  filter(Family != "Wasp") %>%
+  filter(Trap == "Emergence") %>%
+  count(Binomial) %>%
+  group_by(Site, Date) %>%
+  summarise(number.et.bees = sum(n))
+
+#Join avg.bareground and et.bees together
+bareground.et.bees <- full_join(avg.bareground, et.bees, by = c("Date", "Site"))
+
+#Remove dates without emergence trap bees
+bareground.et.bees <- bareground.et.bees %>%
+  na.omit(number.et.bees)
+
+#Use lubridate to include a year column
+bareground.et.bees$Year <- year(bareground.et.bees$Date)
+
+#Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
+BGonETBA12345model <- lmer(number.et.bees ~ avg.bareground + (1|Year) + (1|Site),
+                          data = bareground.et.bees)
+summary(BGonETBA12345model)
+anova(BGonETBA12345model)
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonETBA12345model)
+
+#Change "Year" column to factor.
+bareground.et.bees$Year <- as.factor(bareground.et.bees$Year)
+
+#Plot bare ground availability versus number of bees collected in emergence traps
+BGonETBA12345plot <- ggplot(bareground.et.bees, aes(x = avg.bareground,
+                                                   y = number.et.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c(15, 1, 17, 18, 25)) +
+  theme_bw() +
+  labs(x = "Bare Ground (%)",
+       y = "Emergence Trap Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance in Emergence Traps") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BGonETBA12345plot
+
+#Data dictionary ####
+#Date = Date of sample
+#Site = Site name
+#Sampling.Period; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#X..Floral.Cover..in.10m2. = Average coverage of blooming forb/weed species in ten quadrats
+#X..Blooming.species.in.quadrats = Number of forb/weed species in bloom within ten quadrats
+#X..Bare.Ground..in.10m2. = Average bare ground coverage in ten quadrats
+#Trapname.Abundance = Number of individual bees collected by specified trap/site/date
+#Total.Abundance = Number of individual bees collected by all trap types at the specified site/date
+#Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
+#Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
+#Species.Name = Number of individuals of specified species collected at the specified site/date
+
+#Old code ####
+Fulldata <- read.csv("Combined full data set.csv")
+
+#Change column names so they're not so goofy
+names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
+names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
+names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+
+Fulldata$Date <- mdy(Fulldata$Date)
+Fulldata$Year <- year(Fulldata$Date)
+
+#Calculate average bare ground and number of bees collected via emergence traps at each site during each sampling event.
+BGonBA <- Fulldata %>%
+  group_by(Date, Site, Year, Sampling.Period) %>%
+  summarise(AverageBareGround = mean(Bare.Ground),
+            ETrapAbundance = sum(Emergence.Traps.Abundance),
+            TotalAbundance = sum(Total.Abundance))
+
+#Condense data by combining all sampling dates for each site
+BGonBAcondensed <- Fulldata %>%
+  group_by(Site, Year) %>%
+  summarise(AverageBareGround = mean(Bare.Ground),
+            ETrapAbundance = sum(Emergence.Traps.Abundance))
