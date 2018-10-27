@@ -271,13 +271,9 @@ BGonBA4plot
 #          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
-#Subset BGonBA to include only 2014-2017 data.
-BGonBA1234 <- BGonBA %>%
-  filter(Year <= 2017) %>%
-  filter(!is.na(AverageBareGround))
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonETBA1234model <- lmer(ETrapAbundance ~ AverageBareGround + (1|Year) + (1|Site),
+BGonETBA1234model <- lmer(ETrapAbundance ~ AverageBareGround + (1|Year) * (1|Site),
                           data = BGonBA1234)
 summary(BGonETBA1234model)
 
@@ -296,7 +292,7 @@ r.squaredGLMM(BGonETBA1234model)
 coef(BGonETBA1234model)
 
 #Change "Year" column to factor.
-BGonBA1234$Year <- as.factor(BGonBA1234$Year)
+bareground.bees$Year <- as.factor(bareground.bees$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonETBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
@@ -326,23 +322,17 @@ BGonETBA1234plot
 #              Percent Bare Ground ~ Total Bee Abundance            #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
-#Subset BGonBA to include only 2014-2017 data.
-BGonBA1234 <- BGonBA %>%
-  filter(Year <= 2017) %>%
-  filter(!is.na(AverageBareGround))
-
-#Scale continuous variables
-#BGonBA1234$AverageBareGround.scaled <- scale(BGonBA1234$AverageBareGround)
-#BGonBA1234$TotalAbundance.scaled <- scale(BGonBA1234$TotalAbundance)
+#Subset bareground.bees to include only 2014-2017
+bareground.bees1234 <- filter(bareground.bees, Year < "2018")
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonBA1234model <- lmer(TotalAbundance ~ AverageBareGround + (1|Year) + (1|Site) + (1|Sampling.Period),
-                        data = BGonBA1234)
+BGonBA1234model <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
+                        data = bareground.bees1234)
 summary(BGonBA1234model)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonBA1234null <- lmer(TotalAbundance ~ (1|Year) + (1|Site),
-                        data = BGonBA1234)
+BGonBA1234null <- lmer(number.bees ~ (1|Year) + (1|Site),
+                        data = bareground.bees1234)
 summary(BGonBA1234null)
 
 #Likelihood ratio test between the full and null models
@@ -355,11 +345,11 @@ r.squaredGLMM(BGonBA1234model)
 coef(BGonBA1234model)
 
 #Change "Year" column to factor.
-BGonBA1234$Year <- as.factor(BGonBA1234$Year)
+bareground.bees1234$Year <- as.factor(bareground.bees1234$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
-BGonBA1234plot <- ggplot(BGonBA1234, aes(x = AverageBareGround,
-                                         y = TotalAbundance)) +
+BGonBA1234plot <- ggplot(bareground.bees1234, aes(x = avg.bareground,
+                                                  y = number.bees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
