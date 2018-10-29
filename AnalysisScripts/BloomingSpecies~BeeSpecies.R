@@ -231,32 +231,42 @@ BSonBS4plot
 #           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
-#Read in bee identification data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
+#Determine total number of individuals per species collected by site and date
+bee.spp1234 <- Bees %>%
+  filter(Year < 2018) %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  group_by(Site, Date) %>%
+  count(Binomial)
 
-#Format date and year in BeeIDs with lubridate
-BeeIDs$Date <- mdy(BeeIDs$Date)
-BeeIDs$Year <- year(BeeIDs$Date)
+#Determine number of species collected by site and date
+bee.spp1234 <- bee.spp1234 %>%
+  group_by(Site, Date) %>%
+  summarise(number.beespp = n_distinct(Binomial))
 
-#Create a table to determine total number of species collected
-BeeIDsTable <- BeeIDs %>%
-  length(unique(Binomial))
+#Calculate number of blooming species by site and date
+number.blooms1234 <- Quadrats %>%
+  filter(Year < 2018) %>%
+  group_by(Site, Date) %>%
+  summarise(number.blooms = n_distinct(Species))
 
-#Subset Fulldata to include years 1-4
-years1234 <- Fulldata %>%
-  filter(Year <= 2017)
+#Join the two data sets together
+numberblooms.bees1234 <- left_join(bee.spp1234, number.blooms1234, by = c("Site", "Date"))
+
+#Create "Year" column in numberblooms.bees1234
+numberblooms.bees1234$Year <- year(numberblooms.bees1234$Date)
 
 #Convert "Year" to a  factor
-years1234$Year <- as.factor(years1234$Year)
+numberblooms.bees1234$Year <- as.factor(numberblooms.bees1234$Year)
 
 #Model for bee species richness predicted by number of blooming species
-BSonBS1234model <- lmer(Total.Species.Richness ~ Blooming.Species + (1|Site) + (1|Sampling.Period) + (1|Year),
-                      data = years1234)
+BSonBS1234model <- lmer(number.beespp ~ number.blooms + (1|Site) * (1|Year),
+                      data = numberblooms.bees1234)
 summary(BSonBS1234model)
 
 #Null model not including number of blooming species
-BSonBS1234null <- lmer(Total.Species.Richness ~ (1|Site) + (1|Sampling.Period) + (1|Year),
-                       data = years1234)
+BSonBS1234null <- lmer(number.beespp ~ (1|Site) * (1|Year),
+                       data = numberblooms.bees1234)
 summary(BSonBS1234null)
 
 #Likelihood ratio test between the full and null models
@@ -269,9 +279,8 @@ plot(fitted(BSonBS1234model, residuals(BSonBS1234model)))
 r.squaredGLMM(BSonBS1234model)
 
 #Plot of the number of blooming forb/weed species vs. bee species richness
-BSonBS1234plot <- ggplot(years1234, 
-                         aes(x = Blooming.Species,
-                             y = Total.Species.Richness)) +
+BSonBS1234plot <- ggplot(numberblooms.bees1234, aes(x = number.blooms,
+                                                    y = number.beespp)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -280,13 +289,13 @@ BSonBS1234plot <- ggplot(years1234,
               color = "black",
               size = 0.5) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
-                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F")) +
+                     values = c("#FFB90F", "#000000", "red3", "palegreen4")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
                      values = c(15, 16, 17, 18)) +
   theme_bw() +
-  labs(x = "Number of Plant Species in Bloom",
+  labs(x = "Number of Blooming Plant Species",
        y = "Number of Bee Species") +
-  ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
+  ggtitle("Increasing Blooming Plant Species Richness \nEffect on Bee Species Richness") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +

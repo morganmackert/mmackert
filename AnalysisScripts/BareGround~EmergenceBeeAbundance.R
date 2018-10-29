@@ -76,8 +76,8 @@ BGonETBA1234model <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
 summary(BGonETBA1234model)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonETBA1234null <- lmer(ETrapAbundance ~ (1|Year) + (1|Site),
-                         data = BGonBA1234)
+BGonETBA1234null <- lmer(number.bees ~ (1|Year) + (1|Site),
+                         data = bareground.etbees1234)
 summary(BGonETBA1234null)
 
 #Likelihood ratio test between the full and null models
@@ -109,9 +109,10 @@ BGonETBA1234plot <- ggplot(bareground.etbees1234, aes(x = avg.bareground,
   theme_bw() +
   labs(x = "Bare Ground (%)",
        y = "Emergence Trap Bee Abundance") +
-  ggtitle("Influence of Bare Ground on Bee Abundance in Emergence Traps") +
+  ggtitle("Influence of Bare Ground on Bee Abundance \nin Emergence Traps") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5) 
 BGonETBA1234plot

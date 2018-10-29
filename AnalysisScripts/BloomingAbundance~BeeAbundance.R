@@ -52,7 +52,7 @@ floral.cover <- floral.cover %>%
   summarise(avg.floralcover = mean(floral.cover))
 
 #Join SpecRichAbund and FloralCover datasets together
-floralcover.bees <- full_join(bees, floral.cover, by = c("Site", "Date"))
+floralcover.bees <- left_join(bees, floral.cover, by = c("Site", "Date"))
 
 #Fill in 0 for any NAs in Total.Abundance (showing we sampled vegetation, but collected no bees)
 floralcover.bees$total.bees[is.na(floralcover.bees$total.bees)] <- 0
@@ -240,6 +240,57 @@ BAonBA4plot <- ggplot(BAonBA4, aes(x = AverageFloralCover,
   labs(x = "Blooming Species Coverage (%)",
        y = "Bee Abundance")
 BAonBA4plot
+
+#Years 1-4 ####
+#-------------------------------------------------------------------#
+#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
+#                             Years 1-4                             #
+#-------------------------------------------------------------------#
+#Subset floralcover.bees to include only 2014-2017
+floralcover.bees1234 <- floralcover.bees %>%
+  filter(Year < 2018)
+
+#Model for bee abundance predicted by blooming plant coverage
+BAonBA1234model <- lmer(total.bees ~ avg.floralcover + (1|Site) * (1|Year),
+                         data = floralcover.bees1234)
+summary(BAonBA1234model)
+anova(BAonBA1234model)
+
+#Check residuals
+qqnorm(resid(BAonBA1234model))
+qqline(resid(BAonBA1234model))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BAonBA1234model)
+
+#Convert year to factor
+floralcover.bees1234$Year <- as.factor(floralcover.bees1234$Year)
+
+#Graph that shiz
+BAonBA1234plot <- ggplot(floralcover.bees1234,
+                          aes(x = avg.floralcover,
+                              y = total.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("#FFB90F", "#000000", "red3", "palegreen4")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
+  theme_bw() +
+  labs(x = "Blooming Forb Coverage (%)",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Forb \nCoverage on Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
+BAonBA1234plot
 
 #Years 1-5 ####
 #-------------------------------------------------------------------#
