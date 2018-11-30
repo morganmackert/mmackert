@@ -2,14 +2,12 @@
 #                          SOIL COMPOSITION                         #
 #-------------------------------------------------------------------#
 
-#Research Question:  Does soil composition influence bee abundance/richness within the nesting plots?
+#Research Question:  How does soil composition within nesting plots between sites?
 
-#Objectives:  
+#Objective:  
 #Visualize soil composition via ternary graphs (a la Cane 1991) of each site and all of the sites together
-#Compare soil composition to bee abundance and bee richness; significant differences?
 
-
-##### FIGURE OUT HOW TO INCLUDE DEPTH AS SHAPE IN TERNARY GRAPHS #####
+#Start ####
 
 #Clear environment and set working directory
 rm(list=ls())
@@ -25,13 +23,8 @@ soils <- read.csv("soil/Reduced Analysis Results.csv")
 
 #Rename columns in "Reduced Analysis Results"
 colnames(soils) <- c("Sample ID", "Site", "Depth", "Sand", "Silt", "Clay", "Texture")
-#Sample ID = the identification number and letter combination given to each sample before analysis
-#Site = Site name
-#Beginning Depth = the shallowest depth of each sample
-#Ending Depth = the deepest depth of each sample
-#Sand/Silt/Clay = Percentage of each soil type in the sample
-#Texture = soil classification for each sample
 
+#Plunkett ####
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
 #-------------------------------------------------------------------#
@@ -54,6 +47,7 @@ PLsoilstern <- ggtern(data = PLsoils,
   theme(text = element_text(size = 15))
 PLsoilstern
 
+#Bowman ####
 #-------------------------------------------------------------------#
 #                              Bowman                               #
 #-------------------------------------------------------------------#
@@ -76,6 +70,7 @@ BOsoilstern <- ggtern(data = BOsoils,
   theme(text = element_text(size = 15))
 BOsoilstern
 
+#Kaldenberg ####
 #-------------------------------------------------------------------#
 #                           Kaldenberg                              #
 #-------------------------------------------------------------------#
@@ -98,6 +93,7 @@ KAsoilstern <- ggtern(data = KAsoils,
   theme(text = element_text(size = 15))
 KAsoilstern
 
+#McClellan ####
 #-------------------------------------------------------------------#
 #                            McClellan                              #
 #-------------------------------------------------------------------#
@@ -120,6 +116,7 @@ MCsoilstern <- ggtern(data = MCsoils,
   theme(text = element_text(size = 15))
 MCsoilstern
 
+#Sloan ####
 #-------------------------------------------------------------------#
 #                               Sloan                               #
 #-------------------------------------------------------------------#
@@ -142,6 +139,7 @@ SLsoilstern <- ggtern(data = SLsoils,
   theme(text = element_text(size = 15))
 SLsoilstern
 
+#Sheller ####
 #-------------------------------------------------------------------#
 #                              Sheller                              #
 #-------------------------------------------------------------------#
@@ -162,6 +160,7 @@ SHsoilstern <- ggtern(data = SHsoils,
   theme(text = element_text(size = 15))
 SHsoilstern
 
+#Cretsinger ####
 #-------------------------------------------------------------------#
 #                           Cretsinger                              #
 #-------------------------------------------------------------------#
@@ -184,6 +183,7 @@ CRsoilstern <- ggtern(data = CRsoils,
   theme(text = element_text(size = 15))
 CRsoilstern
 
+#Peckumn ####
 #-------------------------------------------------------------------#
 #                              Peckumn                              #
 #-------------------------------------------------------------------#
@@ -207,6 +207,7 @@ PEsoilstern <- ggtern(data = PEsoils,
   theme_showarrows()
 PEsoilstern
 
+#All Sites ####
 #-------------------------------------------------------------------#
 #                           Full Ternary                            #
 #-------------------------------------------------------------------#
@@ -346,3 +347,11 @@ fullsoilsternRRW <- ggtern(data = soils,
   theme(text = element_text(size = 15)) +
   theme_nomask()
 fullsoilsternRRW
+
+#Data dictionary ####
+#Sample ID = the identification number and letter combination given to each sample before analysis
+#Site = Site name
+#Beginning Depth = the shallowest depth of each sample
+#Ending Depth = the deepest depth of each sample
+#Sand/Silt/Clay = Percentage of each soil type in the sample
+#Texture = soil classification for each sample

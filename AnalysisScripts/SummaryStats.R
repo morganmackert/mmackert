@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------#
 #                  Summary Statistics for Full Dataset              #
-#                              2014-2017                            #
+#                              2014-2018                            #
 #-------------------------------------------------------------------#
 
 #Clear environment and set working directory
@@ -13,37 +13,32 @@ library(dplyr)
 library(tidyr)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
+Bees <- read.csv("Bees/Bee IDs.csv", header = T, na.strings = c("", "NA"))
 Quadrats <- read.csv("Plants/Quadrats.csv")
 
 #Format date with lubridate
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 Quadrats$Date <- mdy(Quadrats$Date)
 
 #Change Year from number to year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 Quadrats$Year <- year(Quadrats$Date)
 
-#Change column names so they're not so DUMB
-names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Floral.Cover"
-names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Species"
-names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
-
 #Format Bare.Ground column as numeric
-Quadrats$Bare.Ground <- as.numeric(Quadrats$Bare.Ground)
+Quadrats$BareGround <- as.numeric(Quadrats$BareGround)
 
 #Determine average bare ground coverage for each site
 AverageBareGround <- Quadrats %>%
-  select(Date, Site, Quadrat, Bare.Ground) %>%
+  select(Date, Site, Quadrat, BareGround) %>%
   group_by(Date, Site, Quadrat) %>%
-  summarise(Bare.Ground = Bare.Ground[1]) %>%
+  summarise(BareGround = BareGround[1]) %>%
   group_by(Site) %>%
-  summarise(Average.Bare.Ground = mean(Bare.Ground))
+  summarise(Average.Bare.Ground = mean(BareGround))
 
 #Determine abundance for each site
-AbundSite <- BeeIDs %>%
-  filter(Trap != "Target") %>%
+AbundSite <- Bees %>%
   filter(Family != "Wasp") %>%
+  filter(!is.na(Binomial)) %>%
   group_by(Site) %>%
   count(Binomial)
 AbundSite <- AbundSite %>%
@@ -103,4 +98,3 @@ SpecRichAbundwide[is.na(SpecRichAbundwide)] <- 0
 
 #Export as .csv
 #write.csv(SpecRichAbundwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessandAbundance1234.csv")
-

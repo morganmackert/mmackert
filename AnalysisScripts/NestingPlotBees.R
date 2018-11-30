@@ -1,7 +1,11 @@
 #-------------------------------------------------------------------#
 #                          Nesting Plot Bees                        #
-#                              Year 4                               #
 #-------------------------------------------------------------------#
+
+#Research Question:  If we provide bare soil areas within flight distance of strips, will ground-nesting bees utilize them?
+#Objectives:  Quantify the number of individual bees and bee species collected from the nesting plots
+
+#Start ####
 
 #Clear environment and set working directory
 rm(list=ls())
@@ -12,39 +16,30 @@ library(lubridate)
 library(dplyr)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
+Bees <- read.csv("Bees/Bee IDs.csv")
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 
 #Add new column with only the year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 
 #Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs %>%
+Bees %>%
   group_by(Site) %>%
   summarise()
 
 #Same with "Trap"
-BeeIDs %>%
+Bees %>%
   group_by(Trap) %>%
   summarise()
 
-#We find that site names are good to go, but trap names need some work!
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
+#Year 4 ####
+#-------------------------------------------------------------------#
+#                               Year 4                              #
+#-------------------------------------------------------------------#
 
-#Subset only 2017 nesting plot bees, not including wasps or unidentifiable specimens
+#Subset only 2017 bees, not including wasps or unidentifiable specimens
 BeeIDs1234 <- BeeIDs %>%
   filter(Year <= 2017) %>%
   filter(Binomial != "Wasp") %>%
@@ -105,3 +100,41 @@ BeeIDs1234NPbysite <- BeeIDs1234NP %>%
 BeeIDs1234NPsppbysite <- BeeIDs1234NP %>%
   group_by(Site) %>%
   summarise(Total.Richness = length(unique(Binomial)))
+
+#Year 5 ####
+#-------------------------------------------------------------------#
+#                               Year 5                              #
+#-------------------------------------------------------------------#
+
+#Filter out wasps and unidentifiable specimens
+Bees <- Bees %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Binomial)) %>%
+  filter(!is.na(Site))
+
+#Subset Bees to include only nesting plot bees
+BeesNP <- Bees %>%
+  filter(Trap == "Plot")
+
+#Determine total number of species
+BeesNPspp <- BeesNP %>%
+  group_by(Binomial) %>%
+  count()
+
+#Which sites were they collected from?
+BeesNPbysite <- BeesNP %>%
+  group_by(Site) %>%
+  count(Binomial)
+
+#Data dictionary ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet
