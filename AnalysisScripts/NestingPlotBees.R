@@ -101,9 +101,9 @@ BeeIDs1234NPsppbysite <- BeeIDs1234NP %>%
   group_by(Site) %>%
   summarise(Total.Richness = length(unique(Binomial)))
 
-#Year 5 ####
+#Years 4-5 ####
 #-------------------------------------------------------------------#
-#                               Year 5                              #
+#                            Years 4-5                              #
 #-------------------------------------------------------------------#
 
 #Filter out wasps and unidentifiable specimens
@@ -123,10 +123,22 @@ BeesNPspp <- BeesNP %>%
   group_by(Binomial) %>%
   count()
 
+#Determine total number of individuals
+sum(BeesNPspp$n)
+
 #Which sites were they collected from?
 BeesNPbysite <- BeesNP %>%
   group_by(Site) %>%
   count(Binomial)
+
+#How do the numbers differ between years?
+BeesNPbyyear <- BeesNP %>%
+  group_by(Year) %>%
+  count(Binomial)
+
+BeesNPbyyearnumber <- BeesNPbyyear %>%
+  group_by(Year) %>%
+  summarise(sum = sum(n))
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen

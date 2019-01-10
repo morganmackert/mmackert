@@ -35,6 +35,18 @@ AverageBareGround <- Quadrats %>%
   group_by(Site) %>%
   summarise(Average.Bare.Ground = mean(BareGround))
 
+#Determine species richness without nesting plots
+SppRichnoplot <- Bees %>%
+  filter(!is.na(Binomial)) %>%
+  filter(Family != "Wasp") %>%
+  filter(Trap != "Plot") %>%
+  count(Binomial)
+
+SppRich <- Bees %>%
+  filter(!is.na(Binomial)) %>%
+  filter(Family != "Wasp") %>%
+  count(Binomial)
+
 #Determine abundance for each site
 AbundSite <- Bees %>%
   filter(Family != "Wasp") %>%
@@ -60,7 +72,7 @@ AbundTrapwide <- spread(AbundTrap, Trap, Bee.Abundance)
 #write.csv(AbundTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/AbundancebyTrap1234.csv")
 
 #Determine species richness for each site
-SpeciesRichnessSite <- BeeIDs %>%
+SpeciesRichnessSite <- Bees %>%
   filter(Trap != "Target") %>%
   filter(Family != "Wasp") %>%
   group_by(Site) %>%
@@ -98,3 +110,11 @@ SpecRichAbundwide[is.na(SpecRichAbundwide)] <- 0
 
 #Export as .csv
 #write.csv(SpecRichAbundwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessandAbundance1234.csv")
+
+#Genus richness for 2014-2016
+GenusRich <- Bees %>%
+  filter(Year < 2017) %>%
+  filter(Trap != "Target") %>%
+  filter(Family != "Wasp") %>%
+  group_by(Genus) %>%
+  count(Genus)

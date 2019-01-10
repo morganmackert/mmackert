@@ -70,3 +70,4 @@ fullsoilstern <- ggtern(data = Soils,
 fullsoilstern
 
 #Map bee species collected at each site on soil characteristics ternary graph
+
