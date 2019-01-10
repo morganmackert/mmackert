@@ -17,10 +17,9 @@ setwd("~/ISU/Project/Data")
 #Load libraries
 library(dplyr)
 library(lubridate)
-library(tidyr)
 library(lme4)
 library(lmerTest)
-library(multcompView)
+library(MuMIn)
 library(ggplot2)
 
 #Read in data
