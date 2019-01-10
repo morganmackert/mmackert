@@ -18,11 +18,12 @@ setwd("~/ISU/Project/Data")
 library(lubridate)
 library(dplyr)
 library(lme4)
+library(lmerTest)
 library(MuMIn)
 library(ggplot2)
 
 #Read in data
-Fulldata <- read.csv("Combined Full data set.csv")
+#Fulldata <- read.csv("Combined Full data set.csv")
 Bees <- read.csv("Bees/Bee IDs.csv")
 Quadrats <- read.csv("Plants/Quadrats.csv")
 
@@ -40,6 +41,7 @@ bees <- Bees %>%
   group_by(Site, Date) %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Date)) %>%
   count(Binomial) %>%
   summarise(total.bees = sum(n))
 
@@ -298,18 +300,50 @@ BAonBA1234plot
 #                             Years 1-5                             #
 #-------------------------------------------------------------------#
 
-#Model for bee abundance predicted by blooming plant coverage
+#Models for bee abundance predicted by blooming plant coverage
 BAonBA12345model <- lmer(total.bees ~ avg.floralcover + (1|Site) * (1|Year),
                         data = floralcover.bees)
 summary(BAonBA12345model)
-anova(BAonBA12345model)
+#AIC = 2372.017; p-value = 0.050611
+
+BAonBA12345model2 <- lmer(total.bees ~ avg.floralcover + (1|Year),
+                          data = floralcover.bees)
+summary(BAonBA12345model2)
+#AIC = 2374.095; p-value = 0.000437
+
+BAonBA12345model3 <- lmer(total.bees ~ avg.floralcover + (1|Site) + (1|Year),
+                          data = floralcover.bees)
+summary(BAonBA12345model3)
+#AIC = 2372.017; p-value = 0.050611
+
+BAonBA12345model4 <- lmer(total.bees ~ avg.floralcover + (1|Site) + (1|Year) + (1|Date),
+                          data = floralcover.bees)
+summary(BAonBA12345model4)
+#AIC = 2370.723; p-value = 0.01209
+#Model 4 has lowest AIC value! Use this one.
+
+BAonBA12345model5 <- lmer(total.bees ~ avg.floralcover + (1|Site) * (1|Year) * (1|Date),
+                          data = floralcover.bees)
+summary(BAonBA12345model5)
+#AIC = 2370.723; p-value = 0.01209
+
+BAonBA12345model6 <- lmer(total.bees ~ avg.floralcover + (1|Date) * (1|Site),
+                          data = floralcover.bees)
+summary(BAonBA12345model6)
+#AIC = 2377.518; p-value = 0.00322
+
+BAonBA12345model7 <- lmer(total.bees ~ avg.floralcover + Date + (1|Site),
+                          data = floralcover.bees)
+summary(BAonBA12345model7)
+#AIC = 2381.758; p-value = 0.12902
 
 #Check residuals
-qqnorm(resid(BAonBA12345model))
-qqline(resid(BAonBA12345model))
+qqnorm(resid(BAonBA12345model4))
+qqline(resid(BAonBA12345model4))
 
 #Use MuMIn to get R-squared value of full model
-r.squaredGLMM(BAonBA12345model)
+r.squaredGLMM(BAonBA12345model4)
+#R2m = 0.03296998; R2c = 0.5201793
 
 #Convert year to factor
 floralcover.bees$Year <- as.factor(floralcover.bees$Year)
@@ -317,7 +351,7 @@ floralcover.bees$Year <- as.factor(floralcover.bees$Year)
 #Graph that shiz
 BAonBA12345plot <- ggplot(floralcover.bees,
                           aes(x = avg.floralcover,
-                             y = total.bees)) +
+                              y = total.bees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
