@@ -47,23 +47,41 @@ avg.bareground <- bareground %>%
   group_by(Date, Site) %>%
   summarise(avg.bareground = mean(total.bareground), 
             number.quadrats = length(total.bareground))
+#Two entries have only 9 quadrats included in calculation due to absences in the original 2014 data set
 
-#Calculate number of bees collected via emergence traps
-total.bees <- Bees %>%
+#Calculate number of bees collected via all traps
+bees <- Bees %>%
   group_by(Site, Date) %>%
   filter(Family != "Wasp") %>%
+  filter(!is.na(Date)) %>%
   count(Binomial) %>%
   group_by(Site, Date) %>%
   summarise(number.bees = sum(n))
 
+#Calculate number of bees collected only in emergence traps
+etrapbees <- Bees %>%
+  group_by(Site, Date) %>%
+  filter(Family != "Wasp") %>%
+  filter(!is.na(Date)) %>%
+  filter(Trap == "Emergence") %>%
+  count(Binomial) %>%
+  group_by(Site, Date) %>%
+  summarise(number.etrapbees = sum(n))
+
+#Remove dates in bareground.etrapbees without emergence trap bees
+bareground.etrapbees <- bareground.etrapbees %>%
+  na.omit(number.etrapbees)
+
 #Join the two datasets together
-bareground.bees <- full_join(total.bees, avg.bareground, by = c("Date", "Site"))
+bareground.bees <- full_join(bees, avg.bareground, by = c("Date", "Site"))
+bareground.etrapbees <- full_join(etrapbees, avg.bareground, by = c("Date", "Site"))
 
 #Fill NAs in bareground.bees with 0 (no bees were collected on these days)
 bareground.bees$number.bees[is.na(bareground.bees$number.bees)] <- 0
 
 #Create Year column in bareground.bees
 bareground.bees$Year <- year(bareground.bees$Date)
+bareground.etrapbees$Year <- year(bareground.etrapbees$Date)
 
 #Years 1-2 ####
 #-------------------------------------------------------------------#
@@ -379,16 +397,28 @@ BGonBA1234plot
 
 #Model for bee abundance predicted by bare ground including Year, Site, and their interaction as fixed effects.
 BGonBA12345model <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
-                        data = bareground.bees)
+                         data = bareground.bees)
 summary(BGonBA12345model)
-anova(BGonBA12345model)
+#AIC = 2384.456; p-value = 0.095947
+
+BGonBA12345model2 <- lmer(number.bees ~ avg.bareground + Date + (1|Site) + (1|Year),
+                          data = bareground.bees)
+summary(BGonBA12345model2)
+#AIC = 2390.418; p-value = 0.0977
+
+BGonBA12345model3 <- lmer(number.bees ~ avg.bareground + (1|Date) + (1|Site) + (1|Year),
+                          data = bareground.bees)
+summary(BGonBA12345model3)
+#AIC = 2383.567; p-value = 0.091470
+#Model 3 has lowest AIC value! Use this one.
 
 #Check residuals
-qqnorm(resid(BGonBA12345model))
-qqline(resid(BGonBA12345model))
+qqnorm(resid(BGonBA12345model3))
+qqline(resid(BGonBA12345model3))
 
 #Use MuMIn to get R-squared value of full model
-r.squaredGLMM(BGonBA12345model)
+r.squaredGLMM(BGonBA12345model3)
+#R2m = 0.01291065; R2c = 0.4989396
 
 #Change "Year" column to factor.
 bareground.bees$Year <- as.factor(bareground.bees$Year)
@@ -422,40 +452,40 @@ BGonBA12345plot
 #          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
 #                             Years 1-5                             #
 #-------------------------------------------------------------------#
-#Subset total.bees to include only emergence trap bees
-et.bees <- Bees %>%
-  group_by(Site, Date) %>%
-  filter(Family != "Wasp") %>%
-  filter(Trap == "Emergence") %>%
-  count(Binomial) %>%
-  group_by(Site, Date) %>%
-  summarise(number.et.bees = sum(n))
-
-#Join avg.bareground and et.bees together
-bareground.et.bees <- full_join(avg.bareground, et.bees, by = c("Date", "Site"))
-
-#Remove dates without emergence trap bees
-bareground.et.bees <- bareground.et.bees %>%
-  na.omit(number.et.bees)
-
-#Use lubridate to include a year column
-bareground.et.bees$Year <- year(bareground.et.bees$Date)
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonETBA12345model <- lmer(number.et.bees ~ avg.bareground + (1|Year) + (1|Site),
-                          data = bareground.et.bees)
+BGonETBA12345model <- lmer(number.etrapbees ~ avg.bareground + (1|Year) + (1|Site),
+                          data = bareground.etrapbees)
 summary(BGonETBA12345model)
-anova(BGonETBA12345model)
+#AIC = 199.9698; p-value = 0.31005
+##This model has lowest AIC value! Use this one.
 
-#Use MuMIn to get R-squared value of full model
+BGonETBA12345model2 <- lmer(number.etrapbees ~ avg.bareground + Date + (1|Year) + (1|Site),
+                           data = bareground.etrapbees)
+summary(BGonETBA12345model2)
+#AIC = 210.9973; p-value = 0.155
+
+BGonETBA12345model3 <- lmer(number.etrapbees ~ avg.bareground + (1|Date) + (1|Year) + (1|Site),
+                           data = bareground.etrapbees)
+summary(BGonETBA12345model3)
+#AIC = 199.0056; p-value = 0.9570
+
+BGonETBA12345model4 <- lmer(number.etrapbees ~ avg.bareground + (1|Year) * (1|Site),
+                           data = bareground.etrapbees)
+summary(BGonETBA12345model4)
+#AIC = 199.9698; p-value = 0.31005
+
+#Use MuMIn to get R-squared value of best model
 r.squaredGLMM(BGonETBA12345model)
+#R2m = 0.03221127; R2c = 0.03221127
 
 #Change "Year" column to factor.
-bareground.et.bees$Year <- as.factor(bareground.et.bees$Year)
+bareground.etrapbees$Year <- as.factor(bareground.etrapbees$Year)
 
 #Plot bare ground availability versus number of bees collected in emergence traps
-BGonETBA12345plot <- ggplot(bareground.et.bees, aes(x = avg.bareground,
-                                                   y = number.et.bees)) +
+BGonETBA12345plot <- ggplot(bareground.etrapbees,
+                            aes(x = avg.bareground,
+                                y = number.etrapbees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -470,7 +500,7 @@ BGonETBA12345plot <- ggplot(bareground.et.bees, aes(x = avg.bareground,
   theme_bw() +
   labs(x = "Bare Ground (%)",
        y = "Emergence Trap Bee Abundance") +
-  ggtitle("Influence of Bare Ground on Bee Abundance in Emergence Traps") +
+  ggtitle("Influence of Bare Ground on \nBee Abundance in Emergence Traps") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
