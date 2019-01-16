@@ -3,7 +3,10 @@
 #-------------------------------------------------------------------#
 
 #Research Question:  If we provide bare soil areas within flight distance of strips, will ground-nesting bees utilize them?
-#Objectives:  Quantify the number of individual bees and bee species collected from the nesting plots
+
+#Objectives
+#Quantify the number of individual bees and bee species collected from the nesting plots
+#Create ternary plot of bee species and their individual soil preferences
 
 #Start ####
 
@@ -14,25 +17,38 @@ setwd("~/ISU/Project/Data")
 #Load libraries
 library(lubridate)
 library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggtern)
+library(plyr)
+
 
 #Read in data
-Bees <- read.csv("Bees/Bee IDs.csv")
+NPbees <- read.csv("Bees/2017-2018 Nesting Plot Bees.csv")
+soils <- read.csv("Soil/Reduced Analysis Results.csv")
 
 #Use lubridate to allow R to recognize the dates
-Bees$Date <- mdy(Bees$Date)
+NPbees$Date <- mdy(NPbees$Date)
 
 #Add new column with only the year
-Bees$Year <- year(Bees$Date)
+NPbees$Year <- year(NPbees$Date)
 
-#Because we're sorting by "Site," we need to make sure naming conventions are consistent
-Bees %>%
-  group_by(Site) %>%
-  summarise()
+#Filter out "wasp" entries from NPBees
+NPbees <- NPbees %>%
+  filter(Family != "Wasp")
 
-#Same with "Trap"
-Bees %>%
-  group_by(Trap) %>%
-  summarise()
+#Rename columns in "Reduced Analysis Results"
+colnames(soils) <- c("Sample ID", "Site", "Depth", "Sand", "Silt", "Clay", "Texture")
+
+#Extract plot number from "Sample.ID" in soils into separate column
+soils$Plot <- substr(as.vector(soils$"Sample ID"), 3, 3)
+
+#Convert "Plot" to integer in soils
+soils$Plot <- as.integer(soils$Plot)
+
+#Only include 0-6 inches of soil depth in ternary graph
+soils <- soils %>%
+  filter(Depth == "0 - 6")
 
 #Year 4 ####
 #-------------------------------------------------------------------#
@@ -106,39 +122,85 @@ BeeIDs1234NPsppbysite <- BeeIDs1234NP %>%
 #                            Years 4-5                              #
 #-------------------------------------------------------------------#
 
-#Filter out wasps and unidentifiable specimens
-Bees <- Bees %>%
-  filter(Binomial != "Wasp") %>%
-  filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable") %>%
-  filter(!is.na(Binomial)) %>%
-  filter(!is.na(Site))
-
-#Subset Bees to include only nesting plot bees
-BeesNP <- Bees %>%
-  filter(Trap == "Plot")
-
 #Determine total number of species
-BeesNPspp <- BeesNP %>%
+NPbeesspp <- NPbees %>%
   group_by(Binomial) %>%
   count()
 
 #Determine total number of individuals
-sum(BeesNPspp$n)
+sum(NPbeesspp$n)
+#330
 
 #Which sites were they collected from?
-BeesNPbysite <- BeesNP %>%
+NPbeesbysite <- NPbees %>%
   group_by(Site) %>%
   count(Binomial)
 
 #How do the numbers differ between years?
-BeesNPbyyear <- BeesNP %>%
+NPbeesbyyear <- NPbees %>%
   group_by(Year) %>%
   count(Binomial)
 
-BeesNPbyyearnumber <- BeesNPbyyear %>%
+NPbeesnobyyear <- NPbeesbyyear %>%
   group_by(Year) %>%
   summarise(sum = sum(n))
+
+#Combine NPbees and soils data frames
+soils.NPbees <- left_join(soils, NPbees, by = c("Site", "Plot"))
+
+#Lasioglossum (Dialictus) sp. and Halictus confusus both occurr at all sites; remove for greater clarity in ternary plot
+soils.NPbees.red <- soils.NPbees %>%
+  filter(Binomial != "Lasioglossum (Dialictus) sp.") %>%
+  filter(Binomial != "Halictus confusus")
+
+#Set color scheme for plot
+colors = c("#000000", "red3", "darkgreen", "goldenrod", "cyan")
+
+#Graph bee families on soils ternary plot
+soils.NPbeesfamilytern <- ggtern(data = soils.NPbees,
+                                 aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Family),
+             shape = 21,
+             size = 3,
+             position = position_jitter_tern(x = 0.1, y = 0.1, z = 0.1),
+             color = "black") +
+  geom_point(data = subset(soils.NPbees, Family == "Megachilidae")) +
+  #geom_mean_ellipse(aes(color = Family)) +
+  ggtitle("Soil Composition Used by \nBee Families in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = colors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = colors)
+soils.NPbeesfamilytern
+
+#Graph bee species names on soils ternary plot
+soils.NPbeestern <- ggtern(data = soils.NPbees.red,
+                           aes(x = Sand, y = Silt, z = Clay)) +
+  #geom_point(aes(color = Binomial))
+  geom_text(aes(label = Binomial),
+            position = position_jitter_tern(x = 0.5, y = 0.5, z = 0.5)) +
+  ggtitle("Soil Composition Used by \nBee Species in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15))
+soils.NPbeestern
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen
