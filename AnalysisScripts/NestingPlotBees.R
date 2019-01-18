@@ -121,7 +121,6 @@ BeeIDs1234NPsppbysite <- BeeIDs1234NP %>%
 #-------------------------------------------------------------------#
 #                            Years 4-5                              #
 #-------------------------------------------------------------------#
-
 #Determine total number of species
 NPbeesspp <- NPbees %>%
   group_by(Binomial) %>%
@@ -154,14 +153,14 @@ soils.NPbees.red <- soils.NPbees %>%
   filter(Binomial != "Halictus confusus")
 
 #Set color scheme for plot
-colors = c("#000000", "red3", "darkgreen", "goldenrod", "cyan")
+familycolors = c("#000000", "red3", "darkgreen", "goldenrod", "cyan")
 
 #Graph bee families on soils ternary plot
 soils.NPbeesfamilytern <- ggtern(data = soils.NPbees,
                                  aes(x = Sand, y = Silt, z = Clay)) +
   geom_point(aes(fill = Family),
              shape = 21,
-             size = 3,
+             size = 2,
              position = position_jitter_tern(x = 0.1, y = 0.1, z = 0.1),
              color = "black") +
   geom_point(data = subset(soils.NPbees, Family == "Megachilidae")) +
@@ -178,9 +177,9 @@ soils.NPbeesfamilytern <- ggtern(data = soils.NPbees,
                                   hjust = 0.5)) +
   theme(text = element_text(size = 15)) +
   guides(color = guide_legend(override.aes = list(shape = 21,
-                                                  fill = colors,
+                                                  fill = familycolors,
                                                   color = "black"))) +
-  scale_fill_manual(values = colors)
+  scale_fill_manual(values = familycolors)
 soils.NPbeesfamilytern
 
 #Graph bee species names on soils ternary plot
@@ -201,6 +200,180 @@ soils.NPbeestern <- ggtern(data = soils.NPbees.red,
                                   hjust = 0.5)) +
   theme(text = element_text(size = 15))
 soils.NPbeestern
+
+#By Family ####
+#-------------------------------------------------------------------#
+#                            By Family                              #
+#-------------------------------------------------------------------#
+#Andrenidae
+#Filter soils.NPbees to include only Andrenidae
+soils.NPbeesAnd <- soils.NPbees %>%
+  filter(Family == "Andrenidae")
+
+#Set color scheme for plot
+andcolors = c("#000000", "red3", "goldenrod", "darkgreen")
+
+#Graph Andrenidae
+soils.NPbeesAndtern <- ggtern(data = soils.NPbeesAnd,
+                              aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Binomial),
+             position = position_jitter_tern(x = 0.15, y = 0.15, z = 0.15),
+             shape = 21,
+             size = 2,
+             color = "black") +
+  #geom_text(aes(label = Binomial)) +
+  ggtitle("Soil Composition Used by \nAndrenidae in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = andcolors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = andcolors)
+soils.NPbeesAndtern
+
+#Apidae
+#Filter soils.NPbees to include only Apidae
+soils.NPbeesApi <- soils.NPbees %>%
+  filter(Family == "Apidae")
+
+#Set color scheme for plot
+apicolors <-c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+#Graph Apidae
+soils.NPbeesApitern <- ggtern(data = soils.NPbeesApi,
+                              aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Binomial),
+             position = position_jitter_tern(x = 0.1, y = 0.1, z = 0.1),
+             shape = 21,
+             size = 2,
+             color = "black") +
+  #geom_text(aes(label = Binomial)) +
+  ggtitle("Soil Composition Used by \nApidae in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = apicolors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = apicolors)
+soils.NPbeesApitern
+
+#Colletidae
+#Filter soils.NPbees to include only Colletidae
+soils.NPbeesCol <- soils.NPbees %>%
+  filter(Family == "Colletidae")
+
+#Set color scheme for plot
+colcolors <-c("goldenrod", "red4")
+
+#Graph Colletidae
+soils.NPbeesColtern <- ggtern(data = soils.NPbeesCol,
+                              aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Binomial),
+             position = position_jitter_tern(x = 0.12, y = 0.12, z = 0.12),
+             shape = 21,
+             size = 3,
+             color = "black") +
+  #geom_text(aes(label = Binomial)) +
+  ggtitle("Soil Composition Used by \nColletidae in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = colcolors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = colcolors)
+soils.NPbeesColtern
+
+#Halictidae
+#Filter soils.NPbees to include only Halictidae
+soils.NPbeesHal <- soils.NPbees %>%
+  filter(Family == "Halictidae")
+
+#Set color scheme for plot
+halcolors <-c("#000000", "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9", "#BC80BD", "#CCEBC5", "#FFED6F")
+
+#Graph Halictidae
+soils.NPbeesHaltern <- ggtern(data = soils.NPbeesHal,
+                              aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Binomial),
+             position = position_jitter_tern(x = 0.15, y = 0.15, z = 0.15),
+             shape = 21,
+             size = 3,
+             color = "black") +
+  #geom_text(aes(label = Binomial)) +
+  ggtitle("Soil Composition Used by \nHalicidate in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = halcolors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = halcolors)
+soils.NPbeesHaltern
+
+#Megachilidae
+#Filter soils.NPbees to include only Megachilidae
+soils.NPbeesMeg <- soils.NPbees %>%
+  filter(Family == "Megachilidae")
+
+#Set color scheme for plot
+megcolors <-c("#000000", "red3", "goldenrod")
+
+#Graph Halictidae
+soils.NPbeesMegtern <- ggtern(data = soils.NPbeesMeg,
+                              aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(aes(fill = Binomial),
+             position = position_jitter_tern(x = 0.1, y = 0.1, z = 0.1),
+             shape = 21,
+             size = 3,
+             color = "black") +
+  #geom_text(aes(label = Binomial)) +
+  ggtitle("Soil Composition Used by \nMegachilidae in Nesting Plots") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 22,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15)) +
+  guides(color = guide_legend(override.aes = list(shape = 21,
+                                                  fill = megcolors,
+                                                  color = "black"))) +
+  scale_fill_manual(values = megcolors)
+soils.NPbeesMegtern
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen

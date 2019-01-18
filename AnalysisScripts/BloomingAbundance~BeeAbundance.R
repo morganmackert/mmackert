@@ -53,10 +53,10 @@ floral.cover <- floral.cover %>%
   group_by(Site, Date) %>%
   summarise(avg.floralcover = mean(floral.cover))
 
-#Join SpecRichAbund and FloralCover datasets together
+#Join floral.cover and bees datasets together
 floralcover.bees <- left_join(bees, floral.cover, by = c("Site", "Date"))
 
-#Fill in 0 for any NAs in Total.Abundance (showing we sampled vegetation, but collected no bees)
+#Fill in 0 for any NAs in total.bees (showing we sampled vegetation, but collected no bees)
 floralcover.bees$total.bees[is.na(floralcover.bees$total.bees)] <- 0
 
 #Include Year column in floralcover.bees using lubridate
@@ -64,7 +64,6 @@ floralcover.bees$Year <- year(floralcover.bees$Date)
 
 #Years 1-2 ####
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                           Years 1-2                               #
 #-------------------------------------------------------------------#
 #Subset BAonBA to include only 2014 and 2015 data.
@@ -299,7 +298,6 @@ BAonBA1234plot
 #           Blooming Forb and Weed Abundance ~ Bee Abundance        #
 #                             Years 1-5                             #
 #-------------------------------------------------------------------#
-
 #Models for bee abundance predicted by blooming plant coverage
 BAonBA12345model <- lmer(total.bees ~ avg.floralcover + (1|Site) * (1|Year),
                         data = floralcover.bees)
@@ -386,8 +384,8 @@ BAonBA12345plot
 #Trapname.Species.Richness = Number of bee species collected by specified trap/site/date
 #Total.Species.Richness = Number of bee species collected by all trap types at the specified site/date
 #Species.Name = Number of individuals of specified species collected at the specified site/date
-#Old code ####
 
+#Old code ####
 #Change names so they're not so goofy
 names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Floral.Cover"
 names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"

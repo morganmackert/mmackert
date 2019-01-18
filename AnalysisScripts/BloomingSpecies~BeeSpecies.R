@@ -332,7 +332,6 @@ BSonBS1234plot
 #           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-5                             #
 #-------------------------------------------------------------------#
-
 #Model for bee species richness predicted by number of blooming species
 BSonBS12345model <- lmer(no.beespp ~ no.floralspp + (1|Site),
                         data = floralspp.beespp)

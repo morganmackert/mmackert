@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------#
 #           Blooming Forb and Weed Species ~ Bee Abundance          #
-#                             Years 1-2                             #
 #-------------------------------------------------------------------#
 
 #Research Question: How does the number of blooming forb/weed species within the strip influence bee abundance?
@@ -9,6 +8,7 @@
 #Create model(s) to explore relationship between blooming forb/weed species richness and bee abundance
 #Use created model(s) to visualize the relationship graphically
 
+#Start ####
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -20,6 +20,46 @@ library(lme4)
 library(MuMIn)
 library(ggplot2)
 
+#Read in data
+Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
+Bees <- read.csv("Bees/Bee IDs.csv")
+
+#Use lubridate to allow R to read the dates
+Quadrats$Date <- mdy(Quadrats$Date)
+Quadrats$Year <- year(Quadrats$Date)
+Bees$Date <- mdy(Bees$Date)
+Bees$Year <- year(Bees$Date)
+
+#Fill NAs with 0 in Quadrats$Cover to indicate no plants were blooming at that point
+Quadrats$Cover[is.na(Quadrats$Cover)] <- 0
+
+#Determine number of plant species in bloom for each site/date
+floral.species <- Quadrats %>%
+  group_by(Site, Date) %>%
+  summarise(no.floralspp = n_distinct(Species, na.rm = TRUE))
+
+#Determine number of individuals of each species collected for each site/date
+bees <- Bees %>%
+  group_by(Site, Date) %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Date)) %>%
+  count(Binomial) %>%
+  summarise(total.bees = sum(n))
+
+#Join floral.species and bees datasets together
+floralspecies.bees <- full_join(bees, floral.species, by = c("Site", "Date"))
+
+#Fill in 0 for any NAs in total.bees (showing we sampled vegetation, but collected no bees)
+floralspecies.bees$total.bees[is.na(floralspecies.bees$total.bees)] <- 0
+
+#Include Year column in floralcover.bees using lubridate
+floralspecies.bees$Year <- year(floralspecies.bees$Date)
+
+#Years 1-2 ####
+#-------------------------------------------------------------------#
+#                             Years 1-2                             #
+#-------------------------------------------------------------------#
 #Read in data
 nqAM <- read.csv("Moorhouse Full data set.csv")
 #####Floral index in this data set DOES include weed species as well as forbs.
@@ -68,8 +108,8 @@ BSonBAAMplot <- ggplot(nqAM, aes(x = Quadrats, y = TotalAbundance)) +
   theme(legend.text = element_text(size = 10))
 BSonBAAMplot
 
+#Year 3
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Abundance          #
 #                             Year 3                                #
 #-------------------------------------------------------------------#
 #Clear environment and set working directory
@@ -114,8 +154,8 @@ BSonBAMMMplot <- ggplot(nqMMM, aes(x = Quadrats, y = TotalAbundance)) +
   theme(legend.text = element_text(size = 10))
 BSonBAMMMplot
 
+#Years 1-3 ####
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Abundance          #
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 #Clear environment
@@ -195,3 +235,80 @@ BSonBA123plot <- ggplot(years123,
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5) 
 BSonBA123plot
+
+#Years 1-5 ####
+#-------------------------------------------------------------------#
+#                             Years 1-5                             #
+#-------------------------------------------------------------------#
+#Models for bee abundance predicted by blooming plant species richness
+BSonBA12345model <- lmer(total.bees ~ no.floralspp + (1|Site) * (1|Year),
+                         data = floralspecies.bees)
+summary(BSonBA12345model)
+#AIC = 2393.772; p-value = 0.318666
+
+BSonBA12345model2 <- lmer(total.bees ~ no.floralspp + (1|Year),
+                          data = floralspecies.bees)
+summary(BSonBA12345model2)
+#AIC = 2397.076; p-value = 0.00224
+
+BSonBA12345model3 <- lmer(total.bees ~ no.floralspp + (1|Site) + (1|Year),
+                          data = floralspecies.bees)
+summary(BSonBA12345model3)
+#AIC = 2393.772; p-value = 0.318666
+
+BSonBA12345model4 <- lmer(total.bees ~ no.floralspp + (1|Site) + (1|Year) + (1|Date),
+                          data = floralspecies.bees)
+summary(BSonBA12345model4)
+#AIC = 2392.057; p-value = 0.142417
+#Model 4 has lowest AIC value! Use this one.
+
+BSonBA12345model5 <- lmer(total.bees ~ no.floralspp + (1|Site) * (1|Year) * (1|Date),
+                          data = floralspecies.bees)
+summary(BSonBA12345model5)
+#AIC = 2392.057; p-value = 0.142417
+
+BSonBA12345model6 <- lmer(total.bees ~ no.floralspp + (1|Date) * (1|Site),
+                          data = floralspecies.bees)
+summary(BSonBA12345model6)
+#AIC = 2398.563; p-value = 0.0311
+
+BSonBA12345model7 <- lmer(total.bees ~ no.floralspp + Date + (1|Site),
+                          data = floralspecies.bees)
+summary(BSonBA12345model7)
+#AIC = 2402.298; p-value = 0.42717
+
+#Check residuals
+qqnorm(resid(BSonBA12345model4))
+qqline(resid(BSonBA12345model4))
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BSonBA12345model4)
+#R2m = 0.01186844; R2c = 0.5205423
+
+#Convert year to factor
+floralspecies.bees$Year <- as.factor(floralspecies.bees$Year)
+
+#Graph that shiz
+BSonBA12345plot <- ggplot(floralspecies.bees,
+                          aes(x = no.floralspp,
+                              y = total.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
+                     values = c(15, 1, 17, 18, 25)) +
+  theme_bw() +
+  labs(x = "Blooming Species Richness",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Blooming Species Richness \non Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BSonBA12345plot
