@@ -27,35 +27,38 @@ Quadrats$Year <- year(Quadrats$Date)
 #Format Bare.Ground column as numeric
 Quadrats$BareGround <- as.numeric(Quadrats$BareGround)
 
-#Determine average bare ground coverage for each site
-AverageBareGround <- Quadrats %>%
-  select(Date, Site, Quadrat, BareGround) %>%
-  group_by(Date, Site, Quadrat) %>%
-  summarise(BareGround = BareGround[1]) %>%
+#Average bare ground cover for each site
+bareground <- Quadrats %>%
+  filter(!is.na(BareGround)) %>%
+  group_by(Site, Date, Quadrat) %>%
+  summarise(total.bareground = BareGround[1])
+avg.bareground <- bareground %>%
   group_by(Site) %>%
-  summarise(Average.Bare.Ground = mean(BareGround))
+  summarise(avg.bareground = mean(total.bareground), 
+            number.quadrats = length(total.bareground))
 
 #Determine species richness without nesting plots
-SppRichnoplot <- Bees %>%
+beespp.noplot <- Bees %>%
   filter(!is.na(Binomial)) %>%
   filter(Family != "Wasp") %>%
   filter(Trap != "Plot") %>%
   count(Binomial)
 
-SppRich <- Bees %>%
+#Bee species richness
+beespp <- Bees %>%
   filter(!is.na(Binomial)) %>%
   filter(Family != "Wasp") %>%
   count(Binomial)
 
 #Determine abundance for each site
-AbundSite <- Bees %>%
+bees <- Bees %>%
   filter(Family != "Wasp") %>%
   filter(!is.na(Binomial)) %>%
   group_by(Site) %>%
   count(Binomial)
-AbundSite <- AbundSite %>%
+bees <- bees %>%
   group_by(Site) %>%
-  summarise(Bee.Abundance = sum(n))
+  summarise(total.bees = sum(n))
 
 #Determine abundance by trap for each site/date
 AbundTrap <- BeeIDs %>%
@@ -72,11 +75,11 @@ AbundTrapwide <- spread(AbundTrap, Trap, Bee.Abundance)
 #write.csv(AbundTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/AbundancebyTrap1234.csv")
 
 #Determine species richness for each site
-SpeciesRichnessSite <- Bees %>%
-  filter(Trap != "Target") %>%
+beespp.site <- Bees %>%
   filter(Family != "Wasp") %>%
+  filter(!is.na(Site)) %>%
   group_by(Site) %>%
-  summarise(length(unique(Binomial)))
+  summarise(no.beespp = n_distinct(Binomial))
 
 #Determine species richness by trap for each site/date
 SpecRichTrap <- BeeIDs %>%
@@ -118,3 +121,9 @@ GenusRich <- Bees %>%
   filter(Family != "Wasp") %>%
   group_by(Genus) %>%
   count(Genus)
+
+#Average floral cover for each site
+floral.cover <- Quadrats %>%
+  group_by(Site) %>%
+  summarise(avg.floralcover = mean(Cover))
+

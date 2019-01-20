@@ -17,6 +17,7 @@ setwd("~/ISU/Project/Data")
 library(lubridate)
 library(dplyr)
 library(lme4)
+library(lmerTest)
 library(MuMIn)
 library(ggplot2)
 
