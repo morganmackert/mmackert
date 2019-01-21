@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------#
 #                      Richness Estimates by Site                   #
-#                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
 #Research Question: How do richness estimates of the bee community vary between sites of differing vegetation diversities?
