@@ -37,6 +37,11 @@ avg.bareground <- bareground %>%
   summarise(avg.bareground = mean(total.bareground), 
             number.quadrats = length(total.bareground))
 
+#Average floral cover for each site
+floral.cover <- Quadrats %>%
+  group_by(Site) %>%
+  summarise(avg.floralcover = mean(Cover))
+
 #Determine species richness without nesting plots
 beespp.noplot <- Bees %>%
   filter(!is.na(Binomial)) %>%
@@ -51,14 +56,21 @@ beespp <- Bees %>%
   count(Binomial)
 
 #Determine abundance for each site
-bees <- Bees %>%
+bees.site <- Bees %>%
   filter(Family != "Wasp") %>%
+  filter(Family != "Fly") %>%
   filter(!is.na(Binomial)) %>%
+  filter(!is.na(Site)) %>%
   group_by(Site) %>%
   count(Binomial)
-bees <- bees %>%
+bees.site <- bees.site %>%
   group_by(Site) %>%
   summarise(total.bees = sum(n))
+
+#Check to make sure total matches original datafile
+bees.site %>%
+  summarise(sum(total.bees))
+#15,904, good to go!
 
 #Determine abundance by trap for each site/date
 AbundTrap <- BeeIDs %>%
@@ -77,6 +89,8 @@ AbundTrapwide <- spread(AbundTrap, Trap, Bee.Abundance)
 #Determine species richness for each site
 beespp.site <- Bees %>%
   filter(Family != "Wasp") %>%
+  filter(Family != "Fly") %>%
+  filter(Binomial != "Unidentifiable") %>%
   filter(!is.na(Site)) %>%
   group_by(Site) %>%
   summarise(no.beespp = n_distinct(Binomial))
@@ -121,9 +135,3 @@ GenusRich <- Bees %>%
   filter(Family != "Wasp") %>%
   group_by(Genus) %>%
   count(Genus)
-
-#Average floral cover for each site
-floral.cover <- Quadrats %>%
-  group_by(Site) %>%
-  summarise(avg.floralcover = mean(Cover))
-
