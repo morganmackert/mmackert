@@ -101,8 +101,16 @@ beespp.site <- beespp.sitedate %>%
   summarise(no.beespp = length(unique(Binomial)))
 
 #Create table showing number of individuals of each species collected
-bees.spp <- bees %>%
+beespp <- bees %>%
   count(Binomial)
+
+#Determine number of rare species (n < 11) including all samples
+beespp.rare <- beespp %>%
+  filter(n <= 10)
+
+#Determine number of singleton species (n == 1) including all samples
+beespp.single <- beespp %>%
+  filter (n ==1)
 
 #Create table showing number of individual bees collected at each site
 bees.site <- beespp.sitedate %>%
@@ -115,12 +123,12 @@ nobeespp.site <- beespp.sitedate %>%
   summarise(total.bees = sum(n))
 
 #Filter nobeespp.site to include only rare species (n < 11)
-rare.bees <- nobeespp.site %>%
+rare.beessite <- nobeespp.site %>%
   filter(total.bees <= 10) %>%
   summarise(no.rarespp = length(unique(Binomial)))
 
 #Filter nobeespp.site to include only singleton species (n = 1)
-single.bees <- nobeespp.site %>%
+single.beessite <- nobeespp.site %>%
   filter(total.bees == 1) %>%
   summarise(no.singletonspp = length(unique(Binomial)))
 

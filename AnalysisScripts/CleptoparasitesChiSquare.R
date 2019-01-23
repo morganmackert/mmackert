@@ -3,6 +3,8 @@
 #                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
+#Reseach Question:  
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")

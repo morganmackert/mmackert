@@ -8,6 +8,7 @@
 #Objectives:
 #Perform MRPP analysis on bee species communities at each site as a function of the number of unique blooming plant species present
 
+#Start ####
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project")
@@ -20,23 +21,21 @@ library(vegan)
 library(MASS)
 
 #Read in data
-BeeIDs <- read.csv("Data/Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
+Bees <- read.csv("Data/Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 
 #Add new column with only the year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 
+#Filter yucky stuff out of data set
+bees <- Bees %>%
+  filter(!is.na(Site)) %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable")
+
+#Years 1-3 ####
 #-------------------------------------------------------------------#
 #                             2014-2016                             #
 #-------------------------------------------------------------------#
@@ -92,6 +91,7 @@ BeeCommunityMRPPplot <- ggplot(MRPP,
   #scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8"))
 BeeCommunityMRPPplot
 
+#Year 4 ####
 #-------------------------------------------------------------------#
 #                               2017                                #
 #-------------------------------------------------------------------#
@@ -141,3 +141,42 @@ BeeCommunityMRPPplot <- ggplot(MRPP,
   labs(y = "Δ")
 #scale_x_discrete(limits = c("6", "1", "10", "3", "4", "11", "5", "7", "9", "2", "8"))
 BeeCommunityMRPPplot
+
+#Years 1-5 ####
+#-------------------------------------------------------------------#
+#                             2014-2018                             #
+#-------------------------------------------------------------------#
+#Determine number of individuals per bee species collected at each site
+bees.site <- bees %>%
+  group_by(Date, Site) %>%
+  count(Binomial)
+
+#Reformat from long to wide
+bees.site.wide <- spread(bees.site, Binomial, n)
+
+#Fill NAs with 0
+bees.site.wide[is.na(bees.site.wide)] <- 0
+
+#Move "Site" column from to another data frame
+bees.site.widesites <- bees.site.wide["Site"]
+
+#Remove "Site" and "Date" columns
+bees.site.wide <- bees.site.wide[!names(bees.site.wide) %in% c("Site", "Date")]
+
+#Convert to data.frame
+bees.site.wide <- as.data.frame(bees.site.wide)
+
+#Perform MRPP analysis
+bee.mrpp <- mrpp(bees.site.wide, bees.site.widesites$Site, distance = "euclidian")
+bee.mrpp
+
+#Data dictionary ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet

@@ -24,6 +24,12 @@ Quadrats$Date <- mdy(Quadrats$Date)
 Bees$Year <- year(Bees$Date)
 Quadrats$Year <- year(Quadrats$Date)
 
+#Filter out bad stuff from Bees
+bees <- Bees %>%
+  filter(Family != "Wasp") %>%
+  filter(Family != "Fly") %>%
+  filter(!is.na(Site))
+
 #Format Bare.Ground column as numeric
 Quadrats$BareGround <- as.numeric(Quadrats$BareGround)
 
@@ -128,10 +134,7 @@ SpecRichAbundwide[is.na(SpecRichAbundwide)] <- 0
 #Export as .csv
 #write.csv(SpecRichAbundwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessandAbundance1234.csv")
 
-#Genus richness for 2014-2016
-GenusRich <- Bees %>%
-  filter(Year < 2017) %>%
-  filter(Trap != "Target") %>%
-  filter(Family != "Wasp") %>%
+#Genus richness for 2014-2018
+genusrich <- Bees %>%
   group_by(Genus) %>%
   count(Genus)

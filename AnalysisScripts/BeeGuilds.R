@@ -2,11 +2,17 @@
 #                             BEE GUILDS                            #
 #-------------------------------------------------------------------#
 
+#Research Question:  How do bee nesting guilds vary across site?
+
+#Objective:  Assign each bee species to their respective nesting guild
+
+#Start ####
+
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
 
-#LOad libraries
+#Load libraries
 library(lubridate)
 library(dplyr)
 library(tidyr)
@@ -14,51 +20,43 @@ library(ggplot2)
 library(scales)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
+Bees <- read.csv("Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 
 #Add new column with only the year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 
 #Subset BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs <- BeeIDs %>%
-  filter(Trap != "Target") %>%
+bees <- Bees %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable")
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Site))
+  
 
 #Assign guild name to each specimen
-BeeIDs <- BeeIDs %>%
+bees <- bees %>%
   mutate(Guild = case_when(
     Binomial == "Bombus citrinus" ~ "Social parasite",
     Binomial == "Megachile latimanus" ~ "Solitary ground-nester",
-    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Lasioglossum (Lasioglossum)" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum s.s." | Genus == "Lasioglossum"| Genus == "Eucera" | Genus == "Lasioglossum (Leuchalictus)" | Genus == "Lasioglossum (Hemihalictus)" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Lasioglossum (Sphecodogastra)" | Genus == "Peponapis" | Genus == "Dufourea" | Genus == "Protandrena" ~ "Solitary ground-nester",
-    Genus == "Lasioglossum (Dialictus)" | Genus == "Lasioglossum (Evylaeus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
+    Genus == "Agapostemon" | Genus == "Andrena" | Genus == "Calliopsis" | Genus == "Colletes" | Genus == "Dieunomia" | Genus == "Melissodes" | Genus == "Pseudopanurgus" | Genus == "Perdita" | Genus == "Lasioglossum" | Genus == "Eucera" | Genus == "Anthophora" | Genus == "Svastra" | Genus == "Nomia" | Genus == "Florilegus" | Genus == "Peponapis" | Genus == "Dufourea" | Genus == "Protandrena" | Genus == "Lasioglossum (Evylaeus)" ~ "Solitary ground-nester",
+    Genus == "Lasioglossum (Dialictus)" | Genus == "Augochlorella" | Genus == "Augochlora" | Genus == "Halictus" | Genus == "Augochloropsis" ~ "Social ground-nester",
     Genus == "Apis" ~ "Honey bee",
     Genus == "Bombus" ~ "Bumble bee",
-    Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
-    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" | Genus == "Xeromelecta" ~ "Cleptoparasite"
+    Genus == "Heriades" | Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
+    Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Stelis" | Genus == "Triepeolus" | Genus == "Xeromelecta" | Genus == "Epeolus" ~ "Cleptoparasite"
   ))
 
 #Check to make sure all species have been assigned a guild
-BeeIDs %>% 
+bees %>% 
   group_by(Guild) %>% 
   tally()
 #Good!
 
+#Years 1-3 ####
 #-------------------------------------------------------------------#
-#                             Bee Guilds                            #
 #                             2014-2016                             #
 #-------------------------------------------------------------------#
 
@@ -196,8 +194,8 @@ BeeIDs123byguildsitebarplot <- ggplot(BeeIDs123byguildsite,
                                    hjust = 1))
 BeeIDs123byguildsitebarplot
 
+#Years 1-4 ####
 #-------------------------------------------------------------------#
-#                             Bee Guilds                            #
 #                             2014-2017                             #
 #-------------------------------------------------------------------#
 #Subset BeeIDs to include only 2014-2017
@@ -412,3 +410,170 @@ BeeIDs1234byguildRRWstack <- ggplot(BeeIDs1234byguildRRW) +
   scale_x_discrete(labels = wrap_format(20)) +
   scale_fill_manual(values = c("#66C2A5", "#FC8D62"))
 BeeIDs1234byguildRRWstack
+
+##Years 1-5 ####
+#-------------------------------------------------------------------#
+#                             2014-2018                             #
+#-------------------------------------------------------------------#
+#Calculate number of bees in each guild by site
+bees.guild <- bees %>%
+  group_by(Site, Guild) %>%
+  count(Binomial)
+bees.guild <- bees.guild %>%
+  group_by(Site, Guild) %>%
+  summarise(no.bees = sum(n))
+
+#Reformat from long to wide
+bees.guild.wide <- spread(bees.guild, Guild, no.bees)
+
+#Fill NAs with 0
+bees.guild.wide[is.na(bees.guild.wide)] <- 0
+
+#Calculate number of bee species in each guild by site
+beespp.guild <- bees %>%
+  group_by(Site, Guild) %>%
+  summarise(no.beespp = n_distinct(Binomial))
+
+#Reformat from long to wide
+beespp.guild.wide <- spread(beespp.guild, Guild, no.beespp)
+
+#Fill NAs with 0
+beespp.guild.wide[is.na(beespp.guild.wide)] <- 0
+
+#Create table showing the number of individuals within each guild by site and year
+bees.guildsiteyear <- bees %>%
+  group_by(Site, Year, Guild) %>%
+  count(Binomial)
+bees.guildsiteyear <- bees.guildsiteyear %>%
+  group_by(Site, Year, Guild) %>%
+  summarise(Abundance = sum(n))
+
+#Reformat from long to wide
+bees.guildsiteyear.wide <- spread(bees.guildsiteyear, Guild, Abundance)
+
+#Fill NAs with 0
+bees.guildsiteyear.wide[is.na(bees.guildsiteyear.wide)] <- 0
+
+#Export as .csv
+#write.csv(bees.guild.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/Bee guilds by abundance.csv")
+
+#Create table showing the number of species in each guild by site and year
+beespp.guildyear <- bees %>%
+  group_by(Site, Year, Guild) %>%
+  summarise(no.beespp = length(unique(Binomial)))
+
+#Reformat from long to wide format
+beespp.guildyear.wide <- spread(beespp.guildyear, Guild, no.beespp)
+
+#Fill NAs with 0
+beespp.guildyear.wide[is.na(beespp.guildyear.wide)] <- 0
+
+#Export as .csv
+#write.csv(beespp.guild.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/Bee guilds by species.csv")
+
+#Create table showing number of individuals in each guild collected each year
+bees.guildyear <- bees %>%
+  group_by(Year) %>%
+  count(Guild)
+
+#Change "Year" to a factor
+bees.guildyear$Year <- as.factor(bees.guildyear$Year)
+
+#Plot number of specimens collected in each guild by year
+bees.guildyear.plot <- ggplot(bees.guildyear,
+                              aes(x = Guild,
+                                  y = n)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 4) +
+  theme_bw() + 
+  labs(y = "Bee Abundance") +
+  ggtitle("Bee Abundance in \nEach Guild by Year") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+bees.guildyear.plot
+
+#Do the same but in a grouped bar plot
+bees.guildyear.barplot <- ggplot(bees.guildyear,
+                                 aes(x = Guild,
+                                     y = n,
+                                     fill = Year)) +
+  geom_bar(color = "black",
+           position = "dodge",
+           stat = "identity") +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Bee Abundance in \nEach Guild by Year") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+bees.guildyear.barplot
+
+#Create table showing number of individuals collected at each site during each year
+bees.guildsite <- bees %>%
+  group_by(Year, Site) %>%
+  count(Guild)
+
+#Export "BeeIDs123byguildsite" to .csv to use in SAS analyses
+#write.csv(BeeIDs123byguildsite, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeGuilds/GuildsbySite123.csv")
+
+#Graph that shiz
+bees.guildsite.plot <- ggplot(bees.guildsite,
+                                aes(x = Guild,
+                                    y = n)) +
+  geom_point(aes(color = Site)) +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Bee Abundance in Each Guild by Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+bees.guildsite.plot
+
+#Bar graph
+bees.guildsite.barplot <- ggplot(bees.guildsite,
+                                 aes(x = Guild,
+                                     y = n,
+                                     fill = Site)) +
+  geom_bar(color = "black",
+           position = "dodge",
+           stat = "identity") +
+  theme_bw() +
+  labs(y = "Bee Abundance") +
+  ggtitle("Bee Abundance in Each Guild by Site") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)  +
+  theme(axis.text.x = element_text(size = 12,
+                                   angle = 45,
+                                   hjust = 1))
+bees.guildsite.barplot
+
+#Data dictionary ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet
