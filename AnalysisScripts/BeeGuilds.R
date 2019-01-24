@@ -7,7 +7,6 @@
 #Objective:  Assign each bee species to their respective nesting guild
 
 #Start ####
-
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -34,7 +33,6 @@ bees <- Bees %>%
   filter(Family != "Wasp") %>%
   filter(Binomial != "Unidentifiable") %>%
   filter(!is.na(Site))
-  
 
 #Assign guild name to each specimen
 bees <- bees %>%
@@ -440,6 +438,15 @@ beespp.guild.wide <- spread(beespp.guild, Guild, no.beespp)
 #Fill NAs with 0
 beespp.guild.wide[is.na(beespp.guild.wide)] <- 0
 
+#Remove "Site" column from bees.guild.wide to perform chi-squared test
+beespp.guild.wide<- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site")]
+
+#-------------------------------------------------------------------#
+#          Chi-squared test:  Bee Species per Guild ~ Site          #
+#-------------------------------------------------------------------#
+#Perform chi-squared test on the number of bee species collected within each nesting guild at each site
+chisq.test(beespp.guild.wide)
+
 #Create table showing the number of individuals within each guild by site and year
 bees.guildsiteyear <- bees %>%
   group_by(Site, Year, Guild) %>%
@@ -566,6 +573,25 @@ bees.guildsite.barplot <- ggplot(bees.guildsite,
                                    angle = 45,
                                    hjust = 1))
 bees.guildsite.barplot
+
+#-------------------------------------------------------------------#
+#             Chi-squared test:  Cleptoparasites ~ Host             #
+#-------------------------------------------------------------------#
+#Filter bees to include only social parasites and cleptoparasites
+bees.clepto.full <- bees %>%
+  filter(Guild == "Social parasite" | Guild == "Cleptoparasite")
+
+#Export bees.clepto.full as .csv to input host information
+write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/FullCleptoparasites.csv")
+
+#Summarise cleptoparasitic species by site
+bees.clepto.reduced <- bees %>%
+  group_by(Site) %>%
+  filter(Guild == "Social parasite" | Guild == "Cleptoparasite") %>%
+  count(Binomial)
+
+#Export bees.clepto.reduced as .csv to input host information
+write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/ReducedCleptoparasites.csv")
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen

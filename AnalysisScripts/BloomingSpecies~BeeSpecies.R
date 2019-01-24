@@ -23,8 +23,8 @@ library(MuMIn)
 library(ggplot2)
 
 #Read in data
-Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"))
-Bees <- read.csv("Bees/Bee IDs.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv", header = TRUE, na.strings = c("", "NA"))
+Bees <- read.csv("Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Use lubridate to allow R to read the dates
 Quadrats$Date <- mdy(Quadrats$Date)
@@ -35,12 +35,17 @@ Bees$Year <- year(Bees$Date)
 #Fill NAs with 0 in Quadrats$Cover to indicate no plants were blooming at that point
 Quadrats$Cover[is.na(Quadrats$Cover)] <- 0
 
-#Determine total number of bee species collected
-bees.spp <- Bees %>%
-  group_by(Site, Date) %>%
-  filter(Binomial != "") %>%
+#Filter out icky stuff from Bees
+bees <- Bees %>%
   filter(Binomial != "Wasp") %>%
   filter(Binomial != "Unidentifiable") %>%
+  filter(Family != "Wasp") %>%
+  filter(!is.na(Binomial)) %>%
+  filter(!is.na(Site))
+
+#Determine total number of bee species collected at each site during each collection event
+bees.spp <- bees %>%
+  group_by(Site, Date) %>%
   summarise(no.beespp = n_distinct(Binomial))
 
 #Determine number of plant species in bloom for each site/date
@@ -336,23 +341,31 @@ BSonBS1234plot
 BSonBS12345model <- lmer(no.beespp ~ no.floralspp + (1|Site),
                         data = floralspp.beespp)
 summary(BSonBS12345model)
+AIC(BSonBS12345model)
 #AIC = 1311.76; p-value < 0.001
+#AIC = 1516.082
 
 BSonBS12345model2 <- lmer(no.beespp ~ no.floralspp + (1|Site) + (1|Year),
                          data = floralspp.beespp)
 summary(BSonBS12345model2)
+AIC(BSonBS12345model2)
 #AIC = 1289.25; p-value < 0.001
+#AIC = 1509.912
 
 BSonBS12345model3 <- lmer(no.beespp ~ no.floralspp + Date + (1|Site) + (1|Year),
                          data = floralspp.beespp)
 summary(BSonBS12345model3)
+AIC(BSonBS12345model3)
 #AIC = 1298.763; p-value < 0.001
+#AIC = 1518.85
 
 BSonBS12345model4 <- lmer(no.beespp ~ no.floralspp + (1|Site) + (1|Year) + (1|Date),
                          data = floralspp.beespp)
 summary(BSonBS12345model4)
+AIC(BSonBS12345model4)
 #AIC = 1285.049; p-value < 0.001
 #Model 4 has lowest AIC value! Use this one.
+#AIC = 1499.652
 
 #Check residuals
 qqnorm(resid(BSonBS12345model4))

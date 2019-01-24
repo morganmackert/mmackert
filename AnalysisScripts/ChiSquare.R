@@ -1,8 +1,12 @@
 #-------------------------------------------------------------------#
 #                       Guild Chi-Squared Test                      #
-#                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
+#Research question:  Do the number of bee species within each nesting guild differ between sites?
+
+#Objective:  Conduct Pearson's chi-squared test on the number of bee species within each nesting guild collected at each site
+
+#Start ####
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -15,45 +19,27 @@ library(vegan)
 library(MASS)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
+Bees <- read.csv("Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 
 #Add new column with only the year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 
-#Because we're sorting by "Site," we need to make sure naming conventions are consistent
-BeeIDs %>%
-  group_by(Site) %>%
-  summarise()
-
-#Same with "Trap"
-BeeIDs %>%
-  group_by(Trap) %>%
-  summarise()
-
-#We find that site names are good to go, but trap names need some work!
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
-
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs123 <- BeeIDs %>%
-  filter(Year <= 2016) %>%
-  filter(Trap != "Target") %>%
-  filter(Binomial != "Wasp") %>%
+#Get rid of icky stuff in Bees
+bees <- Bees %>%
   filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable")
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Site))
+
+#Years 1-3 ####
+#-------------------------------------------------------------------#
+#                               Years 1-3                           #
+#-------------------------------------------------------------------#
+#Subset only years 1-3
+BeeIDs123 <- bees %>%
+  filter(Year <= 2016)
 
 #Assign guild name to each specimen
 BeeIDs123 <- BeeIDs123 %>%
@@ -114,3 +100,19 @@ BeeIDs123 <- BeeIDs123 %>%
     Genus == "Hoplitis" | Genus == "Hylaeus" | Genus == "Megachile" | Genus == "Osmia" | Genus == "Ceratina" | Binomial == "Anthophora terminalis" | Genus == "Xylocopa" | Genus == "Ashmeadiella" ~ "Cavity nester",
     Genus == "Coelioxys" | Genus == "Holcopasites" | Genus == "Nomada" | Genus == "Sphecodes" | Genus == "Triepeolus" ~ "Cleptoparasite"
   ))
+
+#Data dictionary ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet
+#Old code ####
+#We find that site names are good to go, but trap names need some work!
+BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
+BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
+BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
