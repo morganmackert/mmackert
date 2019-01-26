@@ -11,7 +11,7 @@
 #Start ####
 #Clear environment and set working directory
 rm(list=ls())
-setwd("~/ISU/Project")
+setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(lubridate)
@@ -21,7 +21,7 @@ library(vegan)
 library(MASS)
 
 #Read in data
-Bees <- read.csv("Data/Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
+Bees <- read.csv("Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Use lubridate to allow R to recognize the dates
 Bees$Date <- mdy(Bees$Date)

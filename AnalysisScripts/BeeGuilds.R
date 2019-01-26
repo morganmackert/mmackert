@@ -438,14 +438,18 @@ beespp.guild.wide <- spread(beespp.guild, Guild, no.beespp)
 #Fill NAs with 0
 beespp.guild.wide[is.na(beespp.guild.wide)] <- 0
 
-#Remove "Site" column from bees.guild.wide to perform chi-squared test
-beespp.guild.wide<- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site")]
+#Move "Site" column from to another data frame
+beespp.guild.widesite <- beespp.guild.wide["Site"]
 
-#-------------------------------------------------------------------#
-#          Chi-squared test:  Bee Species per Guild ~ Site          #
-#-------------------------------------------------------------------#
-#Perform chi-squared test on the number of bee species collected within each nesting guild at each site
-chisq.test(beespp.guild.wide)
+#Remove "Site" and "Date" columns
+beespp.guild.wide <- beespp.guild.wide[!names(beespp.guild.wide) %in% "Site"]
+
+#Convert to data.frame
+beespp.guild.wide <- as.data.frame(beespp.guild.wide)
+
+#Perform MRPP analysis
+beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "euclidian")
+beespp.guild.mrpp
 
 #Create table showing the number of individuals within each guild by site and year
 bees.guildsiteyear <- bees %>%
@@ -603,3 +607,12 @@ write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Projec
 #Genus = Taxonimic genus to which each specimen belongs
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
+#Old code ####
+#-------------------------------------------------------------------#
+#          Chi-squared test:  Bee Species per Guild ~ Site          #
+#-------------------------------------------------------------------#
+#Remove "Site" column from bees.guild.wide to perform chi-squared test
+beespp.guild.wide<- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site")]
+
+#Perform chi-squared test on the number of bee species collected within each nesting guild at each site
+chisq.test(beespp.guild.wide)
