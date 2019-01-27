@@ -18,15 +18,6 @@ library(MASS)
 
 #Read in data
 BeeIDs <- read.csv("Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
 
 #Use lubridate to allow R to recognize the dates
 BeeIDs$Date <- mdy(BeeIDs$Date)
@@ -83,3 +74,14 @@ Cleptoparasites <- Cleptoparasites[!names(Cleptoparasites) %in% c("Site", "Speci
 
 #Perform Chi-Squared test
 chisq.test(Cleptoparasites)
+
+#Old code ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet

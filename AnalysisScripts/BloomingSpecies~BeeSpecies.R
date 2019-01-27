@@ -343,29 +343,25 @@ BSonBS12345model <- lmer(no.beespp ~ no.floralspp + (1|Site),
 summary(BSonBS12345model)
 AIC(BSonBS12345model)
 #AIC = 1311.76; p-value < 0.001
-#AIC = 1516.082
 
 BSonBS12345model2 <- lmer(no.beespp ~ no.floralspp + (1|Site) + (1|Year),
                          data = floralspp.beespp)
 summary(BSonBS12345model2)
 AIC(BSonBS12345model2)
 #AIC = 1289.25; p-value < 0.001
-#AIC = 1509.912
 
 BSonBS12345model3 <- lmer(no.beespp ~ no.floralspp + Date + (1|Site) + (1|Year),
                          data = floralspp.beespp)
 summary(BSonBS12345model3)
 AIC(BSonBS12345model3)
 #AIC = 1298.763; p-value < 0.001
-#AIC = 1518.85
 
 BSonBS12345model4 <- lmer(no.beespp ~ no.floralspp + (1|Site) + (1|Year) + (1|Date),
                          data = floralspp.beespp)
 summary(BSonBS12345model4)
 AIC(BSonBS12345model4)
-#AIC = 1285.049; p-value < 0.001
+#AIC = 1283.096; p-value < 0.001
 #Model 4 has lowest AIC value! Use this one.
-#AIC = 1499.652
 
 #Check residuals
 qqnorm(resid(BSonBS12345model4))

@@ -16,7 +16,7 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(scales)
+library(vegan)
 
 #Read in data
 Bees <- read.csv("Bees/Bee IDs.csv", header = TRUE, na.strings = c("", "NA"))
@@ -447,9 +447,13 @@ beespp.guild.wide <- beespp.guild.wide[!names(beespp.guild.wide) %in% "Site"]
 #Convert to data.frame
 beespp.guild.wide <- as.data.frame(beespp.guild.wide)
 
+#-------------------------------------------------------------------#
+#                   MRPP:  Bee species/guild ~ Site                 #
+#-------------------------------------------------------------------#
 #Perform MRPP analysis
 beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "euclidian")
 beespp.guild.mrpp
+#Result comes back NaN; sample size is too small
 
 #Create table showing the number of individuals within each guild by site and year
 bees.guildsiteyear <- bees %>%
@@ -586,7 +590,7 @@ bees.clepto.full <- bees %>%
   filter(Guild == "Social parasite" | Guild == "Cleptoparasite")
 
 #Export bees.clepto.full as .csv to input host information
-write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/FullCleptoparasites.csv")
+#write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/FullCleptoparasites.csv")
 
 #Summarise cleptoparasitic species by site
 bees.clepto.reduced <- bees %>%
@@ -594,8 +598,26 @@ bees.clepto.reduced <- bees %>%
   filter(Guild == "Social parasite" | Guild == "Cleptoparasite") %>%
   count(Binomial)
 
+#Determine total number of cleptoparasitic species collected
+beespp.clepto <- bees.clepto.full %>%
+  group_by(Binomial) %>%
+  count()
+
 #Export bees.clepto.reduced as .csv to input host information
-write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/ReducedCleptoparasites.csv")
+#write.csv(bees.clepto.full, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/Data/Bees/ReducedCleptoparasites.csv")
+
+#Bring in Cleptoparasites.csv data file including all cleptoparasite captures, their respective hosts, and host presence/absence
+clepto <- read.csv("Bees/CleptoparasitesCondensed12345.csv")
+
+#Fill NAs with 0
+clepto[is.na(clepto)] <- 0
+
+#Remove "Site" column from data frame
+clepto <- clepto[!names(clepto) %in% c("Site", "Species")]
+
+#Perform Chi-Squared test
+chisq.test(clepto)
+#X2 = 114.56; df = 68; p-value = 0.0003564
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen
