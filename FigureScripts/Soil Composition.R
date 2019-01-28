@@ -214,13 +214,29 @@ PEsoilstern
 #Set "sitecolors" to be "Set1" from color brewer; makes formatting the legend easier
 sitecolors <- RColorBrewer::brewer.pal(8, "Set1")
 
+#Replace site names with site numbers
+soils <- soils %>%
+  mutate(SiteNo. = case_when(
+    Site == "Bowman" ~ "1",
+    Site == "Cretsinger" ~ "2",
+    Site == "Kaldenberg" ~ "5",
+    Site == "McClellan" ~ "6",
+    Site == "Peckumn" ~ "8",
+    Site == "Plunkett" ~ "9",
+    Site == "Sheller" ~ "10",
+    Site == "Sloan" ~ "11"
+  ))
+
+#For the legend in the ternary plot to be ordered numerically, change the site numbers to factor
+soils$SiteNo. <- as.factor(soils$SiteNo.)
+
 #Create full ternary diagram colored by site
 fullsoilstern <- ggtern(data = soils,
                         aes(x = Sand, y = Silt, z = Clay)) +
-  geom_point(aes(color = Site),
-                 size = 4) +
+  geom_point(aes(color = SiteNo.),
+                 size = 3) +
   geom_point(shape = 21,
-             size = 4,
+             size = 3,
              color = "black") +
   ggtitle("Soil Composition within Nesting Plots \nof All Sites") +
   theme_bw() +
@@ -229,14 +245,15 @@ fullsoilstern <- ggtern(data = soils,
         legend.title.align = 0.5,
         legend.text = element_text(size = 12),
         legend.position = c(0.85, 0.80)) +
-  theme(plot.title = element_text(size = 22,
+  theme(plot.title = element_text(size = 20,
                                   face = "bold",
                                   hjust = 0.5)) +
   theme(text = element_text(size = 15)) +
   guides(color = guide_legend(override.aes = list(shape = 21,
                                                   fill = sitecolors,
                                                   color = "black"))) +
-  scale_color_manual(values = sitecolors)
+  scale_color_manual(values = sitecolors,
+                     name = "Site Number")
 fullsoilstern
 
 #-------------------------------------------------------------------#

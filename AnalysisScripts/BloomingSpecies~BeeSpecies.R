@@ -386,6 +386,7 @@ BSonBS12345plot <- ggplot(floralspp.beespp,
               se = FALSE,
               color = "black",
               size = 0.5) +
+  #geom_vline(xintercept = 3) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),

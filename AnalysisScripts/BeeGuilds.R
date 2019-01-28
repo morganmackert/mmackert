@@ -429,7 +429,7 @@ bees.guild.wide[is.na(bees.guild.wide)] <- 0
 
 #Calculate number of bee species in each guild by site
 beespp.guild <- bees %>%
-  group_by(Site, Guild) %>%
+  group_by(Site, Date, Guild) %>%
   summarise(no.beespp = n_distinct(Binomial))
 
 #Reformat from long to wide
@@ -442,7 +442,7 @@ beespp.guild.wide[is.na(beespp.guild.wide)] <- 0
 beespp.guild.widesite <- beespp.guild.wide["Site"]
 
 #Remove "Site" and "Date" columns
-beespp.guild.wide <- beespp.guild.wide[!names(beespp.guild.wide) %in% "Site"]
+beespp.guild.wide <- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site", "Date")]
 
 #Convert to data.frame
 beespp.guild.wide <- as.data.frame(beespp.guild.wide)
@@ -451,7 +451,7 @@ beespp.guild.wide <- as.data.frame(beespp.guild.wide)
 #                   MRPP:  Bee species/guild ~ Site                 #
 #-------------------------------------------------------------------#
 #Perform MRPP analysis
-beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "euclidian")
+beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "bray")
 beespp.guild.mrpp
 #Result comes back NaN; sample size is too small
 

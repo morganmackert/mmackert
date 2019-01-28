@@ -167,7 +167,7 @@ bees.site.wide <- bees.site.wide[!names(bees.site.wide) %in% c("Site", "Date")]
 bees.site.wide <- as.data.frame(bees.site.wide)
 
 #Perform MRPP analysis
-bee.mrpp <- mrpp(bees.site.wide, bees.site.widesites$Site, distance = "euclidian")
+bee.mrpp <- mrpp(bees.site.wide, bees.site.widesites$Site, distance = "bray")
 bee.mrpp
 
 #Data dictionary ####
