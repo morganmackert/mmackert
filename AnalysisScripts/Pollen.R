@@ -42,9 +42,13 @@ reduced.pollen <- subset(pollen, select = c(Bee.ID, Pollen))
 #Change reduced.pollen to a graph.data.frame
 reducedpollen.graph <- graph.data.frame(reduced.pollen, directed = FALSE)
 
-
+#View bipartite.mapping modes
 bipartite.mapping(reducedpollen.graph)
 
-plot(reducedpollen.graph)
+#Add bipartite.mapping type to data frame
+V(reducedpollen.graph)$type <- bipartite.mapping(reducedpollen.graph)$type
+
+#Graph it
+plot(reducedpollen.graph, layout = layout.bipartite)
 
      
