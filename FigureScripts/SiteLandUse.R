@@ -11,6 +11,7 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 
+#Plunkett ####
 #-------------------------------------------------------------------#
 #                             Plunkett                              #
 #-------------------------------------------------------------------#
@@ -54,6 +55,7 @@ PLlandusepie <- plot_ly(PlunkettLandUse, labels = PlunkettLandUse$LandType, valu
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 PLlandusepie
 
+#Bowman ####
 #-------------------------------------------------------------------#
 #                              Bowman                               #
 #-------------------------------------------------------------------#
@@ -94,6 +96,7 @@ BOlandusepie <- plot_ly(BowmanLandUse, labels = BowmanLandUse$LandType, values =
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 BOlandusepie
 
+#Kaldenberg ####
 #-------------------------------------------------------------------#
 #                           Kaldenberg                              #
 #-------------------------------------------------------------------#
@@ -134,6 +137,7 @@ KAlandusepie <- plot_ly(KaldenbergLandUse, labels = KaldenbergLandUse$LandType, 
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 KAlandusepie
 
+#McClellan ####
 #-------------------------------------------------------------------#
 #                            McClellan                              #
 #-------------------------------------------------------------------#
@@ -174,6 +178,7 @@ MClandusepie <- plot_ly(McClellanLandUse, labels = McClellanLandUse$LandType, va
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 MClandusepie
 
+#Sloan ####
 #-------------------------------------------------------------------#
 #                               Sloan                               #
 #-------------------------------------------------------------------#
@@ -214,6 +219,7 @@ SLlandusepie <- plot_ly(SloanLandUse, labels = SloanLandUse$LandType, values = S
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 SLlandusepie
 
+#Sheller ####
 #-------------------------------------------------------------------#
 #                              Sheller                              #
 #-------------------------------------------------------------------#
@@ -254,6 +260,7 @@ SHlandusepie <- plot_ly(ShellerLandUse, labels = ShellerLandUse$LandType, values
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 SHlandusepie
 
+#Cretsinger ####
 #-------------------------------------------------------------------#
 #                           Cretsinger                              #
 #-------------------------------------------------------------------#
@@ -294,6 +301,7 @@ CRlandusepie <- plot_ly(CretsingerLandUse, labels = CretsingerLandUse$LandType, 
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 CRlandusepie
 
+#Peckumn ####
 #-------------------------------------------------------------------#
 #                              Peckumn                              #
 #-------------------------------------------------------------------#
@@ -334,6 +342,7 @@ PElandusepie <- plot_ly(PeckumnLandUse, labels = PeckumnLandUse$LandType, values
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 PElandusepie
 
+#Elkader ####
 #-------------------------------------------------------------------#
 #                              Elkader                              #
 #-------------------------------------------------------------------#
@@ -374,6 +383,7 @@ ELlandusepie <- plot_ly(ElkaderLandUse, labels = ElkaderLandUse$LandType, values
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ELlandusepie
 
+#Greving ####
 #-------------------------------------------------------------------#
 #                              Greving                              #
 #-------------------------------------------------------------------#
@@ -414,6 +424,7 @@ GRlandusepie <- plot_ly(GrevingLandUse, labels = GrevingLandUse$LandType, values
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 GRlandusepie
 
+#Neal Smith ####
 #-------------------------------------------------------------------#
 #                           Neal Smith                              #
 #-------------------------------------------------------------------#
@@ -454,6 +465,7 @@ NSlandusepie <- plot_ly(NealSmithLandUse, labels = NealSmithLandUse$LandType, va
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 NSlandusepie
 
+#All Sites ####
 #-------------------------------------------------------------------#
 #                        Stacked Bar Graph                          #
 #-------------------------------------------------------------------#
@@ -532,3 +544,31 @@ Fulllandusebarprop <- ggplot(FullLandUseJoined,
        y = "Coverage (%)",
        fill = "Land Type")
 Fulllandusebarprop
+
+#-------------------------------------------------------------------#
+#                            Land Use MRPP                          #
+#-------------------------------------------------------------------#
+#Format FullLandUse from long to wide
+FullLandUse.wide <- spread(FullLandUse, LandType, Coverage)
+
+#Move Site column to another data frame
+FullLandUse.widesites <- FullLandUse.wide["Site"]
+
+#Remove Site and SiteNum columns
+FullLandUse.wide <- FullLandUse.wide[!names(FullLandUse.wide) %in% c("Site", "SiteNum")]
+
+#Convert to a data.frame
+FullLandUse.wide <- as.data.frame(FullLandUse.wide)
+
+#Perform MRPP analysis
+landuse.mrpp <- mrpp(FullLandUse.wide, FullLandUse.widesites, distance = "bray")
+landuse.mrpp
+
+land.dist <- vegdist(FullLandUse.wide)
+
+attach(FullLandUse.widesites)
+
+land.ano <- anosim(land.dist, Site)
+
+land.aov <- aov(Coverage ~ Site, data = FullLandUse)
+summary(land.aov)

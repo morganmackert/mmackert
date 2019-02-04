@@ -21,27 +21,12 @@ library(goeveg)
 
 #Read in data
 Quadrats <- read.csv("Plants/Quadrats.csv", header = T, na.strings = c("", "NA"), stringsAsFactors = TRUE)
-#Date = Date of sample
-#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
-#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
-#Site = Site name
-#Quadrat = Quadrat number; 1-10
-#Species = Name of plant(s) in quadrat
-#X..Cover = Percent coverage of each species within quadrat
-#X..Bare.Ground = Percent coverage of bare ground within quadrat
-#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
-#Outside.Species = Blooming plant species occurring elsewhere on the property
 
 #Use lubridate to allow R to recognize the dates
 Quadrats$Date <- mdy(Quadrats$Date)
 
 #Reformat Year column to be full year
 Quadrats$Year <- year(Quadrats$Date)
-
-#Change column names so they're not so goofy.
-names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
-names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
-names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
 
 #Subset only years 1-3 and Greving/Peckumn
 Quadrats123GR <- Quadrats %>%
@@ -123,3 +108,20 @@ ordihull(GRPE.mds,
          groups = averageveg123GRPE$Site,
          label = TRUE)
 #We've got overlapping communities! Yay!
+
+#Data dictionary ####
+#Date = Date of sample
+#Year = Year of the study; 1 = 2014, 2 = 2015, 3 = 2016, 4 = 2017
+#Sample; 1 = Early May, 2 = Late May, 3 = June, 4 = July, 5 = August
+#Site = Site name
+#Quadrat = Quadrat number; 1-10
+#Species = Name of plant(s) in quadrat
+#X..Cover = Percent coverage of each species within quadrat
+#X..Bare.Ground = Percent coverage of bare ground within quadrat
+#Species.in.Strip...Not.in.Quadrats = Blooming plant species occurring within the study strip, but not detected within the quadrats
+#Outside.Species = Blooming plant species occurring elsewhere on the property
+#Old code ####
+#Change column names so they're not so goofy.
+names(Quadrats)[names(Quadrats) == "X..Cover"] <- "Cover"
+names(Quadrats)[names(Quadrats) == "X..Bare.Ground"] <- "Bare.Ground"
+names(Quadrats)[names(Quadrats) == "Species.in.Strip...Not.in.Quadrats"] <- "Strip.Plants"
