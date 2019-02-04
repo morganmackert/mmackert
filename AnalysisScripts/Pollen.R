@@ -72,8 +72,6 @@ plotweb(bees.pollen,
         col.high = "yellow",
         bor.col.interaction = NA)
 
-visweb(bees.pollen)
-
 #Gross code ####
 #Keep only Bee.ID and Pollen columns
 #reduced.pollennodupes <- subset(pollen.nodupes, select = c(Bee.ID, Pollen))
