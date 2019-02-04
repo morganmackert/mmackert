@@ -9,7 +9,6 @@
 #Use created model(s) to visualize the relationship graphically
 
 #Start ####
-
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -38,7 +37,6 @@ Quadrats$BareGround <- as.numeric(as.character(Quadrats$BareGround))
 #Calculate total bare ground
 bareground <- Quadrats %>%
   filter(!is.na(BareGround)) %>%
-  select(Date, Site, Quadrat, BareGround) %>%
   group_by(Date, Site, Quadrat) %>%
   summarise(total.bareground = BareGround[1])
 
@@ -52,6 +50,7 @@ avg.bareground <- bareground %>%
 et.bees <- Bees %>%
   group_by(Site, Date) %>%
   filter(Family != "Wasp") %>%
+  filter(Binomial != "Wasp") %>%
   filter(Trap == "Emergence") %>%
   count(Binomial) %>%
   group_by(Site, Date) %>%
@@ -63,8 +62,8 @@ bareground.etbees <- left_join(et.bees, avg.bareground, by = c("Date", "Site"))
 #Create Year column in bareground.bees
 bareground.etbees$Year <- year(bareground.etbees$Date)
 
+#Years 1-4 ####
 #-------------------------------------------------------------------#
-#          Percent Bare Ground ~ Emergence Trap Bee Abundance       #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
 #Subset bareground.etbees to include only years 2014-2017
@@ -116,3 +115,82 @@ BGonETBA1234plot <- ggplot(bareground.etbees1234, aes(x = avg.bareground,
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5) 
 BGonETBA1234plot
+
+#Years 1-5 ####
+#-------------------------------------------------------------------#
+#                             Years 1-5                             #
+#-------------------------------------------------------------------#
+#Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
+BGonETBAmodel <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
+                      data = bareground.etbees)
+summary(BGonETBAmodel)
+AIC(BGonETBAmodel)
+
+#Use MuMIn to get R-squared value of full model
+r.squaredGLMM(BGonETBA1234model)
+
+#Change "Year" column to factor.
+bareground.etbees1234$Year <- as.factor(bareground.etbees1234$Year)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonETBA1234plot <- ggplot(bareground.etbees1234, aes(x = avg.bareground,
+                                                      y = number.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c("#FFB90F", "#000000", "red3", "palegreen4")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16, 17, 18)) +
+  theme_bw() +
+  labs(x = "Bare Ground (%)",
+       y = "Emergence Trap Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance \nin Emergence Traps") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5) 
+BGonETBA1234plot
+
+#MRPP ####
+#-------------------------------------------------------------------#
+#           MRPP:  Emergence Trap Bee Community by Year             #
+#-------------------------------------------------------------------#
+#Compare bee communities between 2014, 2015-2016, and 2017-2018 to address any differences between different timing of emergence trap deployment
+etbees <- Bees %>%
+  group_by(Site, Date, Year) %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Trap == "Emergence") %>%
+  count(Binomial)
+
+#Redo Year naming conventions to include different emergence trap deployment times
+etbees$Year <- as.character(etbees$Year)
+etbees$Year[etbees$Year == "2015"] <- "201516"
+etbees$Year[etbees$Year == "2016"] <- "201516"
+etbees$Year[etbees$Year == "2017"] <- "201718"
+etbees$Year[etbees$Year == "2018"] <- "201718"
+
+#Reformat from long to wide
+etbees.wide <- spread(etbees, Binomial, n)
+
+#Fill NAs with 0
+etbees.wide[is.na(etbees.wide)] <- 0
+
+#Move Year column to another data frame
+etbees.wideyear <- etbees.wide["Year"]
+
+#Remove extra columns
+etbees.wide <- etbees.wide[!names(etbees.wide) %in% c("Site", "Date", "Year")]
+
+#Convert to data.frame
+etbees.wide <- as.data.frame(etbees.wide)
+
+#MRPP
+etbees.mrpp <- mrpp(etbees.wide, etbees.wideyear$Year, distance = "bray")
+etbees.mrpp

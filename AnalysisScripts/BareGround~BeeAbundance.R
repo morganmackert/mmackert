@@ -9,7 +9,6 @@
 #Use created model(s) to visualize the relationship graphically
 
 #Start ####
-
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -38,7 +37,6 @@ Quadrats$BareGround <- as.numeric(as.character(Quadrats$BareGround))
 #Calculate total bare ground
 bareground <- Quadrats %>%
   filter(!is.na(BareGround)) %>%
-  select(Date, Site, Quadrat, BareGround) %>%
   group_by(Date, Site, Quadrat) %>%
   summarise(total.bareground = BareGround[1])
 
@@ -53,6 +51,7 @@ avg.bareground <- bareground %>%
 bees <- Bees %>%
   group_by(Site, Date) %>%
   filter(Family != "Wasp") %>%
+  filter(Binomial != "Wasp") %>%
   filter(!is.na(Date)) %>%
   count(Binomial) %>%
   group_by(Site, Date) %>%
@@ -62,24 +61,25 @@ bees <- Bees %>%
 etrapbees <- Bees %>%
   group_by(Site, Date) %>%
   filter(Family != "Wasp") %>%
+  filter(Binomial != "Wasp") %>%
   filter(!is.na(Date)) %>%
   filter(Trap == "Emergence") %>%
   count(Binomial) %>%
   group_by(Site, Date) %>%
   summarise(number.etrapbees = sum(n))
 
-#Remove dates in bareground.etrapbees without emergence trap bees
-bareground.etrapbees <- bareground.etrapbees %>%
-  na.omit(number.etrapbees)
-
 #Join the two datasets together
 bareground.bees <- full_join(bees, avg.bareground, by = c("Date", "Site"))
 bareground.etrapbees <- full_join(etrapbees, avg.bareground, by = c("Date", "Site"))
 
+#Remove dates in bareground.etrapbees without emergence trap bees
+bareground.etrapbees <- bareground.etrapbees %>%
+  na.omit(number.etrapbees)
+
 #Fill NAs in bareground.bees with 0 (no bees were collected on these days)
 bareground.bees$number.bees[is.na(bareground.bees$number.bees)] <- 0
 
-#Create Year column in bareground.bees
+#Create Year column
 bareground.bees$Year <- year(bareground.bees$Date)
 bareground.etrapbees$Year <- year(bareground.etrapbees$Date)
 
@@ -87,46 +87,22 @@ bareground.etrapbees$Year <- year(bareground.etrapbees$Date)
 #-------------------------------------------------------------------#
 #                           Years 1-2                               #
 #-------------------------------------------------------------------#
-#Subset BGonBA to include only 2014 and 2015 data.
-BGonBA12 <- filter(BGonBA, Year <= 2)
-
-#Year column is brought in as an integer. Change to numeric for Amy's plot.
-pch.list12 <- as.numeric(BGonBA12$Year)
-
-#Amy's plot: Percent Bare Ground vs. Bee Abundance
-plot(BGonBA12$AverageBareGround, BGonBA12$ETrapAbundance,
-     xlab = "Percent Bare Ground", ylab = "Bee Abundance",
-     pch = (pch.list12), col = "black")
-model=lm(BGonBA12$ETrapAbundance~BGonBA12$AverageBareGround)
-model
-summary(model)
-abline(model)
-legend("topleft",bty="n",
-       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
-model2=lm(BGonBA12$ETrapAbundance~0+BGonBA12$AverageBareGround)
-summary(model2)
-abline(model2, lty="dotted")
-
-#Model for bee abundance predicted by bare ground
-BGYSonBA12model <- glm(ETrapAbundance ~ AverageBareGround + Year + Site,
-                     family = poisson,
-                     data = BGonBA12)
-summary(BGYSonBA12model)
+#Subset bareground.bees and bareground.etrapbees to include only 2014 and 2015 data.
+bareground.bees12 <- filter(bareground.bees, Year < 2016)
+bareground.etrapbees12 <- filter(bareground.etrapbees, Year < 2016)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonBA12model <- glm(ETrapAbundance ~ AverageBareGround,
-                      data = BGonBA12)
-summary(BGonBA12model)
-
-#Find intercept and slope to plot best fit line on graph
-coef(BGonBA12model)
+BGonBAmodel <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year) + (1|Date),
+                    data = bareground.bees12)
+summary(BGonBAmodel)
 
 #Change "Year" column to a factor.
-BGonBA12$Year <- as.factor(BGonBA12$Year)
+bareground.bees12$Year <- as.factor(bareground.bees12$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
-BGonBA12plot <- ggplot(BGonBA12, aes(x = AverageBareGround,
-                                     y = ETrapAbundance)) +
+BGonBA12plot <- ggplot(bareground.bees12,
+                       aes(x = avg.bareground,
+                           y = number.bees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -389,6 +365,61 @@ BGonBA1234plot <- ggplot(bareground.bees1234, aes(x = avg.bareground,
   theme(legend.text = element_text(size = 10))
 BGonBA1234plot
 
+
+#Years 4-5 ####
+#Subset bareground.bees and bareground.etrapbees to include only 2017 and 2018 data.
+bareground.bees45 <- filter(bareground.bees, Year > 2016)
+bareground.etrapbees45 <- filter(bareground.etrapbees, Year > 2016)
+
+#Model for bee abundance predicted by bare ground without Year and Site.
+BGonBAmodel45 <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year) + (1|Date),
+                    data = bareground.bees45)
+summary(BGonBAmodel45)
+AIC(BGonBAmodel45)
+#AIC = 925.9541, p-value = 0.075522; SINGULAR FIT
+
+BGonBAmodel452 <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year),
+                      data = bareground.bees45)
+summary(BGonBAmodel452)
+AIC(BGonBAmodel452)
+#AIC = 923.9714, p-value = 0.076358; SINGULAR FIT
+
+BGonBAmodel453 <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Date),
+                      data = bareground.bees45)
+summary(BGonBAmodel453)
+AIC(BGonBAmodel453)
+#AIC = 923.9541, p-value = 0.075522
+
+BGonBAmodel454 <- lmer(number.bees ~ avg.bareground + (1|Site),
+                      data = bareground.bees45)
+summary(BGonBAmodel454)
+AIC(BGonBAmodel454)
+#AIC = 921.9714, p-value = 0.076358
+
+#Change "Year" column to a factor.
+bareground.bees12$Year <- as.factor(bareground.bees12$Year)
+
+#Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
+BGonBA12plot <- ggplot(bareground.bees12,
+                       aes(x = avg.bareground,
+                           y = number.bees)) +
+  geom_point(aes(shape = Year,
+                 color = Year),
+             size = 3) +
+  geom_smooth(method = "glm",
+              se = FALSE,
+              color = "black",
+              size = 0.5) +
+  theme_bw() +
+  labs(x = "Percent Bare Ground",
+       y = "Bee Abundance") +
+  ggtitle("Influence of Bare Ground on Bee Abundance") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10))
+BGonBA12plot
+
 #Years 1-5 ####
 #-------------------------------------------------------------------#
 #              Percent Bare Ground ~ Total Bee Abundance            #
@@ -544,3 +575,20 @@ BGonBAcondensed <- Fulldata %>%
   group_by(Site, Year) %>%
   summarise(AverageBareGround = mean(Bare.Ground),
             ETrapAbundance = sum(Emergence.Traps.Abundance))
+
+#Year column is brought in as an integer. Change to numeric for Amy's plot.
+pch.list12 <- as.numeric(BGonBA12$Year)
+
+#Amy's plot: Percent Bare Ground vs. Bee Abundance
+plot(BGonBA12$AverageBareGround, BGonBA12$ETrapAbundance,
+     xlab = "Percent Bare Ground", ylab = "Bee Abundance",
+     pch = (pch.list12), col = "black")
+model=lm(BGonBA12$ETrapAbundance~BGonBA12$AverageBareGround)
+model
+summary(model)
+abline(model)
+legend("topleft",bty="n",
+       legend=paste("R2 is",format(summary(model)$adj.r.squared,digits=4)))
+model2=lm(BGonBA12$ETrapAbundance~0+BGonBA12$AverageBareGround)
+summary(model2)
+abline(model2, lty="dotted")
