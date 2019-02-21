@@ -8,6 +8,7 @@ setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(ggplot2)
+library(ggbiplot)
 library(plotly)
 library(dplyr)
 library(tidyr)
@@ -550,10 +551,19 @@ Fulllandusebarprop
 #-------------------------------------------------------------------#
 #                                PCA                                #
 #-------------------------------------------------------------------#
+#Reformat FullLandUse from long to wide
+FullLandUse.wide <- spread(FullLandUse, LandType, Coverage)
+
+#PCA!
 landpca <- princomp(FullLandUse.wide %>% select(-Site, -SiteNum))
-print(landpca$loadings)
-biplot(landpca)
 #Use cor=TRUE when variables are different scales. Our scales are all the same, so no need to do this.
+
+landpca.bi <- ggbiplot(landpca,
+                       labels = rownames(FullLandUse.wide),
+                       labels.size = 4,
+                       scale = 0.65) +
+  theme_bw()
+landpca.bi
 
 #Old code ####
 #-------------------------------------------------------------------#
@@ -600,3 +610,6 @@ ggplot(FullLandUse, aes(x = Site, y = Coverage)) +
 
 anova(land.lm)
 str(FullLandUse)
+
+print(landpca$loadings)
+biplot(landpca)
