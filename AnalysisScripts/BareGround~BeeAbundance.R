@@ -16,6 +16,7 @@ setwd("~/ISU/Project/Data")
 #Load libraries
 library(lubridate)
 library(ggplot2)
+library(ggpmisc)
 library(dplyr)
 library(lme4)
 library(lmerTest)
@@ -76,6 +77,9 @@ bareground.etrapbees <- full_join(etrapbees, avg.bareground, by = c("Date", "Sit
 bareground.etrapbees <- bareground.etrapbees %>%
   na.omit(number.etrapbees)
 
+bareground.bees <- bareground.bees %>%
+  na.omit(avg.bareground)
+
 #Fill NAs in bareground.bees with 0 (no bees were collected on these days)
 bareground.bees$number.bees[is.na(bareground.bees$number.bees)] <- 0
 
@@ -92,9 +96,10 @@ bareground.bees12 <- filter(bareground.bees, Year < 2016)
 bareground.etrapbees12 <- filter(bareground.etrapbees, Year < 2016)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
-BGonBAmodel <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year) + (1|Date),
+BGonBAmodel12 <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year) + (1|Date),
                     data = bareground.bees12)
-summary(BGonBAmodel)
+summary(BGonBAmodel12)
+coefficients(BGonBAmodel12)
 
 #Change "Year" column to a factor.
 bareground.bees12$Year <- as.factor(bareground.bees12$Year)
@@ -106,14 +111,12 @@ BGonBA12plot <- ggplot(bareground.bees12,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonBAmodel12))[ , "Estimate"][1],
+              slope = coef(summary(BGonBAmodel12))[ , "Estimate"][2]) +
   theme_bw() +
-  labs(x = "Percent Bare Ground",
+  labs(x = "Bare Ground (%)",
        y = "Bee Abundance") +
-  ggtitle("Influence of Bare Ground on Bee Abundance") +
+  ggtitle("2014-2015\nInfluence of Bare Ground on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +

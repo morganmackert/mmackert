@@ -10,6 +10,8 @@ setwd("~/ISU/Project/Data")
 library(ggplot2)
 library(plotly)
 library(dplyr)
+library(tidyr)
+library(vegan)
 
 #Plunkett ####
 #-------------------------------------------------------------------#
@@ -546,6 +548,15 @@ Fulllandusebarprop <- ggplot(FullLandUseJoined,
 Fulllandusebarprop
 
 #-------------------------------------------------------------------#
+#                                PCA                                #
+#-------------------------------------------------------------------#
+landpca <- princomp(FullLandUse.wide %>% select(-Site, -SiteNum))
+print(landpca$loadings)
+biplot(landpca)
+#Use cor=TRUE when variables are different scales. Our scales are all the same, so no need to do this.
+
+#Old code ####
+#-------------------------------------------------------------------#
 #                            Land Use MRPP                          #
 #-------------------------------------------------------------------#
 #Format FullLandUse from long to wide
@@ -564,11 +575,28 @@ FullLandUse.wide <- as.data.frame(FullLandUse.wide)
 landuse.mrpp <- mrpp(FullLandUse.wide, FullLandUse.widesites, distance = "bray")
 landuse.mrpp
 
+#-------------------------------------------------------------------#
+#                     Land Use ANOVA and ANOSIM                     #
+#-------------------------------------------------------------------#
+#Distance measures of LandUse data frame
 land.dist <- vegdist(FullLandUse.wide)
 
+#Attach site names
 attach(FullLandUse.widesites)
 
+#ANOSIM test
 land.ano <- anosim(land.dist, Site)
+summary(land.ano)
 
+#ANOVA
 land.aov <- aov(Coverage ~ Site, data = FullLandUse)
+land.lm <- lm(Coverage ~ Site, data = FullLandUse)
 summary(land.aov)
+summary(land.lm)
+head(FullLandUse)
+
+ggplot(FullLandUse, aes(x = Site, y = Coverage)) +
+  geom_boxplot()
+
+anova(land.lm)
+str(FullLandUse)

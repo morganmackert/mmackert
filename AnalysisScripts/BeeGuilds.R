@@ -4,7 +4,7 @@
 
 #Research Question:  How do bee nesting guilds vary across site?
 
-#Objective:  Assign each bee species to their respective nesting guild
+#Objective:  Assign each bee species to their respective nesting guild and analyze
 
 #Start ####
 #Clear environment and set working directory
@@ -429,7 +429,7 @@ bees.guild.wide[is.na(bees.guild.wide)] <- 0
 
 #Calculate number of bee species in each guild by site
 beespp.guild <- bees %>%
-  group_by(Site, Date, Guild) %>%
+  group_by(Site, Guild) %>%
   summarise(no.beespp = n_distinct(Binomial))
 
 #Reformat from long to wide
