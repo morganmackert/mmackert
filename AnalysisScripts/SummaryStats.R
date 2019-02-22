@@ -138,3 +138,17 @@ SpecRichAbundwide[is.na(SpecRichAbundwide)] <- 0
 genusrich <- Bees %>%
   group_by(Genus) %>%
   count(Genus)
+
+#Determine the number of individuals collected in nesting plots by year
+npbees <- bees %>%
+  filter(Trap == "Plot") %>%
+  group_by(Site, Year) %>%
+  count(Binomial)
+npbees <- npbees %>%
+  summarise(no.bees = sum(n))
+
+#Determine the number of species collected in nesting plots by year
+npbeespp <- bees %>%
+  filter(Trap == "Plot") %>%
+  group_by(Site, Year) %>%
+  summarise(no.npbeespp = n_distinct(Binomial))
