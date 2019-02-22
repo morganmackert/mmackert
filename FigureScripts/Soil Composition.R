@@ -14,9 +14,11 @@ rm(list=ls())
 setwd("~/ISU/Project/mmackert/Data")
 
 #Load libraries
+library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(ggtern)
-library(dplyr)
+library(ggpubr)
 
 #Read in data
 soils <- read.csv("soil/Reduced Analysis Results.csv")
@@ -364,6 +366,47 @@ fullsoilsternRRW <- ggtern(data = soils,
   theme(text = element_text(size = 15)) +
   theme_nomask()
 fullsoilsternRRW
+
+#-------------------------------------------------------------------#
+#                     Soil Composition ANOVA                        #
+#-------------------------------------------------------------------#
+#Reformat from wide to long format
+soils.long <- gather(soils, key = "soil.type", value = "percentage", Sand, Silt, Clay)
+
+#Exploratory boxplot
+ggboxplot(soils.long,
+          x = "soil.type",
+          y = "percentage",
+          color = "soil.type",
+          palette = "uchicago",
+          ylab = "Percentage",
+          xlab = "Soil Type") +
+  stat_compare_means(method = "anova",
+                     label.y = 90) +
+  stat_compare_means(label = "p.signif",
+                     method = "t.test",
+                     ref.group = ".all.") +
+  rremove("legend")
+
+#Exploraty mean line graph
+ggline(soils.long, x = "soil.type", y = "percentage",
+       add = c("mean_se", "jitter"),
+       ylab = "Percentage", xlab = "Soil Type")
+
+#ANOVA of percent composition of each soil type
+soil.aov <- aov(percentage ~ soil.type,
+                data = soils.long)
+summary(soil.aov)
+
+#Plot results of ANOVA and we see that homogeneity of variance assumption is violated
+plot(soil.aov, 1)
+
+#ANOVA with no assumption of equal variances
+oneway.test(percentage ~ soil.type,
+            data = soils.long)
+
+#QQ plot shows residuals fall mostly on the line, we good
+plot(soil.aov, 2)
 
 #Data dictionary ####
 #Sample ID = the identification number and letter combination given to each sample before analysis
