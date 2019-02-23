@@ -79,7 +79,7 @@ bees.site %>%
 #15,904, good to go!
 
 #Determine abundance by trap for each site/date
-AbundTrap <- BeeIDs %>%
+AbundTrap <- Bees %>%
   filter(Trap != "Target") %>%
   filter(Family != "Wasp") %>%
   group_by(Site, Date, Trap) %>%
@@ -102,7 +102,7 @@ beespp.site <- Bees %>%
   summarise(no.beespp = n_distinct(Binomial))
 
 #Determine species richness by trap for each site/date
-SpecRichTrap <- BeeIDs %>%
+SpecRichTrap <- Bees %>%
   filter(Trap != "Target") %>%
   filter(Family != "Wasp") %>%
   group_by(Site, Date, Trap) %>%
@@ -113,7 +113,7 @@ SpecRichTrapwide <- spread(SpecRichTrap, Trap, Bee.Species.Richness)
 #write.csv(SpecRichTrapwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/SpeciesRichnessbyTrap1234.csv")
 
 #Determine genus richness for each site/date
-GenusRich <- BeeIDs %>%
+GenusRich <- Bees %>%
   filter(Trap != "Target") %>%
   filter(Family != "Wasp") %>%
   group_by(Site, Date) %>%
@@ -123,7 +123,7 @@ GenusRich <- BeeIDs %>%
 #write.csv(GenusRich, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/SummaryStats/GenusRichness1234.csv")
 
 #Determine number of individuals of each species collected for each site/date
-SpecRichAbund <- BeeIDs %>%
+SpecRichAbund <- Bees %>%
   filter(Trap != "Target") %>%
   filter(Family != "Wasp") %>%
   group_by(Site, Date) %>%
@@ -152,3 +152,15 @@ npbeespp <- bees %>%
   filter(Trap == "Plot") %>%
   group_by(Site, Year) %>%
   summarise(no.npbeespp = n_distinct(Binomial))
+
+#Explore number of bees and number of species collected in emergence traps by year to check for differences in emergence trap deployment timing (2014 in late May, 2015-2016 in early May, 2017-2018 in late April)
+etrap.bees <- bees %>%
+  filter(Trap == "Emergence") %>%
+  group_by(Date) %>%
+  count(Binomial)
+
+#Format from long to wide for easier interpretation
+etrap.bees.wide <- spread(etrap.bees, Date, n)
+
+#Export as .csv
+write.csv(etrap.bees.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/EmergenceTrapBeesbyDate.csv")

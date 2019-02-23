@@ -16,15 +16,15 @@ setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(lubridate)
+library(plyr)
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggtern)
-library(plyr)
-
+library(ggbiplot)
 
 #Read in data
-NPbees <- read.csv("Bees/2017-2018 Nesting Plot Bees.csv")
+NPbees <- read.csv("Bees/2017-2018 Nesting Plot Bees.csv", na.strings = c("", "NA"))
 soils <- read.csv("Soil/Reduced Analysis Results.csv")
 
 #Use lubridate to allow R to recognize the dates
@@ -124,7 +124,7 @@ BeeIDs1234NPsppbysite <- BeeIDs1234NP %>%
 #Determine total number of species
 NPbeesspp <- NPbees %>%
   group_by(Binomial) %>%
-  count()
+  tally()
 
 #Determine total number of individuals
 sum(NPbeesspp$n)
@@ -147,6 +147,34 @@ NPbeesnobyyear <- NPbeesbyyear %>%
 #Combine NPbees and soils data frames
 soils.NPbees <- left_join(soils, NPbees, by = c("Site", "Plot"))
 
+#-------------------------------------------------------------------#
+#                                 PCA                               #
+#-------------------------------------------------------------------#
+#Group bee species by soil type
+bees.soiltype <- soils.NPbees %>%
+  group_by(Texture) %>%
+  count(Binomial)
+
+#Reformat from long to wide
+bees.soiltype.wide <- spread(bees.soiltype, Texture, n)
+
+#Fill NAs with 0
+bees.soiltype.wide[is.na(bees.soiltype.wide)] <- 0
+
+#Export as .csv
+write.csv(bees.soiltype.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/NestingPlotBeesbySoilType.csv")
+
+#PCA
+beessoil.pca <- princomp(bees.soiltype.wide %>% select(-Binomial))
+
+#Biplot
+ggbiplot(beessoil.pca,
+         labels = (bees.soiltype.wide$Binomial)) +
+  theme_bw()
+
+#-------------------------------------------------------------------#
+#                           Ternary Plots                           #
+#-------------------------------------------------------------------#
 #Lasioglossum (Dialictus) sp. and Halictus confusus both occurr at all sites; remove for greater clarity in ternary plot
 soils.NPbees.red <- soils.NPbees %>%
   filter(Binomial != "Lasioglossum (Dialictus) sp.") %>%
@@ -374,6 +402,9 @@ soils.NPbeesMegtern <- ggtern(data = soils.NPbeesMeg,
                                                   color = "black"))) +
   scale_fill_manual(values = megcolors)
 soils.NPbeesMegtern
+
+mtcars %>% group_by(gear) %>% count(carb)
+
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen
