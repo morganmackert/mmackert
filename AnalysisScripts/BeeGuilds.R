@@ -447,14 +447,6 @@ beespp.guild.wide <- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site", 
 #Convert to data.frame
 beespp.guild.wide <- as.data.frame(beespp.guild.wide)
 
-#-------------------------------------------------------------------#
-#                   MRPP:  Bee species/guild ~ Site                 #
-#-------------------------------------------------------------------#
-#Perform MRPP analysis
-beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "bray")
-beespp.guild.mrpp
-#Result comes back NaN; sample size is too small
-
 #Create table showing the number of individuals within each guild by site and year
 bees.guildsiteyear <- bees %>%
   group_by(Site, Year, Guild) %>%
@@ -629,6 +621,7 @@ chisq.test(clepto)
 #Genus = Taxonimic genus to which each specimen belongs
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
+
 #Old code ####
 #-------------------------------------------------------------------#
 #          Chi-squared test:  Bee Species per Guild ~ Site          #
@@ -638,3 +631,12 @@ beespp.guild.wide<- beespp.guild.wide[!names(beespp.guild.wide) %in% c("Site")]
 
 #Perform chi-squared test on the number of bee species collected within each nesting guild at each site
 chisq.test(beespp.guild.wide)
+
+
+#-------------------------------------------------------------------#
+#                   MRPP:  Bee species/guild ~ Site                 #
+#-------------------------------------------------------------------#
+#Perform MRPP analysis
+beespp.guild.mrpp <- mrpp(beespp.guild.wide, beespp.guild.widesite$Site, distance = "bray")
+beespp.guild.mrpp
+#Result comes back NaN; sample size is too small
