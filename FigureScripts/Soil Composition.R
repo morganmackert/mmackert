@@ -389,9 +389,16 @@ ggboxplot(soils.long,
   rremove("legend")
 
 #Exploraty mean line graph
-ggline(soils.long, x = "soil.type", y = "percentage",
+ggline(soils.long, x = "soil.type",
+       y = "percentage",
        add = c("mean_se", "jitter"),
-       ylab = "Percentage", xlab = "Soil Type")
+       ylab = "Composition (%)",
+       xlab = "Soil Type") +
+  stat_compare_means(method = "anova",
+                     label.y = 90) +
+  stat_compare_means(label = "p.signif",
+                     method = "t.test",
+                     ref.group = ".all.")
 
 #ANOVA of percent composition of each soil type
 soil.aov <- aov(percentage ~ soil.type,
