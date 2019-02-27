@@ -28,6 +28,8 @@ Quadrats$Year <- year(Quadrats$Date)
 bees <- Bees %>%
   filter(Family != "Wasp") %>%
   filter(Family != "Fly") %>%
+  filter(Binomial != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
   filter(!is.na(Site))
 
 #Format Bare.Ground column as numeric
@@ -56,10 +58,13 @@ beespp.noplot <- Bees %>%
   count(Binomial)
 
 #Bee species richness
-beespp <- Bees %>%
+beespp <- bees %>%
+  group_by(Family) %>%
   filter(!is.na(Binomial)) %>%
-  filter(Family != "Wasp") %>%
   count(Binomial)
+
+#Export as .csv
+#write.csv(beespp, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/BeeSpeciesRichness.csv")
 
 #Determine abundance for each site
 bees.site <- Bees %>%
