@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------#
 #                  Bee Species Richness ~ Trap Type                 #
-#                             Years 1-3                             #
 #-------------------------------------------------------------------#
 
 #Research Question: How does bee species richness vary with respect to the type of trap used to collect them? Can we maximize our collection effort by using fewer, more effective traps?
@@ -9,6 +8,7 @@
 #Create model(s) to explore relationship between bee species richness and trap type
 #Use created model(s) to visualize the relationship graphically
 
+#Start ####
 #Clear environment and set working directory
 rm(list=ls())
 setwd("~/ISU/Project/Data")
@@ -22,43 +22,38 @@ library(vegan)
 library(goeveg)
 
 #Read in data
-BeeIDs <- read.csv("Bees/Bee IDs.csv")
-#Number = Individual identification number assigned to each specimen
-#Date = Date of sample
-#Site = Site name
-#Trap = Trap type in which each specimen was collected
-#Sex = Sex of the specimen; M = male, F = female
-#Family = Taxonomic family to which each specimen belongs
-#Genus = Taxonimic genus to which each specimen belongs
-#Species = Taxonomic species to which each specimen belongs
-#Binomial = Combined genus and species to create specific epithet
+Bees <- read.csv("Bees/Bee IDs.csv", na.strings = c("", "NA"))
 
 #Use lubridate to allow R to recognize the dates
-BeeIDs$Date <- mdy(BeeIDs$Date)
+Bees$Date <- mdy(Bees$Date)
 
 #Create new column in BeeIDs for the year
-BeeIDs$Year <- year(BeeIDs$Date)
+Bees$Year <- year(Bees$Date)
 
-#Fix trap names
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
-
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs123 <- BeeIDs %>%
-  filter(Year <= 2016) %>%
-  filter(Trap != "Target") %>%
+#Filter out gross stuff
+bees <- Bees %>%
   filter(Binomial != "Wasp") %>%
   filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable")
+  filter(Family != "Fly") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(Trap != "Pitfall") %>%
+  filter(!is.na(Binomial))
+
+#Years 1-3 ####
+#-------------------------------------------------------------------#
+#                              Years 1-3                            #
+#-------------------------------------------------------------------#
+#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
+bees123 <- bees %>%
+  filter(Year <= 2016)
 
 #Group BeeIDs by Trap Type
-BeeIDs123TTcount <- BeeIDs123 %>%
+bees123.trap <- bees123 %>%
   group_by(Trap) %>%
   count(Binomial)
 
 #Convert from long to wide format
-BeeIDs123TTcountwide <- spread(BeeIDs123TTcount, Trap, n)
+bees123.trap.wide <- spread(bees123.trap.wide, Trap, n)
 
 #Export to .csv
 #write.csv(BeeIDs123TTcountwide, file = "C:/Users/morga/Documents/ISU/Project/mmackert/Graphs/BeeRichness~TrapType/BeeSpeciesbyTrapType123.csv")
@@ -143,24 +138,13 @@ ordihull(Bee.Community.mds,
 
 #Try K-means stuff?
 
-
+#Years 1-4 ####
 #-------------------------------------------------------------------#
-#          Bee Species Richness by Sample Period ~ Trap Type        #
 #                             Years 1-4                             #
 #-------------------------------------------------------------------#
-#Research Question: How does bee species richness vary with respect of the type of trap used to collect them? Does this number also vary with sampling period? Can we maximize our collection effort by using fewer, more effective trapping methods?
-
-#Objectives:
-#Create model(s) to explore relationship between bee species richness and trap type
-#Use created model(s) to visualize the relationship graphically
-
-#Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
-BeeIDs1234 <- BeeIDs %>%
-  filter(Year <= 2017) %>%
-  filter(Trap != "Target") %>%
-  filter(Binomial != "Wasp") %>%
-  filter(Family != "Wasp") %>%
-  filter(Binomial != "Unidentifiable")
+#Subset only years 1-4; BeeIDs without target bees, wasps, or unidentifiable specimens
+bees1234 <- bees %>%
+  filter(Year <= 2017)
 
 #Group BeeIDs by Trap Type
 BeeIDs1234TTcount <- BeeIDs1234 %>%
@@ -245,3 +229,103 @@ ordiplot(Bee.Community1234.mds)
 ordihull(Bee.Community1234.mds,
          groups = BeeIDs1234TTcountsitewide$Trap,
          label = TRUE)
+
+#Years 1-5 ####
+#-------------------------------------------------------------------#
+#                             Years 1-5                             #
+#-------------------------------------------------------------------#
+#Group by trap type
+bees.trap <- bees %>%
+  group_by(Trap) %>%
+  count(Binomial)
+
+#Convert from long to wide format
+bees.trap.wide <- spread(bees.trap, Trap, n)
+
+#Export to .csv
+#write.csv(bees.trap.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/BeeRichness~TrapType/BeeSpeciesbyTrapType.csv")
+
+#Determine number of species collected by each trap type
+beespp.trap <- bees %>%
+  group_by(Trap) %>%
+  summarise(no.beespp = n_distinct(Binomial))
+
+#Plot: Bee Species Richness vs. Trap Type plot using ggplot2
+bees.trap.plot <- ggplot(beespp.trap,
+                         aes(x = Trap,
+                             y = no.beespp)) +
+  geom_bar(stat = "identity",
+           color = "black") +
+  theme_bw() +
+  labs(x = "Trap Type",
+       y = "Number of Bee Species") +
+  ggtitle("Number of Bee Species Collected by \nDifferent Trap Types") +
+  theme(plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(axis.text.x = element_text(size = 10,
+                                   angle = 45,
+                                   hjust = 1))
+bees.trap.plot
+
+#Determine number of bee species collected in all trap types at each site
+bees.trap.site <- bees %>%
+  group_by(Trap, Site) %>%
+  count(Binomial)
+
+#Test for significance between groups
+#Run an ANOVA to test for significance of bee species richness based on trap type
+beespp.trap.anova <- aov(no.beespp ~ Trap,
+                         data = beespp.trap.site)
+summary(beespp.trap.anova)
+#Based on the outcome of the ANOVA (p < 0.001), we know that there are significant differences between the number of bee species collected by each trap type at each site.
+
+#Use Tukey Honest Significant Differences function to perform multiple pairwise-comparisons between the means of each trap type.
+TukeyHSD(beespp.trap.anova)
+
+bees.trap.site.wide <- spread(bees.trap.site, Binomial, n)
+
+#Fill NAs with 0
+bees.trap.site.wide[is.na(bees.trap.site.wide)] <- 0
+
+#Make another data frame removing the Trap and Site columns
+bee.community <- bees.trap.site.wide[, -which(names(bees.trap.site.wide) %in% c("Trap", "Site"))]
+
+#Use metaMDS in vegan to create a "dissimilarity matrix" to measure similarity between samples; use k = 2 to denote the number of dimensions we're reducing to
+beecommunity.mds <- metaMDS(comm = bee.community,
+                                 autotransform = FALSE,
+                                 k = 2,
+                                 trymax = 500)
+
+#Check to make sure we're using the correct number of dimensions; 2 is good
+dimcheckMDS(bee.community)
+
+#Check stress value; if over 0.2 will have to figure out something else
+#Stress value provides a measure of the degree to which the distance between samples in reduced dimensional space corresponds to the actual multivariate distance between the samples. Lower stress values indicate greater conformity.
+beecommunity.mds$stress
+stressplot(beecommunity.mds)
+#We're good!
+
+#Plot it
+ordiplot(beecommunity.mds)
+ordihull(beecommunity.mds,
+         groups = bees.trap.site.wide$Trap,
+         label = TRUE)
+
+#Data dictionary ####
+#Number = Individual identification number assigned to each specimen
+#Date = Date of sample
+#Site = Site name
+#Trap = Trap type in which each specimen was collected
+#Sex = Sex of the specimen; M = male, F = female
+#Family = Taxonomic family to which each specimen belongs
+#Genus = Taxonimic genus to which each specimen belongs
+#Species = Taxonomic species to which each specimen belongs
+#Binomial = Combined genus and species to create specific epithet
+
+#Old code ####
+#Fix trap names
+Bees$Trap[Bees$Trap == "Non-Target"] <- "NT"
+Bees$Trap[Bees$Trap == "Emergence Trap"] <- "Emergence"
+Bees$Trap[Bees$Trap == "Blue Vane"] <- "Blue vane"

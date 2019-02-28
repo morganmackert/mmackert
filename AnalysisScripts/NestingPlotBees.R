@@ -162,7 +162,7 @@ bees.soiltype.wide <- spread(bees.soiltype, Texture, n)
 bees.soiltype.wide[is.na(bees.soiltype.wide)] <- 0
 
 #Export as .csv
-write.csv(bees.soiltype.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/NestingPlotBeesbySoilType.csv")
+#write.csv(bees.soiltype.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/NestingPlotBeesbySoilType.csv")
 
 #PCA
 beessoil.pca <- princomp(bees.soiltype.wide %>% select(-Binomial))

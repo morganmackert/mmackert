@@ -111,3 +111,4 @@ beesppguild.landuse.plot <- ggplot(beesppguild.landuse,
   labs(x = "Coverage (sq. km)",
        y = "Bee Species Richness")
 beesppguild.landuse.plot
+ 
