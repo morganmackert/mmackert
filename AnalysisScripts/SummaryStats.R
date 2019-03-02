@@ -59,8 +59,6 @@ beespp.noplot <- Bees %>%
 
 #Bee species richness
 beespp <- bees %>%
-  group_by(Family) %>%
-  filter(!is.na(Binomial)) %>%
   count(Binomial)
 
 #Export as .csv

@@ -110,7 +110,7 @@ beespp.rare <- beespp %>%
 
 #Determine number of singleton species (n == 1) including all samples
 beespp.single <- beespp %>%
-  filter (n ==1)
+  filter (n == 1)
 
 #Create table showing number of individual bees collected at each site
 bees.site <- beespp.sitedate %>%
