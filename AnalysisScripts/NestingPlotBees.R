@@ -54,6 +54,11 @@ soils <- soils %>%
 #-------------------------------------------------------------------#
 #                               Year 4                              #
 #-------------------------------------------------------------------#
+#Determine number of species collected from nesting plots in 2017
+npbeespp4 <- NPbees %>%
+  filter(Year == 2017) %>%
+  group_by(Binomial) %>%
+  count(Binomial)
 
 #Subset only 2017 bees, not including wasps or unidentifiable specimens
 BeeIDs1234 <- BeeIDs %>%
@@ -403,8 +408,15 @@ soils.NPbeesMegtern <- ggtern(data = soils.NPbeesMeg,
   scale_fill_manual(values = megcolors)
 soils.NPbeesMegtern
 
-mtcars %>% group_by(gear) %>% count(carb)
-
+#Year 5 ####
+#-------------------------------------------------------------------#
+#                              Year 5                               #
+#-------------------------------------------------------------------#
+#Determine total number of species
+npbeespp5 <- NPbees %>%
+  filter(Year == 2018) %>%
+  group_by(Binomial) %>%
+  count(Binomial)
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen
