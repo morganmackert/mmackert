@@ -89,10 +89,8 @@ BGonETBA12plot <- ggplot(bareground.etbees12,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonETBA12model))[ , "Estimate"][1],
+              slope = coef(summary(BGonETBA12model))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2014", "2015"),
                      values = c("#FFB90F", "#000000")) +
   scale_shape_manual(labels = c("2014", "2015"),
@@ -112,14 +110,14 @@ BGonETBA12plot
 #-------------------------------------------------------------------#
 #                              Year 3                               #
 #-------------------------------------------------------------------#
-#Subset bareground.etbees to include only 2014-2015
+#Subset bareground.etbees to include only 2016
 bareground.etbees3 <- bareground.etbees %>%
   filter(Year == 2016)
 
 #Model for bee abundance predicted by bare ground
 BGonETBA3model <- glm(number.bees ~ avg.bareground,
-                       family = poisson,
-                       data = bareground.etbees3)
+                      family = poisson,
+                      data = bareground.etbees3)
 summary(BGonETBA3model)
 AIC(BGonETBA3model)
 
@@ -136,10 +134,8 @@ BGonETBA3plot <- ggplot(bareground.etbees3,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonETBA3model))[ , "Estimate"][1],
+              slope = coef(summary(BGonETBA3model))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2016"),
                      values = c("red3")) +
   scale_shape_manual(labels = c("2016"),
@@ -163,9 +159,11 @@ BGonETBA3plot
 bareground.etbees1234 <- filter(bareground.etbees, Year < "2018")
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonETBA1234model <- lmer(number.bees ~ avg.bareground + (1|Year) * (1|Site),
-                          data = bareground.etbees1234)
+BGonETBA1234model <- glm(number.bees ~ avg.bareground + (1|Year) + (1|Site),
+                           family = poisson,
+                           data = bareground.etbees1234)
 summary(BGonETBA1234model)
+AIC(BGonETBA1234model)
 
 #Model for bee abundance predicted by bare ground without Year and Site.
 BGonETBA1234null <- lmer(number.bees ~ (1|Year) + (1|Site),
@@ -185,15 +183,20 @@ coef(BGonETBA1234model)
 bareground.etbees1234$Year <- as.factor(bareground.etbees1234$Year)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
-BGonETBA1234plot <- ggplot(bareground.etbees1234, aes(x = avg.bareground,
-                                                      y = number.bees)) +
+BGonETBA1234plot <- ggplot(bareground.etbees1234,
+                           aes(x = avg.bareground,
+                               y = number.bees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonETBA1234model))[ , "Estimate"][1],
+              slope = coef(summary(BGonETBA1234model))[ , "Estimate"][2]) +
+  geom_text(x = 6.2, y = 13,
+            label = "y = 0.071x + 2.344",
+            size = 4) +
+  geom_text(x = 3, y = 12.5,
+            label = "p = 0.501",
+            size = 4) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017"),
                      values = c("#FFB90F", "#000000", "red3", "palegreen4")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
@@ -218,9 +221,9 @@ bareground.etbees45 <- bareground.etbees %>%
   filter(Year > 2016)
 
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonETBA45model <- glmer(number.bees ~ avg.bareground + (1|Year) + (1|Site),
-                        family = poisson,
-                        data = bareground.etbees)
+BGonETBA45model <- glm(number.bees ~ avg.bareground,
+                       family = poisson,
+                       data = bareground.etbees45)
 summary(BGonETBA45model)
 AIC(BGonETBA45model)
 
@@ -237,14 +240,12 @@ BGonETBA45plot <- ggplot(bareground.etbees45,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonETBA45model))[ , "Estimate"][1],
+              slope = coef(summary(BGonETBA45model))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2017", "2018"),
-                     values = c("palegreen4", "thistle1")) +
+                     values = c("palegreen4", "orchid2")) +
   scale_shape_manual(labels = c("2017", "2018"),
-                     values = c(18, 25)) +
+                     values = c(18, 8)) +
   theme_bw() +
   labs(x = "Bare Ground (%)",
        y = "Emergence Trap Bee Abundance") +
@@ -256,23 +257,24 @@ BGonETBA45plot <- ggplot(bareground.etbees45,
   theme(legend.title.align = 0.5) 
 BGonETBA45plot
 
-
 #Years 1-5 ####
 #-------------------------------------------------------------------#
 #                             Years 1-5                             #
 #-------------------------------------------------------------------#
 #Model for bee abundance predicted by bare ground including Year and Site as fixed effects.
-BGonETBAmodel <- glmer(number.bees ~ avg.bareground + (1|Year) + (1|Site),
-                       family = poisson,
+BGonETBAmodel <- glm(number.bees ~ avg.bareground,
                        data = bareground.etbees)
 summary(BGonETBAmodel)
 AIC(BGonETBAmodel)
 
 #Use MuMIn to get R-squared value of full model
-r.squaredGLMM(BGonETBA1234model)
+r.squaredGLMM(BGonETBAmodel)
 
 #Change "Year" column to factor.
 bareground.etbees$Year <- as.factor(bareground.etbees$Year)
+
+#Find coefficients of model for graph
+coefficients(BGonETBAmodel)
 
 #Morgan's plot: Percent Bare Ground vs. Bee Abundance plot using ggplot2
 BGonETBA12345plot <- ggplot(bareground.etbees,
@@ -281,10 +283,8 @@ BGonETBA12345plot <- ggplot(bareground.etbees,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BGonETBAmodel))[ , "Estimate"][1],
+              slope = coef(summary(BGonETBAmodel))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c("#FFB90F", "#000000", "red3", "palegreen4", "orchid2")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
@@ -299,6 +299,56 @@ BGonETBA12345plot <- ggplot(bareground.etbees,
   theme(legend.text = element_text(size = 10)) +
   theme(legend.title.align = 0.5) 
 BGonETBA12345plot
+
+#Multipanel graph showing plots for 2014-2015, 2016, 2017-2018, and 2014-2018
+BGonETBA12plot.grid <- BGonETBA12plot +
+  expand_limits(y = c(0, 20)) +
+  expand_limits(x = c(0, 40)) +
+  geom_text(x = 6.2, y = 20,
+            label = "y = 0.023x + 0.960",
+            size = 4) +
+  geom_text(x = 3, y = 19.5,
+            label = "p = 0.065",
+            size = 4) +
+  theme(legend.position = "none") +
+  ggtitle("2014-2015\nInfluence of Bare Ground on\nEmergence Trap Bee Abundance")
+BGonETBA3plot.grid <- BGonETBA3plot +
+  expand_limits(y = c(0, 20)) +
+  expand_limits(x = c(0, 40)) +
+  labs(y = "") +
+  geom_text(x = 6.2, y = 20,
+            label = "y = -0.113x + 1.421",
+            size = 4) +
+  geom_text(x = 3, y = 19.5,
+            label = "p = 0.079",
+            size = 4) +
+  theme(legend.position = "none") +
+  ggtitle("2016\nInfluence of Bare Ground on\nEmergence Trap Bee Abundance")
+BGonETBA45plot.grid <- BGonETBA45plot +
+  expand_limits(y = c(0, 20)) +
+  expand_limits(x = c(0, 40)) +
+  labs(y = "") +
+  geom_text(x = 6.2, y = 20,
+            label = "y = 1.090x + -0.464",
+            size = 4) +
+  geom_text(x = 3, y = 19.5,
+            label = "p < 0.001",
+            size = 4) +
+  theme(legend.position = "none") +
+  ggtitle("2017-2018\nInfluence of Bare Ground on\nEmergence Trap Bee Abundance")
+BGonETBA12345plot.grid <- BGonETBA12345plot +
+  expand_limits(y = c(0, 20)) +
+  expand_limits(x = c(0, 40)) +
+  labs(y = "") +
+  geom_text(x = 6.2, y = 20,
+            label = "y = 0.070x + 2.800",
+            size = 4) +
+  geom_text(x = 3, y = 19.5,
+            label = "p = 0.357",
+            size = 4) +
+  ggtitle("2014-2018\nInfluence of Bare Ground on\nEmergence Trap Bee Abundance")
+
+grid.arrange(BGonETBA12plot.grid, BGonETBA3plot.grid, BGonETBA45plot.grid, BGonETBA12345plot.grid, ncol = 4)
 
 #MRPP ####
 #-------------------------------------------------------------------#
