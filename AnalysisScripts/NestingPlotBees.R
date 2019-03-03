@@ -208,15 +208,36 @@ bees.soiltype.wide <- spread(bees.soiltype, Texture, n)
 #Fill NAs with 0
 bees.soiltype.wide[is.na(bees.soiltype.wide)] <- 0
 
+#Remove bee species collected in all/most soil types
+bees.soiltype.red <- bees.soiltype %>%
+  filter(Binomial != "Halictus confusus") %>%
+  filter(Binomial != "Halictus ligatus") %>%
+  filter(Binomial != "Lasioglossum (Dialictus) sp.")
+
+#Reformat from long to wide
+bees.soiltype.red.wide <- spread(bees.soiltype.red, Texture, n)
+
+#Fill NAs with 0
+bees.soiltype.red.wide[is.na(bees.soiltype.red.wide)] <- 0
+
 #Export as .csv
 #write.csv(bees.soiltype.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/NestingPlotBeesbySoilType.csv")
 
-#PCA
+#Full PCA
 beessoil.pca <- princomp(bees.soiltype.wide %>% select(-Binomial))
 
-#Biplot
+#Full biplot
 ggbiplot(beessoil.pca,
          labels = (bees.soiltype.wide$Binomial)) +
+  theme_bw()
+
+#Reduced PCA
+beessoil.pca.red <- princomp(bees.soiltype.red.wide %>% select(-Binomial))
+
+#Reduced biplot
+ggbiplot(beessoil.pca.red,
+         labels = (bees.soiltype.red.wide$Binomial)) +
+  xlim(-2, 6) +
   theme_bw()
 
 #-------------------------------------------------------------------#
