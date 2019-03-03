@@ -136,21 +136,63 @@ sum(NPbeesspp$n)
 #330
 
 #Which sites were they collected from?
-NPbeesbysite <- NPbees %>%
+NPbees.site <- NPbees %>%
   group_by(Site) %>%
   count(Binomial)
 
 #How do the numbers differ between years?
-NPbeesbyyear <- NPbees %>%
+NPbees.year <- NPbees %>%
   group_by(Year) %>%
   count(Binomial)
 
-NPbeesnobyyear <- NPbeesbyyear %>%
+#Reformat from long to wide
+NPbees.year.wide <- spread(NPbees.year, Year, n)
+
+#Export as .csv file
+#write.csv(NPbees.year.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/Nesting Plot Bees by Year.csv")
+
+#Which sites were they collected from each year?
+NPbees.siteyear <- NPbees %>%
+  group_by(Site, Year) %>%
+  count(Binomial)
+
+#Reformat from long to wide
+NPbees.siteyear.wide <- spread(NPbees.siteyear, Year, n)
+
+#Export as .csv file
+#write.csv(NPbees.siteyear.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/Nesting Plot Bees by Site and Year.csv")
+
+#Determine number of bees collected from each site during each sampling event grouped by year
+NPbees.datesiteyear <- NPbees %>%
+  group_by(Date, Site, Year) %>%
+  count(Binomial)
+
+#Reformat from long to wide
+NPbees.datesiteyear.wide <- spread(NPbees.datesiteyear, Year, n)
+
+#Export as .csv file
+#write.csv(NPbees.datesiteyear.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Nesting Plot Bees/Nesting Plot Bees by Date, Site, and Year.csv")
+
+#Determine total number of individual bees collected each year
+NPbeesind.year <- NPbees.year %>%
   group_by(Year) %>%
   summarise(sum = sum(n))
+#2017:115, 2018: 215
 
 #Combine NPbees and soils data frames
 soils.NPbees <- left_join(soils, NPbees, by = c("Site", "Plot"))
+
+#T-test comparing the mean values of each species collected in 2017 vs. 2018
+t.test(n ~ Year,
+       data = NPbees.year)
+
+#T-test comparing the mean number of bees collected at each site in 2017 vs. 2018
+t.test(n ~ Year,
+       data = NPbees.siteyear)
+
+#T-test comparing the mean number of bees collected during each sampling event at each site in 2017 vs.2018
+t.test(n ~ Year,
+       data = NPbees.datesiteyear)
 
 #-------------------------------------------------------------------#
 #                                 PCA                               #

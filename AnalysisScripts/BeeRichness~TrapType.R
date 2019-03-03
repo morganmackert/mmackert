@@ -236,6 +236,7 @@ ordihull(Bee.Community1234.mds,
 #-------------------------------------------------------------------#
 #Group by trap type
 bees.trap <- bees %>%
+  filter(Trap != "Plot") %>%
   group_by(Trap) %>%
   count(Binomial)
 
@@ -269,10 +270,17 @@ bees.trap.plot <- ggplot(beespp.trap,
                                    hjust = 1))
 bees.trap.plot
 
-#Determine number of bee species collected in all trap types at each site
+#Determine number of individuals in each bee species collected in all trap types at each site
 bees.trap.site <- bees %>%
+  filter(Trap != "Plot") %>%
   group_by(Trap, Site) %>%
   count(Binomial)
+
+#Determine number of bee species collected in all trap types at each site
+beespp.trap.site <- bees %>%
+  filter(Trap != "Plot") %>%
+  group_by(Trap, Site) %>%
+  summarise(no.beespp = n_distinct(Binomial))
 
 #Test for significance between groups
 #Run an ANOVA to test for significance of bee species richness based on trap type
@@ -284,6 +292,7 @@ summary(beespp.trap.anova)
 #Use Tukey Honest Significant Differences function to perform multiple pairwise-comparisons between the means of each trap type.
 TukeyHSD(beespp.trap.anova)
 
+#Reformat from long to wide
 bees.trap.site.wide <- spread(bees.trap.site, Binomial, n)
 
 #Fill NAs with 0
@@ -311,7 +320,15 @@ stressplot(beecommunity.mds)
 ordiplot(beecommunity.mds)
 ordihull(beecommunity.mds,
          groups = bees.trap.site.wide$Trap,
-         label = TRUE)
+         label = TRUE,
+         col = colors)
+
+ordiellipse(beecommunity.mds,
+         groups = bees.trap.site.wide$Trap,
+         label = TRUE,
+         col = colors)
+
+colors <- c("red", "#000000", "blue", "green3", "yellow")
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen

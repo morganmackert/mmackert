@@ -62,6 +62,7 @@ bareground.etbees <- left_join(et.bees, avg.bareground, by = c("Date", "Site"))
 #Create Year column in bareground.bees
 bareground.etbees$Year <- year(bareground.etbees$Date)
 
+#Years 1-2 ####
 #-------------------------------------------------------------------#
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
