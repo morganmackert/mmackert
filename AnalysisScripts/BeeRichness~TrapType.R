@@ -316,6 +316,9 @@ beecommunity.mds$stress
 stressplot(beecommunity.mds)
 #We're good!
 
+#Set colors for graphs
+colors <- c("red", "#000000", "blue", "green3", "yellow")
+
 #Plot it
 ordiplot(beecommunity.mds)
 ordihull(beecommunity.mds,
@@ -327,8 +330,6 @@ ordiellipse(beecommunity.mds,
          groups = bees.trap.site.wide$Trap,
          label = TRUE,
          col = colors)
-
-colors <- c("red", "#000000", "blue", "green3", "yellow")
 
 #Data dictionary ####
 #Number = Individual identification number assigned to each specimen
