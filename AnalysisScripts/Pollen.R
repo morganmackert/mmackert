@@ -21,7 +21,7 @@ library(igraph)
 library(bipartite)
 
 #Read in data
-Pollen <- read.csv("Pollen/2016-2017 Target Bees and Pollen.csv", header = TRUE, na.strings = c("", "NA"))
+Pollen <- read.csv("Pollen/2016-2017 Target Bees and Pollen Reduced.csv", header = TRUE, na.strings = c("", "NA"))
 
 #Reformat Pollen to include bee species in one column and their associated pollen in the next column
 pollen <- gather(Pollen, P.ID, Pollen, P1:P25, na.rm = TRUE)
@@ -30,7 +30,8 @@ pollen <- gather(Pollen, P.ID, Pollen, P1:P25, na.rm = TRUE)
 pollen <- pollen %>%
   filter(Pollen != "N/A") %>%
   filter(!is.na(Bee.ID)) %>%
-  filter(Bee.ID != "Wasp")
+  filter(Bee.ID != "Wasp") %>%
+  filter(Bee.ID != "Fly")
 
 #Check pollen names to be sure they're consistent
 pollen.table <- pollen %>%
@@ -38,7 +39,8 @@ pollen.table <- pollen %>%
   tally()
 
 #Check bee names to be sure they're consistent
-bee.table <- pollen %>%
+bee.table <- Pollen %>%
+  filter(!is.na(Bee.ID)) %>%
   group_by(Bee.ID) %>%
   tally()
 

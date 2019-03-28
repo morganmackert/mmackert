@@ -64,24 +64,23 @@ floralspp.beespp$Year <- year(floralspp.beespp$Date)
 
 #Years 1-2 ####
 #-------------------------------------------------------------------#
-#           Blooming Forb and Weed Species ~ Bee Species            #
 #                             Years 1-2                             #
 #-------------------------------------------------------------------#
-#Subset Fulldata for only 2014-2015
-years12 <- Fulldata %>%
-  filter(Year <= 2015)
+#Subset to include only 2014-2015
+floralspp.beespp12 <- filter(floralspp.beespp, Year <= 2015)
 
 #Change year to factor
-years12$Year <- as.factor(years12$Year)
+floralspp.beespp12$Year <- as.factor(floralspp.beespp12$Year)
 
 #Model for bee abundance predicted by frequency of blooming species
-BSonBS12model <- lm(Total.Species.Richness ~ Blooming.Species,
-                    data = years12)
+BSonBS12model <- glm(no.beespp ~ no.floralspp,
+                    data = floralspp.beespp12)
 summary(BSonBS12model)
 
 #Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
-BSonBS12plot <- ggplot(years12, aes(x = Blooming.Species,
-                                     y = Total.Species.Richness)) +
+BSonBS12plot <- ggplot(floralspp.beespp12,
+                       aes(x = no.floralspp,
+                           y = no.beespp)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -91,9 +90,9 @@ BSonBS12plot <- ggplot(years12, aes(x = Blooming.Species,
               size = 0.5) +
   theme_bw() +
   scale_color_manual(labels = c("2014", "2015"),
-                     values = c("darkorchid1", "#000000")) +
-  scale_shape_manual(labels = c("2014", "2015"),
-                     values = c(16, 17)) +
+                     values = c("darkorchid1", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16)) +
   labs(x = "Number of Blooming Species",
        y = "Number of Bee Species") +
   ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +

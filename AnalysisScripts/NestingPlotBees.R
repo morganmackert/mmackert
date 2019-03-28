@@ -57,7 +57,6 @@ soils <- soils %>%
 #Determine number of species collected from nesting plots in 2017
 npbeespp4 <- NPbees %>%
   filter(Year == 2017) %>%
-  group_by(Binomial) %>%
   count(Binomial)
 
 #Subset only 2017 bees, not including wasps or unidentifiable specimens
@@ -260,8 +259,9 @@ soils.NPbeesfamilytern <- ggtern(data = soils.NPbees,
              position = position_jitter_tern(x = 0.1, y = 0.1, z = 0.1),
              color = "black") +
   geom_point(data = subset(soils.NPbees, Family == "Megachilidae")) +
-  #geom_mean_ellipse(aes(color = Family)) +
-  ggtitle("Soil Composition Used by \nBee Families in Nesting Plots") +
+  geom_mean_ellipse(color = "black",
+                    size = 1) +
+  #ggtitle("Soil Composition Used by \nBee Families in Nesting Plots") +
   theme_bw() +
   theme_showarrows() +
   theme(legend.title = element_text(size = 16),
@@ -478,7 +478,6 @@ soils.NPbeesMegtern
 #Determine total number of species
 npbeespp5 <- NPbees %>%
   filter(Year == 2018) %>%
-  group_by(Binomial) %>%
   count(Binomial)
 
 #Data dictionary ####

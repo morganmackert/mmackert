@@ -67,7 +67,7 @@ floralcover.bees$Year <- year(floralcover.bees$Date)
 #                           Years 1-2                               #
 #-------------------------------------------------------------------#
 #Subset BAonBA to include only 2014 and 2015 data.
-BAonBA12 <- filter(BAonBA, Year <= 2)
+floralcover.bees12 <- filter(floralcover.bees, Year <= 2015)
 
 #Year column brought in as an integer. Change to numeric for Amy's plot.
 pch.list12 <- as.numeric(BAonBA12$Year)
@@ -88,16 +88,21 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelAM)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBA12model <- lm(BeeAbundance ~ AverageFloralCover, data = BAonBA12)
+BAonBA12model <- glmer(total.bees ~ avg.floralcover + (1|Site) + (1|Year),
+                     family = poisson,
+                     data = floralcover.bees12)
 summary(BAonBA12model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
 coef(BAonBA12model)
 
+#Conver Year from integer to factor
+floralcover.bees12$Year <- as.factor(floralcover.bees12$Year)
+
 #Morgan's plot: Number of blooming forb/weed species vs. Bee Abundance
-BAonBA12plot <- ggplot(BAonBA12, 
-                       aes(x = AverageFloralCover,
-                           y = BeeAbundance)) +
+BAonBA12plot <- ggplot(floralcover.bees12, 
+                       aes(x = avg.floralcover,
+                           y = total.bees)) +
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
@@ -106,13 +111,18 @@ BAonBA12plot <- ggplot(BAonBA12,
               color = "black",
               size = 0.5) +
   theme_bw() +
-  labs(x = "Blooming Species Coverage (%)",
+  scale_color_manual(labels = c("2014", "2015"),
+                     values = c("darkorchid1", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16)) +
+  labs(x = "Blooming Floral Coverage (%)",
        y = "Bee Abundance") +
   ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
-  theme(legend.text = element_text(size = 10))
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title.align = 0.5)
 BAonBA12plot
 
 #Years 1-3 ####

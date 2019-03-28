@@ -15,6 +15,7 @@ setwd("~/ISU/Project/Data")
 
 #Load libraries
 library(lubridate)
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -38,6 +39,9 @@ bees <- Bees %>%
   filter(Binomial != "Unidentifiable") %>%
   filter(Trap != "Pitfall") %>%
   filter(!is.na(Binomial))
+
+#Replace "Bowls" with "Pan"
+bees$Trap <- revalue(bees$Trap, c("Bowls" = "Pan"))
 
 #Years 1-3 ####
 #-------------------------------------------------------------------#
@@ -317,14 +321,14 @@ stressplot(beecommunity.mds)
 #We're good!
 
 #Set colors for graphs
-colors <- c("red", "#000000", "blue", "green3", "yellow")
+colors <- c("blue", "black", "#33A02C", "#7570B3", "yellow")
 
 #Plot it
 ordiplot(beecommunity.mds)
-ordihull(beecommunity.mds,
-         groups = bees.trap.site.wide$Trap,
-         label = TRUE,
-         col = colors)
+#ordihull(beecommunity.mds,
+         #groups = bees.trap.site.wide$Trap,
+         #label = TRUE,
+         #col = colors)
 
 ordiellipse(beecommunity.mds,
          groups = bees.trap.site.wide$Trap,

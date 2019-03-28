@@ -240,7 +240,7 @@ fullsoilstern <- ggtern(data = soils,
   geom_point(shape = 21,
              size = 3,
              color = "black") +
-  ggtitle("Soil Composition within Nesting Plots \nof All Sites") +
+  #ggtitle("Soil Composition within Nesting Plots \nof All Sites") +
   theme_bw() +
   theme_showarrows() +
   theme(legend.title = element_text(size = 16),
@@ -422,3 +422,22 @@ plot(soil.aov, 2)
 #Ending Depth = the deepest depth of each sample
 #Sand/Silt/Clay = Percentage of each soil type in the sample
 #Texture = soil classification for each sample
+#Old code ####
+fullsoilsternblack <- ggtern(data = soils,
+                             aes(x = Sand, y = Silt, z = Clay)) +
+  geom_point(shape = 20,
+             size = 3.5,
+             color = "black",
+             fill = "black") +
+  #ggtitle("Soil Composition within Nesting Plots \nof All Sites") +
+  theme_bw() +
+  theme_showarrows() +
+  theme(legend.title = element_text(size = 16),
+        legend.title.align = 0.5,
+        legend.text = element_text(size = 12),
+        legend.position = c(0.85, 0.80)) +
+  theme(plot.title = element_text(size = 20,
+                                  face = "bold",
+                                  hjust = 0.5)) +
+  theme(text = element_text(size = 15))
+fullsoilsternblack

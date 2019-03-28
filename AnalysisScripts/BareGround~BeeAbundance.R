@@ -101,6 +101,9 @@ BGonBA12model <- lmer(number.bees ~ avg.bareground + (1|Site) + (1|Year) + (1|Da
                     data = bareground.bees12)
 summary(BGonBA12model)
 
+#Get R-squared of model
+r.squaredGLMM(BGonBA12model)
+
 #Change "Year" column to a factor.
 bareground.bees12$Year <- as.factor(bareground.bees12$Year)
 
@@ -111,8 +114,8 @@ BGonBA12plot <- ggplot(bareground.bees12,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_abline(intercept = coef(summary(BGonBAmodel12))[ , "Estimate"][1],
-              slope = coef(summary(BGonBAmodel12))[ , "Estimate"][2]) +
+  geom_abline(intercept = coef(summary(BGonBA12model))[ , "Estimate"][1],
+              slope = coef(summary(BGonBA12model))[ , "Estimate"][2]) +
   #geom_text(x = 10, y = 180,
             #label = "y = 0.8216x + 49.4043",
             #size = 5) +
@@ -120,6 +123,10 @@ BGonBA12plot <- ggplot(bareground.bees12,
             #label = "p = 0.037",
             #size = 5) +
   theme_bw() +
+  scale_color_manual(labels = c("2014", "2015"),
+                     values = c("darkorchid1", "darkgreen")) +
+  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
+                     values = c(15, 16)) +
   labs(x = "Bare Ground (%)",
        y = "Bee Abundance") +
   ggtitle("2014-2015\nInfluence of Bare Ground on Bee Abundance") +
