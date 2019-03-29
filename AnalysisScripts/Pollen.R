@@ -33,9 +33,77 @@ pollen <- pollen %>%
   filter(Bee.ID != "Wasp") %>%
   filter(Bee.ID != "Fly")
 
+#Mutate common plant names to species names
+pollen <- pollen %>%
+  mutate(Pollen.ID = case_when(
+    Pollen == "Alfalfa" ~ "Medicago sativa",
+    Pollen == "Bee balm" ~ "Monarda fistulosa",
+    Pollen == "Birdsfoot trefoil" ~ "Lotus corniculatus",
+    Pollen == "Black-eyed Susan" ~ "Rudbeckia hirta",
+    Pollen == "Black medic" ~ "Medicago lupulina",
+    Pollen == "Bull thistle" ~ "Cirsium vulgare",
+    Pollen == "Canada anemone" ~ "Anemone canadensis",
+    Pollen == "Canada goldenrod" ~ "Solidago canadensis",
+    Pollen == "Canada thistle" ~ "Cirsium arvense",
+    Pollen == "Carolina horsenettle" ~ "Solanum carolinense",
+    Pollen == "Cleavers" ~ "Galium aparine",
+    Pollen == "Common daisy" ~ "Bellis perennis",
+    Pollen == "Common daylily" ~ "Hemerocallis fulva",
+    Pollen == "Common milkweed" ~ "Asclepias syriaca",
+    Pollen == "Common mullein" ~ "Verbascum thapsus",
+    Pollen == "Common yellow wood sorrel" ~ "Oxalis stricta",
+    Pollen == "Cup plant" ~ "Silphium perfoliatum",
+    Pollen == "Curly dock" ~ "Rumex crispus",
+    Pollen == "Daisy fleabane" ~ "Erigeron annuus",
+    Pollen == "Dandelion" ~ "Taraxacum officinale",
+    Pollen == "Deptford pink" ~ "Dianthus armeria",
+    Pollen == "Dodder" ~ "Cuscuta gronovii",
+    Pollen == "Dogbane" ~ "Apocynum cannabinum",
+    Pollen == "Dotted smartweed" ~ "Polygonum punctatum",
+    Pollen == "False white indigo" ~ "Baptisia alba",
+    Pollen == "Field bindweed" ~ "Convolvulus arvensis",
+    Pollen == "Field pennycress" ~ "Thlaspi arvense",
+    Pollen == "Golden Alexander" ~ "Zizia aurea",
+    Pollen == "Gray-headed coneflower" ~ "Ratibida pinnata",
+    Pollen == "Ground cherry" ~ "Physalis virginiana",
+    Pollen == "Hairy vetch" ~ "Vicia villosa",
+    Pollen == "Hoary vervain" ~ "Verbena stricta",
+    Pollen == "Japanese honeysuckle" ~ "Lonicera japonica",
+    Pollen == "Marestail" ~ "Conyza canadensis",
+    Pollen == "Mock strawberry" ~ "Duchesnea indica",
+    Pollen == "Musk thistle" ~ "Carduus nutans",
+    Pollen == "Oxeye sunflower" ~ "Heliopsis helianthoides",
+    Pollen == "Pennsylvania smartweed" ~ "Polygonum pensylvanicum",
+    Pollen == "Pineapple weed" ~ "Matricaria discoidea",
+    Pollen == "Prairie ironweed" ~ "Vernonia fasciculata",
+    Pollen == "Prickly lettuce" ~ "Lactuca canadensis",
+    Pollen == "Purple coneflower" ~ "Echinacea purpurea",
+    Pollen == "Purple prairie clover" ~ "Dalea purpurea",
+    Pollen == "Queen Anne's lace" ~ "Daucus carota",
+    Pollen == "Rattlesnake master" ~ "Eryngium yuccifolium",
+    Pollen == "Red clover" ~ "Trifolium pratense",
+    Pollen == "Red raspberry" ~ "Rubus idaeus",
+    Pollen == "Sawtooth sunflower" ~ "Helianthus grosseserratus",
+    Pollen == "Showy tick trefoil" ~ "Desmodium canadense",
+    Pollen == "Soapwort" ~ "Saponaria officinalis",
+    Pollen == "Sow thistle" ~ "Sonchus arvensis",
+    Pollen == "Star of Bethlehem" ~ "Ornithogalum umbellatum",
+    Pollen == "Stiff goldenrod" ~ "Solidago rigida",
+    Pollen == "Velvet leaf" ~ "Abutilon theophrasti",
+    Pollen == "White campion" ~ "Silene latifolia",
+    Pollen == "White clover" ~ "Trifolium repens",
+    Pollen == "White sweet clover" ~ "Melilotus albus",
+    Pollen == "Whorled milkweed" ~ "Asclepias verticillata",
+    Pollen == "Wild cucumber" ~ "Echinocystis lobata",
+    Pollen == "Wild mustard" ~ "Sinapis arvensis",
+    Pollen == "Wild parsnip" ~ "Pastinaca sativa",
+    Pollen == "Yarrow" ~ "Achillea millefolium",
+    Pollen == "Yellow sweet clover" ~ "Melilotus officinalis"
+  ))
+
 #Check pollen names to be sure they're consistent
 pollen.table <- pollen %>%
-  group_by(Pollen) %>%
+  group_by(Pollen.ID) %>%
   tally()
 
 #Check bee names to be sure they're consistent
@@ -46,22 +114,35 @@ bee.table <- Pollen %>%
 
 #Filter out entries with duplicate bee/pollen values by date
 pollen.nodupes <- pollen %>%
-  group_by(Date.Collected) %>%
-  distinct(Bee.ID, Pollen)
+  group_by(Site, Date.Collected) %>%
+  distinct(Bee.ID, Pollen.ID)
+
+#Make a table showing the number of bee species were found to be using each pollen species
+pollen.bees <- pollen.nodupes %>%
+  group_by(Pollen.ID) %>%
+  summarise(no.beespp = (n_distinct(Bee.ID)))
 
 #Produce table with the number of instances each bee species has collected each pollen species
 bees.pollen <- pollen.nodupes %>%
   group_by(Bee.ID) %>%
-  count(Pollen)
+  count(Pollen.ID)
+
+#Table showing the number of instances each pollen species was identified
+pollen.interactions <- bees.pollen %>%
+  group_by(Pollen.ID) %>%
+  summarise(sum(n))
 
 #Format from long to wide using spread
-bees.pollen <- spread(bees.pollen, Pollen, n)
+bees.pollen <- spread(bees.pollen, Pollen.ID, n)
 
 #Remove bee species names from first column and move to row names
 bees.pollen <- column_to_rownames(bees.pollen, "Bee.ID")
 
 #Fill NAs with 0
 bees.pollen[is.na(bees.pollen)] <- 0
+
+#Make font italic
+par(font = 3)
 
 #Graph using bipartite package
 plotweb(bees.pollen,
@@ -70,6 +151,7 @@ plotweb(bees.pollen,
                                    adjustcolor("black", alpha.f = 0.5),
                                    adjustcolor("grey80", alpha.f = 0.5))),
         text.rot = 90,
+        y.lim = c(-1, 2.5),
         col.low = "red",
         col.high = "yellow",
         bor.col.interaction = NA)
