@@ -391,8 +391,8 @@ BSonBS12345plot <- ggplot(floralspp.beespp,
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c(15, 1, 17, 18, 25)) +
   theme_bw() +
-  labs(x = "Number of Plant Species in Bloom",
-       y = "Number of Bee Species") +
+  labs(x = "Blooming Forb Species Richness",
+       y = "Bee Species Richness") +
   ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",

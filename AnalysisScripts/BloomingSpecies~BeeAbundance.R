@@ -305,7 +305,7 @@ BSonBA12345plot <- ggplot(floralspecies.bees,
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c(15, 1, 17, 18, 25)) +
   theme_bw() +
-  labs(x = "Blooming Species Richness",
+  labs(x = "Blooming Forb Species Richness",
        y = "Bee Abundance") +
   ggtitle("Influence of Blooming Species Richness \non Bee Abundance") +
   theme(plot.title = element_text(size = 15,

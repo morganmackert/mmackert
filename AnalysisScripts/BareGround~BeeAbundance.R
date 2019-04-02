@@ -126,7 +126,7 @@ BGonBA12plot <- ggplot(bareground.bees12,
   scale_color_manual(labels = c("2014", "2015"),
                      values = c("darkorchid1", "darkgreen")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
-                     values = c(15, 16)) +
+                     values = c(15, 1)) +
   labs(x = "Bare Ground (%)",
        y = "Bee Abundance") +
   ggtitle("2014-2015\nInfluence of Bare Ground on Bee Abundance") +

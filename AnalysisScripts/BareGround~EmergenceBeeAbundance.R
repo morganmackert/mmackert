@@ -93,9 +93,9 @@ BGonETBA12plot <- ggplot(bareground.etbees12,
   geom_abline(intercept = coef(summary(BGonETBA12model))[ , "Estimate"][1],
               slope = coef(summary(BGonETBA12model))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2014", "2015"),
-                     values = c("#FFB90F", "#000000")) +
+                     values = c("darkorchid1", "darkgreen")) +
   scale_shape_manual(labels = c("2014", "2015"),
-                     values = c(15, 16)) +
+                     values = c(15, 1)) +
   theme_bw() +
   labs(x = "Bare Ground (%)",
        y = "Emergence Trap Bee Abundance") +
@@ -287,9 +287,9 @@ BGonETBA12345plot <- ggplot(bareground.etbees,
   geom_abline(intercept = coef(summary(BGonETBAmodel))[ , "Estimate"][1],
               slope = coef(summary(BGonETBAmodel))[ , "Estimate"][2]) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
-                     values = c("#FFB90F", "#000000", "red3", "palegreen4", "orchid2")) +
+                     values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
-                     values = c(15, 16, 17, 18, 8)) +
+                     values = c(15, 1, 17, 18, 25)) +
   theme_bw() +
   labs(x = "Bare Ground (%)",
        y = "Emergence Trap Bee Abundance") +
