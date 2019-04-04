@@ -353,6 +353,10 @@ qqline(resid(BAonBA12345model4))
 r.squaredGLMM(BAonBA12345model4)
 #R2m = 0.03296998; R2c = 0.5201793
 
+#Find coefficients of model for graph
+coefficients(BAonBA12345model4)
+coef(summary(BAonBA12345model4))
+
 #Convert year to factor
 floralcover.bees$Year <- as.factor(floralcover.bees$Year)
 
@@ -363,10 +367,12 @@ BAonBA12345plot <- ggplot(floralcover.bees,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BAonBA12345model4))[ , "Estimate"][1],
+              slope = coef(summary(BAonBA12345model4))[ , "Estimate"][2]) +
+  #geom_smooth(method = "glm",
+              #se = FALSE,
+              #color = "black",
+              #size = 0.5) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
