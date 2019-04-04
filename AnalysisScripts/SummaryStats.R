@@ -209,3 +209,6 @@ quads34.wide <- quads34.wide %>%
 
 #Determine relative abundance of blooming plants in quadrats with vegan
 quads.rel <- decostand(quads34.wide, method = "total", na.rm = FALSE)
+
+#Export as .csv
+write.csv(quads.rel, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/Plant Abundance.csv")
