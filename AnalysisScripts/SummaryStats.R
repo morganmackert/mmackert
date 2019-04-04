@@ -166,4 +166,46 @@ etrap.bees <- bees %>%
 etrap.bees.wide <- spread(etrap.bees, Date, n)
 
 #Export as .csv
-write.csv(etrap.bees.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/EmergenceTrapBeesbyDate.csv")
+#write.csv(etrap.bees.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/EmergenceTrapBeesbyDate.csv")
+
+
+#Floral resources
+#Determine relative abundance of each floral species during each sampling event
+Quadrats <- read.csv("Plants/Quadrats.csv")
+Quadrats$Date <- mdy(Quadrats$Date)
+
+#Filter 2016-2017
+quads34 <- Quadrats %>%
+  filter(Year == "3" | Year == "4")
+
+#Determine total number of plants in bloom in quadrats during 2016-2017
+bloom.plants <- Quadrats34 %>%
+  group_by(Species) %>%
+  count()
+
+#Calculate total amount of coverage for each species during each sampling event
+quads34.long <- quads34 %>%
+  group_by(Site, Date, Species) %>%
+  summarise(Total.Cover = sum(Cover))
+
+#Reformat dataset from long to wide
+quads34.wide <- spread(quads34.long, Species, Total.Cover)
+
+#Fill NAs with 0
+quads34.wide[is.na(quads34.wide)] <- 0
+
+#Remove V1 column
+quads34.wide <- quads34.wide %>%
+  select(-V1)
+
+#Combine Site and Date columns
+quads34.wide <- quads34.wide %>%
+  unite(SiteDate, c(Site, Date), sep = " ", remove = TRUE)
+
+#Change column to rownames
+quads34.wide <- quads34.wide %>%
+  remove_rownames %>%
+  column_to_rownames(var = "SiteDate")
+
+#Determine relative abundance of blooming plants in quadrats with vegan
+quads.rel <- decostand(quads34.wide, method = "total", na.rm = FALSE)
