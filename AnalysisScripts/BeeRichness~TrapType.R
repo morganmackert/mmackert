@@ -252,6 +252,7 @@ bees.trap.wide <- spread(bees.trap, Trap, n)
 
 #Determine number of species collected by each trap type
 beespp.trap <- bees %>%
+  filter(Trap != "Plot") %>%
   group_by(Trap) %>%
   summarise(no.beespp = n_distinct(Binomial))
 

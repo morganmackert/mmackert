@@ -504,6 +504,20 @@ FullLandUseJoined <- full_join(FullLandUse, SumLandUse, by = c("SiteNum"))
 #Determine proportions using new summed values
 FullLandUseJoined$Proportion <- (FullLandUseJoined$Coverage/FullLandUseJoined$TotalCoverage)*100
 
+#Sum proportions in long format
+FullLandUseJoined.long <- FullLandUseJoined %>%
+  group_by(Site, LandType) %>%
+  summarise(Proportion = sum(Proportion))
+
+#Format from long to wide
+FullLandUseJoined.wide <- spread(FullLandUseJoined.long, LandType, Proportion)
+
+#Sum proportions to make sure they add up to 100
+FullLandUseJoined.wide$Total.Proportion <- rowSums(FullLandUseJoined.wide[ , 2:8])
+
+#Sum corn and soy
+FullLandUseJoined.wide$CornSoy <- FullLandUseJoined.wide$Corn + FullLandUseJoined.wide$Soybeans
+
 #Define specific colors for each land type
 barcolors <- c("Undefined" = "white", "Corn" = "yellow", "Soybeans" = "darkgreen", "Alfalfa" = "violet", "Developed Land" = "darkgray", "Deciduous Forest" = "saddlebrown", "Grass/Pasture" = "olivedrab")
 
