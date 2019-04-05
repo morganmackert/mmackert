@@ -14,6 +14,7 @@ rm(list=ls())
 setwd("~/ISU/Project/Data")
 
 #Load libraries
+library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(tibble)
@@ -130,7 +131,7 @@ bees.pollen <- pollen.nodupes %>%
 #Table showing the number of instances each pollen species was identified
 pollen.interactions <- bees.pollen %>%
   group_by(Pollen.ID) %>%
-  summarise(sum(n))
+  summarise(no.bees = sum(n))
 
 #Format from long to wide using spread
 bees.pollen <- spread(bees.pollen, Pollen.ID, n)
@@ -148,6 +149,121 @@ par(font = 3)
 plotweb(bees.pollen,
         abuns.type = "additional",
         col.interaction = t(ifelse(bees.pollen[,] > 5,
+                                   adjustcolor("black", alpha.f = 0.5),
+                                   adjustcolor("grey80", alpha.f = 0.5))),
+        text.rot = 90,
+        y.lim = c(-1, 2.5),
+        col.low = "red",
+        col.high = "yellow",
+        bor.col.interaction = NA)
+
+#-------------------------------------------------------------------#
+#                     Bee & Flower Interactions                     #
+#-------------------------------------------------------------------#
+#Filter out gross stuff and determine the number of bees collected off of each floral species
+flowers <- Pollen %>%
+  filter(!is.na(Bee.ID)) %>%
+  filter(Bee.ID != "Wasp") %>%
+  filter(Bee.ID != "Fly")
+
+#Mutate flower names
+flowers <- flowers %>%
+  mutate(Flower = case_when(
+    Flower == "Alfalfa" ~ "Medicago sativa",
+    Flower == "Bee balm" ~ "Monarda fistulosa",
+    Flower == "Birdsfoot trefoil" ~ "Lotus corniculatus",
+    Flower == "Black-eyed Susan" ~ "Rudbeckia hirta",
+    Flower == "Black medic" ~ "Medicago lupulina",
+    Flower == "Bull thistle" ~ "Cirsium vulgare",
+    Flower == "Canada anemone" ~ "Anemone canadensis",
+    Flower == "Canada goldenrod" ~ "Solidago canadensis",
+    Flower == "Canada thistle" ~ "Cirsium arvense",
+    Flower == "Carolina horsenettle" ~ "Solanum carolinense",
+    Flower == "Cleavers" ~ "Galium aparine",
+    Flower == "Common daisy" ~ "Bellis perennis",
+    Flower == "Common daylily" ~ "Hemerocallis fulva",
+    Flower == "Common milkweed" ~ "Asclepias syriaca",
+    Flower == "Common mullein" ~ "Verbascum thapsus",
+    Flower == "Common yellow wood sorrel" ~ "Oxalis stricta",
+    Flower == "Cup plant" ~ "Silphium perfoliatum",
+    Flower == "Curly dock" ~ "Rumex crispus",
+    Flower == "Daisy fleabane" ~ "Erigeron annuus",
+    Flower == "Dandelion" ~ "Taraxacum officinale",
+    Flower == "Deptford pink" ~ "Dianthus armeria",
+    Flower == "Dodder" ~ "Cuscuta gronovii",
+    Flower == "Dogbane" ~ "Apocynum cannabinum",
+    Flower == "Dotted smartweed" ~ "Polygonum punctatum",
+    Flower == "False white indigo" ~ "Baptisia alba",
+    Flower == "Field bindweed" ~ "Convolvulus arvensis",
+    Flower == "Field pennycress" ~ "Thlaspi arvense",
+    Flower == "Golden Alexander" ~ "Zizia aurea",
+    Flower == "Gray-headed coneflower" ~ "Ratibida pinnata",
+    Flower == "Ground cherry" ~ "Physalis virginiana",
+    Flower == "Hairy vetch" ~ "Vicia villosa",
+    Flower == "Hoary vervain" ~ "Verbena stricta",
+    Flower == "Japanese honeysuckle" ~ "Lonicera japonica",
+    Flower == "Marestail" ~ "Conyza canadensis",
+    Flower == "Mock strawberry" ~ "Duchesnea indica",
+    Flower == "Musk thistle" ~ "Carduus nutans",
+    Flower == "Oxeye sunflower" ~ "Heliopsis helianthoides",
+    Flower == "Pennsylvania smartweed" ~ "Polygonum pensylvanicum",
+    Flower == "Pineapple weed" ~ "Matricaria discoidea",
+    Flower == "Prairie ironweed" ~ "Vernonia fasciculata",
+    Flower == "Prickly lettuce" ~ "Lactuca canadensis",
+    Flower == "Purple coneflower" ~ "Echinacea purpurea",
+    Flower == "Purple prairie clover" ~ "Dalea purpurea",
+    Flower == "Queen Anne's lace" ~ "Daucus carota",
+    Flower == "Rattlesnake master" ~ "Eryngium yuccifolium",
+    Flower == "Red clover" ~ "Trifolium pratense",
+    Flower == "Red raspberry" ~ "Rubus idaeus",
+    Flower == "Sawtooth sunflower" ~ "Helianthus grosseserratus",
+    Flower == "Showy tick trefoil" ~ "Desmodium canadense",
+    Flower == "Soapwort" ~ "Saponaria officinalis",
+    Flower == "Sow thistle" ~ "Sonchus arvensis",
+    Flower == "Star of Bethlehem" ~ "Ornithogalum umbellatum",
+    Flower == "Stiff goldenrod" ~ "Solidago rigida",
+    Flower == "Velvet leaf" ~ "Abutilon theophrasti",
+    Flower == "White campion" ~ "Silene latifolia",
+    Flower == "White clover" ~ "Trifolium repens",
+    Flower == "White sweet clover" ~ "Melilotus albus",
+    Flower == "Whorled milkweed" ~ "Asclepias verticillata",
+    Flower == "Wild cucumber" ~ "Echinocystis lobata",
+    Flower == "Wild mustard" ~ "Sinapis arvensis",
+    Flower == "Wild parsnip" ~ "Pastinaca sativa",
+    Flower == "Yarrow" ~ "Achillea millefolium",
+    Flower == "Yellow sweet clover" ~ "Melilotus officinalis"
+  ))
+
+#Make sure flower names mutated correctly
+flower.table <- flowers %>%
+  group_by(Flower) %>%
+  tally()
+
+#Group flowers and determine the number of each bee species collected from them
+flowers.bees <- flowers %>%
+group_by(Flower) %>%
+  count(Bee.ID)
+
+flowers.beessum <- flowers.bees %>%
+  group_by(Flower) %>%
+  summarise(no.bees = sum(n))
+
+#Reformat from long to wide
+flowersbees.wide <- spread(flowers.bees, Flower, n)
+
+#Remove flower species names from first column and move to row names
+flowersbees.wide <- column_to_rownames(flowersbees.wide, "Bee.ID")
+
+#Fill NAs with 0
+flowersbees.wide[is.na(flowersbees.wide)] <- 0
+
+#Make font italic
+par(font = 3)
+
+#Graph using bipartite package
+plotweb(flowersbees.wide,
+        abuns.type = "additional",
+        col.interaction = t(ifelse(flowersbees.wide[,] > 5,
                                    adjustcolor("black", alpha.f = 0.5),
                                    adjustcolor("grey80", alpha.f = 0.5))),
         text.rot = 90,
