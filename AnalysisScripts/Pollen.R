@@ -118,6 +118,11 @@ pollen.nodupes <- pollen %>%
   group_by(Site, Date.Collected) %>%
   distinct(Bee.ID, Pollen.ID)
 
+#Filter out entries with duplicate bee/pollen values (no date)
+pollen.nodupes2 <- pollen.nodupes %>%
+  group_by(Bee.ID) %>%
+  count(Pollen.ID)
+
 #Make a table showing the number of bee species were found to be using each pollen species
 pollen.bees <- pollen.nodupes %>%
   group_by(Pollen.ID) %>%
@@ -241,12 +246,23 @@ flower.table <- flowers %>%
 
 #Group flowers and determine the number of each bee species collected from them
 flowers.bees <- flowers %>%
-group_by(Flower) %>%
+  group_by(Flower) %>%
   count(Bee.ID)
-
 flowers.beessum <- flowers.bees %>%
   group_by(Flower) %>%
   summarise(no.bees = sum(n))
+flowers.beespp <- flowers.bees %>%
+  group_by(Flower) %>%
+  summarise(no.beespp = n_distinct(Bee.ID))
+
+#Rename Pollen.ID column in pollen.nodupes2 dataframe to Flower
+pollen.nodupes2 <- rename(pollen.nodupes2, Flower = Pollen.ID)
+
+#Join flowers.bees and pollen.nodupes2 together
+flowersbees.pollen <- full_join(flowers.bees, pollen.nodupes2, by = c("Bee.ID", "Flower"))
+
+#Export to .csv
+write.csv(flowersbees.pollen, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Pollen/Bees Flowers Pollen2.csv")
 
 #Reformat from long to wide
 flowersbees.wide <- spread(flowers.bees, Flower, n)
@@ -271,6 +287,23 @@ plotweb(flowersbees.wide,
         col.low = "red",
         col.high = "yellow",
         bor.col.interaction = NA)
+
+#-------------------------------------------------------------------#
+#                 Floral Fidelity Chi-Squared Test                  #
+#-------------------------------------------------------------------#
+#Bring in Bee Pollen data file
+beepollen.chi <- read.csv("Pollen/Bee Pollen Chi Square Reduced.csv")
+
+#Remove first two columns from data frame
+beepollen.chi <- beepollen.chi[!names(beepollen.chi) %in% c("Bee.species", "Floral.species.bee.collected.from")]
+
+#Perform Chi-Squared test
+beepollen.chitest <- chisq.test(beepollen.chi, simulate.p.value = TRUE)
+#X2 = 281.11; df = 160; p-value = 0.0004998
+
+beepollen.chitest$observed
+round(beepollen.chitest$expected, 2)
+corrplot(beepollen.chitest$residuals, is.corr = FALSE)
 
 #Gross code ####
 #Keep only Bee.ID and Pollen columns

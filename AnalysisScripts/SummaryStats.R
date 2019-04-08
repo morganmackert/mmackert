@@ -168,26 +168,110 @@ etrap.bees.wide <- spread(etrap.bees, Date, n)
 #Export as .csv
 #write.csv(etrap.bees.wide, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/SummaryStats/EmergenceTrapBeesbyDate.csv")
 
-
 #Floral resources
 #Determine relative abundance of each floral species during each sampling event
-Quadrats <- read.csv("Plants/Quadrats.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv", na.strings = c("", "NA"))
 Quadrats$Date <- mdy(Quadrats$Date)
 
 #Filter 2016-2017
 quads34 <- Quadrats %>%
   filter(Year == "3" | Year == "4")
 
+#Mutate flower names
+quads34 <- quads34 %>%
+  mutate(Species = case_when(
+    Species == "Alfalfa" ~ "Medicago sativa",
+    Species == "Bee balm" ~ "Monarda fistulosa",
+    Species == "Birdsfoot trefoil" ~ "Lotus corniculatus",
+    Species == "Black-eyed Susan" ~ "Rudbeckia hirta",
+    Species == "Black medic" ~ "Medicago lupulina",
+    Species == "Bull thistle" ~ "Cirsium vulgare",
+    Species == "Canada anemone" ~ "Anemone canadensis",
+    Species == "Canada goldenrod" ~ "Solidago canadensis",
+    Species == "Canada thistle" ~ "Cirsium arvense",
+    Species == "Carolina horsenettle" ~ "Solanum carolinense",
+    Species == "Cleavers" ~ "Galium aparine",
+    Species == "Common daisy" ~ "Bellis perennis",
+    Species == "Common daylily" ~ "Hemerocallis fulva",
+    Species == "Common milkweed" ~ "Asclepias syriaca",
+    Species == "Common mullein" ~ "Verbascum thapsus",
+    Species == "Common yellow wood sorrel" ~ "Oxalis stricta",
+    Species == "Cup plant" ~ "Silphium perfoliatum",
+    Species == "Curly dock" ~ "Rumex crispus",
+    Species == "Daisy fleabane" ~ "Erigeron annuus",
+    Species == "Dandelion" ~ "Taraxacum officinale",
+    Species == "Deptford pink" ~ "Dianthus armeria",
+    Species == "Dodder" ~ "Cuscuta gronovii",
+    Species == "Dogbane" ~ "Apocynum cannabinum",
+    Species == "Dotted smartweed" ~ "Polygonum punctatum",
+    Species == "False white indigo" ~ "Baptisia alba",
+    Species == "Field bindweed" ~ "Convolvulus arvensis",
+    Species == "Field pennycress" ~ "Thlaspi arvense",
+    Species == "Golden Alexander" ~ "Zizia aurea",
+    Species == "Gray-headed coneflower" ~ "Ratibida pinnata",
+    Species == "Ground cherry" ~ "Physalis virginiana",
+    Species == "Hairy vetch" ~ "Vicia villosa",
+    Species == "Hoary vervain" ~ "Verbena stricta",
+    Species == "Japanese honeysuckle" ~ "Lonicera japonica",
+    Species == "Marestail" ~ "Conyza canadensis",
+    Species == "Mock strawberry" ~ "Duchesnea indica",
+    Species == "Musk thistle" ~ "Carduus nutans",
+    Species == "Oxeye sunflower" ~ "Heliopsis helianthoides",
+    Species == "Pennsylvania smartweed" ~ "Polygonum pensylvanicum",
+    Species == "Pineapple weed" ~ "Matricaria discoidea",
+    Species == "Prairie ironweed" ~ "Vernonia fasciculata",
+    Species == "Prickly lettuce" ~ "Lactuca canadensis",
+    Species == "Purple coneflower" ~ "Echinacea purpurea",
+    Species == "Purple prairie clover" ~ "Dalea purpurea",
+    Species == "Queen Anne's lace" ~ "Daucus carota",
+    Species == "Rattlesnake master" ~ "Eryngium yuccifolium",
+    Species == "Red clover" ~ "Trifolium pratense",
+    Species == "Red raspberry" ~ "Rubus idaeus",
+    Species == "Sawtooth sunflower" ~ "Helianthus grosseserratus",
+    Species == "Showy tick trefoil" ~ "Desmodium canadense",
+    Species == "Soapwort" ~ "Saponaria officinalis",
+    Species == "Sow thistle" ~ "Sonchus arvensis",
+    Species == "Star of Bethlehem" ~ "Ornithogalum umbellatum",
+    Species == "Stiff goldenrod" ~ "Solidago rigida",
+    Species == "Velvet leaf" ~ "Abutilon theophrasti",
+    Species == "White campion" ~ "Silene latifolia",
+    Species == "White clover" ~ "Trifolium repens",
+    Species == "White sweet clover" ~ "Melilotus albus",
+    Species == "Whorled milkweed" ~ "Asclepias verticillata",
+    Species == "Wild cucumber" ~ "Echinocystis lobata",
+    Species == "Wild mustard" ~ "Sinapis arvensis",
+    Species == "Wild parsnip" ~ "Pastinaca sativa",
+    Species == "Yarrow" ~ "Achillea millefolium",
+    Species == "Yellow sweet clover" ~ "Melilotus officinalis"
+  ))
+
 #Determine total number of plants in bloom in quadrats during 2016-2017
-bloom.plants <- Quadrats34 %>%
+bloom.plants <- quads34 %>%
+  filter(!is.na(Species)) %>%
   group_by(Species) %>%
   count()
 
-#Calculate total amount of coverage for each species during each sampling event
-quads34.long <- quads34 %>%
-  group_by(Site, Date, Species) %>%
-  summarise(Total.Cover = sum(Cover))
+#Convert percent coverage to square meters
+plantcover.sqm <- quads34 %>%
+  filter(!is.na(Species)) %>%
+  mutate(cover.sqm = Cover/100)
 
+#Calculate total amount of coverage for each species
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  summarise(Total.Cover = sum(cover.sqm))
+
+#Divide Total Cover by 800 sq. m. to determine total relative abundance of each floral species over 2016-2017
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  mutate(rel.abun = Total.Cover/800)
+
+#Determine percentage of relative abundance
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  mutate(rel.abun.per = rel.abun*100)
+
+#Old code ####
 #Reformat dataset from long to wide
 quads34.wide <- spread(quads34.long, Species, Total.Cover)
 

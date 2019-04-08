@@ -35,11 +35,6 @@ BeeIDs %>%
   group_by(Trap) %>%
   summarise()
 
-#We find that site names are good to go, but trap names need some work!
-BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
-BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
-BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
-
 #Subset only years 1-3; BeeIDs without target bees, wasps, or unidentifiable specimens
 BeeIDs123 <- BeeIDs %>%
   filter(Year <= 2016) %>%
@@ -85,3 +80,8 @@ chisq.test(Cleptoparasites)
 #Genus = Taxonimic genus to which each specimen belongs
 #Species = Taxonomic species to which each specimen belongs
 #Binomial = Combined genus and species to create specific epithet
+
+#We find that site names are good to go, but trap names need some work!
+BeeIDs$Trap[BeeIDs$Trap == "Non-Target"] <- "NT"
+BeeIDs$Trap[BeeIDs$Trap == "Emergence Trap"] <- "Emergence"
+BeeIDs$Trap[BeeIDs$Trap == "Blue Vane"] <- "Blue vane"
