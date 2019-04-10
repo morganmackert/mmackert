@@ -14,12 +14,14 @@ rm(list=ls())
 setwd("~/ISU/Project/Data")
 
 #Load libraries
+library(lubridate)
 library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(tibble)
 library(igraph)
 library(bipartite)
+library(lme4)
 
 #Read in data
 Pollen <- read.csv("Pollen/2016-2017 Target Bees and Pollen Reduced.csv", header = TRUE, na.strings = c("", "NA"))
@@ -144,6 +146,9 @@ bees.pollen <- spread(bees.pollen, Pollen.ID, n)
 #Remove bee species names from first column and move to row names
 bees.pollen <- column_to_rownames(bees.pollen, "Bee.ID")
 
+#Export as .csv
+#write.csv(bees.pollen, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Pollen/Bees Pollen Grid.csv")
+
 #Fill NAs with 0
 bees.pollen[is.na(bees.pollen)] <- 0
 
@@ -262,7 +267,7 @@ pollen.nodupes2 <- rename(pollen.nodupes2, Flower = Pollen.ID)
 flowersbees.pollen <- full_join(flowers.bees, pollen.nodupes2, by = c("Bee.ID", "Flower"))
 
 #Export to .csv
-write.csv(flowersbees.pollen, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Pollen/Bees Flowers Pollen2.csv")
+#write.csv(flowersbees.pollen, file = "C:/Users/Morgan Mackert/Documents/ISU/Project/mmackert/Graphs/Pollen/Bees Flowers Pollen2.csv")
 
 #Reformat from long to wide
 flowersbees.wide <- spread(flowers.bees, Flower, n)
@@ -301,9 +306,173 @@ beepollen.chi <- beepollen.chi[!names(beepollen.chi) %in% c("Bee.species", "Flor
 beepollen.chitest <- chisq.test(beepollen.chi, simulate.p.value = TRUE)
 #X2 = 281.11; df = 160; p-value = 0.0004998
 
-beepollen.chitest$observed
-round(beepollen.chitest$expected, 2)
-corrplot(beepollen.chitest$residuals, is.corr = FALSE)
+#-------------------------------------------------------------------#
+#               Pollen Presence ~ Floral Abundance                  #
+#-------------------------------------------------------------------#
+#Bring in Bee Pollen and Quadrats data files
+pollen.presence <- read.csv("Pollen/Bee Pollen Presence.csv")
+Quadrats <- read.csv("Plants/Quadrats.csv", na.strings = c("", "NA"))
+
+#Use lubridate to allow R to read dates
+Quadrats$Date <- mdy(Quadrats$Date)
+
+#Filter 2016-2017
+quads34 <- Quadrats %>%
+  filter(Year == "3" | Year == "4")
+
+#Mutate flower names
+quads34 <- quads34 %>%
+  mutate(Species = case_when(
+    Species == "Alfalfa" ~ "Medicago sativa",
+    Species == "Bee balm" ~ "Monarda fistulosa",
+    Species == "Birdsfoot trefoil" ~ "Lotus corniculatus",
+    Species == "Black-eyed Susan" ~ "Rudbeckia hirta",
+    Species == "Black medic" ~ "Medicago lupulina",
+    Species == "Bull thistle" ~ "Cirsium vulgare",
+    Species == "Canada anemone" ~ "Anemone canadensis",
+    Species == "Canada goldenrod" ~ "Solidago canadensis",
+    Species == "Canada thistle" ~ "Cirsium arvense",
+    Species == "Carolina horsenettle" ~ "Solanum carolinense",
+    Species == "Cleavers" ~ "Galium aparine",
+    Species == "Common daisy" ~ "Bellis perennis",
+    Species == "Common daylily" ~ "Hemerocallis fulva",
+    Species == "Common milkweed" ~ "Asclepias syriaca",
+    Species == "Common mullein" ~ "Verbascum thapsus",
+    Species == "Common yellow wood sorrel" ~ "Oxalis stricta",
+    Species == "Cup plant" ~ "Silphium perfoliatum",
+    Species == "Curly dock" ~ "Rumex crispus",
+    Species == "Daisy fleabane" ~ "Erigeron annuus",
+    Species == "Dandelion" ~ "Taraxacum officinale",
+    Species == "Deptford pink" ~ "Dianthus armeria",
+    Species == "Dodder" ~ "Cuscuta gronovii",
+    Species == "Dogbane" ~ "Apocynum cannabinum",
+    Species == "Dotted smartweed" ~ "Polygonum punctatum",
+    Species == "False white indigo" ~ "Baptisia alba",
+    Species == "Field bindweed" ~ "Convolvulus arvensis",
+    Species == "Field pennycress" ~ "Thlaspi arvense",
+    Species == "Golden Alexander" ~ "Zizia aurea",
+    Species == "Gray-headed coneflower" ~ "Ratibida pinnata",
+    Species == "Ground cherry" ~ "Physalis virginiana",
+    Species == "Hairy vetch" ~ "Vicia villosa",
+    Species == "Hoary vervain" ~ "Verbena stricta",
+    Species == "Japanese honeysuckle" ~ "Lonicera japonica",
+    Species == "Marestail" ~ "Conyza canadensis",
+    Species == "Mock strawberry" ~ "Duchesnea indica",
+    Species == "Musk thistle" ~ "Carduus nutans",
+    Species == "Oxeye sunflower" ~ "Heliopsis helianthoides",
+    Species == "Pennsylvania smartweed" ~ "Polygonum pensylvanicum",
+    Species == "Pineapple weed" ~ "Matricaria discoidea",
+    Species == "Prairie ironweed" ~ "Vernonia fasciculata",
+    Species == "Prickly lettuce" ~ "Lactuca canadensis",
+    Species == "Purple coneflower" ~ "Echinacea purpurea",
+    Species == "Purple prairie clover" ~ "Dalea purpurea",
+    Species == "Queen Anne's lace" ~ "Daucus carota",
+    Species == "Rattlesnake master" ~ "Eryngium yuccifolium",
+    Species == "Red clover" ~ "Trifolium pratense",
+    Species == "Red raspberry" ~ "Rubus idaeus",
+    Species == "Sawtooth sunflower" ~ "Helianthus grosseserratus",
+    Species == "Showy tick trefoil" ~ "Desmodium canadense",
+    Species == "Soapwort" ~ "Saponaria officinalis",
+    Species == "Sow thistle" ~ "Sonchus arvensis",
+    Species == "Star of Bethlehem" ~ "Ornithogalum umbellatum",
+    Species == "Stiff goldenrod" ~ "Solidago rigida",
+    Species == "Velvet leaf" ~ "Abutilon theophrasti",
+    Species == "White campion" ~ "Silene latifolia",
+    Species == "White clover" ~ "Trifolium repens",
+    Species == "White sweet clover" ~ "Melilotus albus",
+    Species == "Whorled milkweed" ~ "Asclepias verticillata",
+    Species == "Wild cucumber" ~ "Echinocystis lobata",
+    Species == "Wild mustard" ~ "Sinapis arvensis",
+    Species == "Wild parsnip" ~ "Pastinaca sativa",
+    Species == "Yarrow" ~ "Achillea millefolium",
+    Species == "Yellow sweet clover" ~ "Melilotus officinalis"
+  ))
+
+#Determine total number of plants in bloom in quadrats during 2016-2017
+bloom.plants <- quads34 %>%
+  filter(!is.na(Species)) %>%
+  group_by(Species) %>%
+  count()
+
+#Convert percent coverage to square meters
+plantcover.sqm <- quads34 %>%
+  filter(!is.na(Species)) %>%
+  mutate(cover.sqm = Cover/100)
+
+#Calculate total amount of coverage for each species
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  summarise(Total.Cover = sum(cover.sqm))
+
+#Divide Total Cover by 800 sq. m. to determine total relative abundance of each floral species over 2016-2017
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  mutate(rel.abun = Total.Cover/800)
+
+#Determine percentage of relative abundance
+plantcover.sqm <- plantcover.sqm %>%
+  group_by(Species) %>%
+  mutate(rel.abun.per = rel.abun*100)
+
+#Rename floral species column in pollen.bees and pollen.interactions
+names(pollen.bees)[names(pollen.bees) == "Pollen.ID"] <- "Species"
+names(pollen.interactions)[names(pollen.interactions) == "Pollen.ID"] <- "Species"
+
+#Join together data sets with pollen on the number of bees and pollen on the number of bee species with the relative abundance of that floral species
+floralcover.pollen <- full_join(plantcover.sqm, pollen.bees, by = "Species")
+floralcover.pollen <- full_join(floralcover.pollen, pollen.interactions, by = "Species")
+
+#Model showing how relative abundance of floral species the number of bees pollen is identified on
+floralcover.bee.model <- glm(no.bees ~ rel.abun.per,
+                             data = floralcover.pollen)
+summary(floralcover.bee.model)
+
+#Model showing how relative abundance of floral species the number of bee species pollen is identified on
+floralcover.beespp.model <- glm(no.beespp ~ rel.abun.per,
+                             data = floralcover.pollen)
+summary(floralcover.beespp.model)
+
+#-------------------------------------------------------------------#
+#              Pollen Presence ~ Floral Bloom Period                #
+#-------------------------------------------------------------------#
+#Read in plant phenology dataset
+plant.phenology <- read.csv("Pollen/Plant Species Phenology.csv", na.strings = c("", "NA"))
+
+#Reformat from wide to long
+plant.phenology.long <- plant.phenology %>%
+  gather(Months, Species, May:August, na.rm = TRUE)
+
+#Determine total number of months each floral species was in bloom
+plant.months <- plant.phenology.long %>%
+  group_by(Species) %>%
+  summarise(no.months = n_distinct(Months))
+
+#Rename floral species column in pollen.bees and pollen.interactions
+names(pollen.bees)[names(pollen.bees) == "Pollen.ID"] <- "Species"
+names(pollen.interactions)[names(pollen.interactions) == "Pollen.ID"] <- "Species"
+
+#Join plant.months, pollen.bees, and pollen.interactions together
+plant.months.bees <- full_join(plant.months, pollen.interactions, by = "Species")
+plant.months.bees <- full_join(plant.months.bees, flowers.beessum, by = "Species")
+
+#Rename no.bees columns in plant.months.bees
+names(plant.months.bees)[names(plant.months.bees) == "no.bees.x"] <- "pollen.bees"
+names(plant.months.bees)[names(plant.months.bees) == "no.bees.y"] <- "flower.bees"
+
+#Fill NAs with 0
+plant.months.bees[is.na(plant.months.bees)] <- 0
+
+#Model showing how number of months in bloom for each floral species influences the number of bees pollen is identified on
+plantphenology.pollen <- glm(pollen.bees ~ no.months,
+                             data = plant.months.bees)
+summary(plantphenology.pollen)
+
+#Model showing how number of months in bloom for each floral species influences the number of bees collected from that species
+plantphenology.flowers <- glm(flower.bees ~ no.months,
+                                data = plant.months.bees)
+summary(plantphenology.flowers)
+
+
 
 #Gross code ####
 #Keep only Bee.ID and Pollen columns
@@ -323,3 +492,6 @@ V(reducedpollennodupes.graph)$color <- ifelse(V(reducedpollennodupes.graph)$type
 V(reducedpollennodupes.graph)$shape <- ifelse(V(reducedpollennodupes.graph)$type, "circle", "square")
 plot(reducedpollennodupes.graph, vertex.label.cex = 0.7, vertex.label.color = "black", vertex.size = 7)
 plot(reducedpollennodupes.graph, layout = layout.bipartite, vertex.label.cex = 0.7, vertex.label.color = "black", vertex.size = 7)
+
+#Rename floral species column in beepollen.chi
+names(pollen.presence)[names(pollen.presence) == "Floral.Species"] <- "Species"
