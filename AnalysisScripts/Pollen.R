@@ -427,10 +427,41 @@ floralcover.bee.model <- glm(no.bees ~ rel.abun.per,
                              data = floralcover.pollen)
 summary(floralcover.bee.model)
 
+#Get coefficients for graph
+coef(floralcover.bee.model)
+
+#Graph it
+floralcover.bee.plot <- ggplot(floralcover.pollen,
+                          aes(x = rel.abun.per,
+                              y = no.bees)) +
+  geom_point(size = 3) +
+  geom_abline(intercept = coef(summary(floralcover.bee.model))[ , "Estimate"][1],
+              slope = coef(summary(floralcover.bee.model))[ , "Estimate"][2]) +
+  theme_bw() +
+  labs(x = "Relative Floral Abundance (%)",
+       y = "Bee Abundance")
+floralcover.bee.plot
+
 #Model showing how relative abundance of floral species the number of bee species pollen is identified on
 floralcover.beespp.model <- glm(no.beespp ~ rel.abun.per,
                              data = floralcover.pollen)
 summary(floralcover.beespp.model)
+
+#Get coefficients for graph
+coef(floralcover.beespp.model)
+
+#Graph it
+floralcover.beespp.plot <- ggplot(floralcover.pollen,
+                               aes(x = rel.abun.per,
+                                   y = no.beespp)) +
+  geom_point(size = 3) +
+  geom_abline(intercept = coef(summary(floralcover.beespp.model))[ , "Estimate"][1],
+              slope = coef(summary(floralcover.beespp.model))[ , "Estimate"][2]) +
+  theme_bw() +
+  labs(x = "Relative Floral Abundance (%)",
+       y = "Bee Species Richness")
+floralcover.beespp.plot
+
 
 #-------------------------------------------------------------------#
 #              Pollen Presence ~ Floral Bloom Period                #

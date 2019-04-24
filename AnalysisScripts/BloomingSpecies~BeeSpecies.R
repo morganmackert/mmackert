@@ -77,6 +77,9 @@ BSonBS12model <- glm(no.beespp ~ no.floralspp,
                     data = floralspp.beespp12)
 summary(BSonBS12model)
 
+#Get coefficients
+coef(summary(BSonBS12model))
+
 #Morgan's plot: Number of blooming forb/weed species vs. Bee species richness
 BSonBS12plot <- ggplot(floralspp.beespp12,
                        aes(x = no.floralspp,
@@ -91,11 +94,11 @@ BSonBS12plot <- ggplot(floralspp.beespp12,
   theme_bw() +
   scale_color_manual(labels = c("2014", "2015"),
                      values = c("darkorchid1", "darkgreen")) +
-  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
-                     values = c(15, 16)) +
+  scale_shape_manual(labels = c("2014", "2015"),
+                     values = c(15, 1)) +
   labs(x = "Number of Blooming Species",
        y = "Number of Bee Species") +
-  ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
+  #ggtitle("Influence of Blooming Forb and Weed \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
@@ -362,6 +365,9 @@ AIC(BSonBS12345model4)
 #AIC = 1283.096; p-value < 0.001
 #Model 4 has lowest AIC value! Use this one.
 
+#Get coefficients
+coef(summary(BSonBS12345model4))
+
 #Check residuals
 qqnorm(resid(BSonBS12345model4))
 qqline(resid(BSonBS12345model4))
@@ -391,9 +397,9 @@ BSonBS12345plot <- ggplot(floralspp.beespp,
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c(15, 1, 17, 18, 25)) +
   theme_bw() +
-  labs(x = "Blooming Forb Species Richness",
-       y = "Bee Species Richness") +
-  ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
+  labs(x = "Number of Species in Bloom",
+       y = "Number of Bee Species") +
+  #ggtitle("Influence of the Number of Blooming Plant \nSpecies on Bee Species Richness") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
@@ -419,3 +425,17 @@ BSonBS12345plot
 names(Fulldata)[names(Fulldata) == "X..Floral.Cover..in.10m2."] <- "Floral.Cover"
 names(Fulldata)[names(Fulldata) == "X..Blooming.species.in.quadrats"] <- "Blooming.Species"
 names(Fulldata)[names(Fulldata) == "X..Bare.Ground..in.10m2."] <- "Bare.Ground"
+
+#Determine number of plants in bloom in 2016-2017
+floralspp34 <- Quadrats %>%
+  filter(Year == "2016" | Year == "2017") %>%
+  summarise(no.forbspp = n_distinct(Species))
+
+#Determine number of plants in bloom in all years
+floralspp <- Quadrats %>%
+  summarise(no.forbspp = n_distinct(Species))
+
+#Determine site with greatest number of blooming plants by date
+floralspp.sd <- Quadrats %>%
+  group_by(Site, Date) %>%
+  summarise(no.forbspp = n_distinct(Species))

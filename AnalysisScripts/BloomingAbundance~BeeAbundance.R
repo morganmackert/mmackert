@@ -69,12 +69,40 @@ floralcover.bees$Year <- year(floralcover.bees$Date)
 #Subset BAonBA to include only 2014 and 2015 data.
 floralcover.bees12 <- filter(floralcover.bees, Year <= 2015)
 
+#Determine number of bees collected
+no.bees12 <- floralcover.bees12 %>%
+  summarise(no.bees = sum(total.bees))
+no.bees12 <- no.bees12 %>%
+  summarise(no.bees = sum(no.bees))
+
+#Group number of bees by site and date
+no.bees12sd <- floralcover.bees12 %>%
+  group_by(Site, Date) %>%
+  summarise(no.bees = sum(total.bees))
+
+#Determine number of bee species collected
+no.beespp12 <- Bees %>%
+  filter(Year <= 2015) %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Date)) %>%
+  summarise(no.beespp = n_distinct(Binomial))
+
+#Group number of bee species by site and date
+no.beespp12sd <- Bees %>%
+  group_by(Site, Date) %>%
+  filter(Year <= 2015) %>%
+  filter(Family != "Wasp") %>%
+  filter(Binomial != "Unidentifiable") %>%
+  filter(!is.na(Date)) %>%
+  summarise(no.beespp = n_distinct(Binomial))
+
 #Year column brought in as an integer. Change to numeric for Amy's plot.
 pch.list12 <- as.numeric(BAonBA12$Year)
 pch.list12
 
 #Year column brought in as an integer. Change to factor for Morgan's plot.
-BAonBA12$Year <- as.factor(BAonBA12$Year)
+floralcover.bees12$Year <- as.factor(floralcover.bees12$Year)
 
 #Amy's plot: Number Quadrats vs. Bee Abundance
 plot(BAonBA12$AverageFloralCover,BAonBA12$BeeAbundance,
@@ -88,13 +116,13 @@ legend("topleft",bty="n",
        legend=paste("R2 is",format(summary(modelAM)$adj.r.squared,digits=4)))
 
 #Model for bee abundance predicted by frequency of blooming species
-BAonBA12model <- glmer(total.bees ~ avg.floralcover + (1|Site) + (1|Year),
-                     family = poisson,
-                     data = floralcover.bees12)
+BAonBA12model <- glmer(total.bees ~ avg.floralcover + (1|Site) + (1|Date) + (1|Year),
+                      family = poisson,
+                      data = floralcover.bees12)
 summary(BAonBA12model)
 
 #Find intercept and slope to plot best fit line on graph; insert these values in the "geom_abline" line of the graph code
-coef(BAonBA12model)
+coef(summary(BAonBA12model))
 
 #Conver Year from integer to factor
 floralcover.bees12$Year <- as.factor(floralcover.bees12$Year)
@@ -106,18 +134,16 @@ BAonBA12plot <- ggplot(floralcover.bees12,
   geom_point(aes(shape = Year,
                  color = Year),
              size = 3) +
-  geom_smooth(method = "glm",
-              se = FALSE,
-              color = "black",
-              size = 0.5) +
+  geom_abline(intercept = coef(summary(BAonBA12model))[ , "Estimate"][1],
+              slope = coef(summary(BAonBA12model))[ , "Estimate"][2]) +
   theme_bw() +
   scale_color_manual(labels = c("2014", "2015"),
                      values = c("darkorchid1", "darkgreen")) +
-  scale_shape_manual(labels = c("2014", "2015", "2016", "2017"),
-                     values = c(15, 16)) +
-  labs(x = "Blooming Floral Coverage (%)",
+  scale_shape_manual(labels = c("2014", "2015"),
+                     values = c(15, 1)) +
+  labs(x = "Blooming Species Coverage (%)",
        y = "Bee Abundance") +
-  ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
+  #ggtitle("Influence of Blooming Forb and Weed \nCoverage on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +

@@ -104,6 +104,9 @@ summary(BGonBA12model)
 #Get R-squared of model
 r.squaredGLMM(BGonBA12model)
 
+#Get coefficients of model
+coef(summary(BGonBA12model))
+
 #Change "Year" column to a factor.
 bareground.bees12$Year <- as.factor(bareground.bees12$Year)
 
@@ -129,7 +132,7 @@ BGonBA12plot <- ggplot(bareground.bees12,
                      values = c(15, 1)) +
   labs(x = "Bare Ground (%)",
        y = "Bee Abundance") +
-  ggtitle("2014-2015\nInfluence of Bare Ground on Bee Abundance") +
+  #ggtitle("2014-2015\nInfluence of Bare Ground on Bee Abundance") +
   theme(plot.title = element_text(size = 15,
                                   face = "bold",
                                   hjust = 0.5)) +
@@ -498,6 +501,9 @@ summary(BGonBA12345model3)
 #AIC = 2383.567; p-value = 0.091470
 #Model 3 has lowest AIC value! Use this one.
 
+#Get coefficients
+coef(summary(BGonBA12345model3))
+
 #Check residuals
 qqnorm(resid(BGonBA12345model3))
 qqline(resid(BGonBA12345model3))
@@ -518,12 +524,12 @@ BGonBA12345plot <- ggplot(bareground.bees,
              size = 3) +
   geom_abline(intercept = coef(summary(BGonBA12345model3))[ , "Estimate"][1],
               slope = coef(summary(BGonBA12345model3))[ , "Estimate"][2]) +
-  geom_text(x = 20, y = 500,
-            label = "y = 0.6873x + 73.6059",
-            size = 5) +
-  geom_text(x = 13, y = 465,
-            label = "p = 0.1010",
-            size = 5) +
+  #geom_text(x = 20, y = 500,
+            #label = "y = 0.6873x + 73.6059",
+            #size = 5) +
+  #geom_text(x = 13, y = 465,
+            #label = "p = 0.1010",
+            #size = 5) +
   scale_color_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
                      values = c("darkorchid1", "darkgreen", "#000000", "#FFB90F", "cornflowerblue")) +
   scale_shape_manual(labels = c("2014", "2015", "2016", "2017", "2018"),
